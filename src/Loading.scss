@@ -1,0 +1,44 @@
+.loading-container {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%); // Центрируем контейнер
+    width: 394px;
+    height: 844px;
+    background-color: #191919;
+    display: flex;
+    justify-content: center; // Горизонтальное центрирование содержимого
+    align-items: center;    // Вертикальное центрирование содержимого
+  }
+  
+  .background-image {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%); // Центрируем изображение
+    width: 394px;
+    height: 844px;
+    object-fit: contain;
+    z-index: -1;
+  }
+  
+  .loading-spinner {
+    width: 50px;
+    height: 50px;
+    border: 4px solid rgba(255, 255, 255, 0.3);
+    border-top: 4px solid #fff;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+  }
+  
+  @keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+  }
+  
+  body {
+    margin: 0;
+    line-height: normal;
+    font-family: Inter;
+    background-color: #191919;
+  }

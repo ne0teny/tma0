@@ -1,0 +1,563 @@
+.notchIcon {
+  position: absolute;
+  top: -2px;
+  left: calc(50% - 78px);
+  width: 156px;
+  height: 33px;
+}
+.time {
+  position: absolute;
+  top: 1px;
+  left: 0px;
+  letter-spacing: -0.41px;
+  line-height: 22px;
+  font-weight: 600;
+  display: inline-block;
+  width: 54px;
+  height: 20px;
+}
+.statusbarTime {
+  position: absolute;
+  top: 0px;
+  left: calc(50% - 27px);
+  border-radius: 24px;
+  width: 54px;
+  height: 21px;
+}
+.leftSide {
+  position: absolute;
+  top: 14px;
+  left: calc(50% - 168px);
+  width: 54px;
+  height: 21px;
+}
+.statusbarBatteryIcon {
+  position: absolute;
+  top: 0px;
+  left: calc(50% + 11.3px);
+  width: 27.4px;
+  height: 13px;
+}
+.wifiIcon {
+  position: relative;
+  width: 17px;
+  height: 11.8px;
+}
+.iconMobileSignal {
+  position: absolute;
+  top: 1px;
+  left: calc(50% - 38.7px);
+  width: 18px;
+  height: 12px;
+}
+.rightSide {
+  position: absolute;
+  top: 19px;
+  left: calc(50% + 91px);
+  width: 77.4px;
+  height: 13px;
+}
+.statusbar {
+  align-self: stretch;
+  position: relative;
+  height: 47px;
+  overflow: hidden;
+  flex-shrink: 0;
+}
+.backIcon {
+  width: 18px;
+  position: relative;
+  height: 24px;
+}
+.leftTitle {
+  flex: 1;
+  position: relative;
+  letter-spacing: -0.41px;
+  line-height: 22px;
+  display: flex;
+  align-items: center;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  height: 22px;
+}
+.leftAccessory {
+  position: absolute;
+  top: calc(50% - 21px);
+  left: 0px;
+  width: 130px;
+  height: 42px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: flex-start;
+  padding: 9px 9px 9px 7px;
+  box-sizing: border-box;
+  gap: 5px;
+}
+.title1 {
+  align-self: stretch;
+  flex: 1;
+  position: relative;
+  letter-spacing: -0.41px;
+  line-height: 22px;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.title {
+  position: absolute;
+  width: calc(100% - 260px);
+  top: calc(50% - 21px);
+  right: 130px;
+  left: 130px;
+  height: 42px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+.rightAccessory {
+  position: absolute;
+  top: calc(50% - 21px);
+  right: 0px;
+  width: 130px;
+  height: 42px;
+}
+.topnavigationContent {
+  align-self: stretch;
+  position: relative;
+  height: 42px;
+  text-align: left;
+}
+.topnavigation {
+  width: 390px;
+  backdrop-filter: blur(20px);
+  background-color: #1c1c1e;
+  border-bottom: 0.5px solid rgba(60, 60, 67, 0.36);
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: flex-start;
+  gap: 2px;
+}
+.div {
+  width: 91px;
+  position: relative;
+  display: inline-block;
+}
+.frameChild {
+  width: 16px;
+  position: relative;
+  height: 16px;
+  object-fit: cover;
+}
+.instanceParent {
+  height: 18px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 2px;
+  font-size: 14px;
+  color: #fff;
+}
+.parent {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 8px;
+}
+.pointBlock {
+  flex: 1;
+  border-radius: 14px;
+  background-color: #191919;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  padding: 8px 4px;
+}
+.div2 {
+  position: relative;
+}
+.icon {
+  width: 12px;
+  position: relative;
+  height: 12px;
+}
+.group {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 4px;
+}
+.icon1 {
+  width: 16px;
+  position: relative;
+  height: 16px;
+}
+.pointBlockParent {
+  align-self: stretch;
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  justify-content: flex-start;
+  gap: 4px;
+}
+.blockOfInfoInner {
+  align-self: stretch;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+}
+.skufsdff {
+  width: 69px;
+  position: relative;
+  display: inline-block;
+  height: 15px;
+  flex-shrink: 0;
+}
+.icon2 {
+  width: 14px;
+  position: relative;
+  height: 14px;
+}
+.pointBlock2 {
+  flex: 1;
+  border-radius: 14px;
+  background-color: #191919;
+  border: 1px solid #c6d101;
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  justify-content: space-between;
+  padding: 8px 6px;
+}
+.level89 {
+  align-self: stretch;
+  position: relative;
+}
+.progressBarBackground {
+  width: 50px;
+  border-radius: 32px;
+  background: linear-gradient(-68.48deg, #e1ff02, #6a7800 98%);
+  height: 4px;
+}
+.progressBarBackgroundWrapper {
+  align-self: stretch;
+  border-radius: 28px;
+  background-color: #191919;
+  height: 8px;
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  justify-content: flex-start;
+  padding: 2px 13px 2px 2px;
+  box-sizing: border-box;
+}
+.frameWrapper {
+  width: 86px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  justify-content: flex-end;
+}
+.level89Parent {
+  flex: 1;
+  height: 25px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  text-align: center;
+  color: #aeaeae;
+}
+.pointBlockGroup {
+  align-self: stretch;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  text-align: left;
+  color: #fff;
+}
+.blockOfInfo {
+  align-self: stretch;
+  flex: 1;
+  border-radius: 16px;
+  background-color: #2e2e2e;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 4px;
+  gap: 8px;
+}
+.avatarIcon {
+  width: 32px;
+  position: relative;
+  border-radius: 6px;
+  height: 32px;
+  overflow: hidden;
+  flex-shrink: 0;
+  object-fit: cover;
+}
+.namee {
+  width: 61px;
+  position: relative;
+  font-weight: 600;
+  display: inline-block;
+}
+.meme {
+  width: 61px;
+  position: relative;
+  font-size: 10px;
+  display: inline-block;
+}
+.nameAndRunk {
+  width: 61px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: flex-start;
+  gap: 2px;
+}
+.avatarParent {
+  width: 126px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: flex-start;
+  padding: 0px 2px;
+  box-sizing: border-box;
+  gap: 4px;
+}
+.p {
+  margin: 0;
+}
+.div4 {
+  position: relative;
+  font-weight: 600;
+  z-index: 0;
+}
+.imageIcon {
+  width: 30px;
+  position: absolute;
+  margin: 0 !important;
+  top: 13px;
+  left: 95px;
+  height: 30px;
+  object-fit: cover;
+  z-index: 1;
+}
+.div5 {
+  position: absolute;
+  top: calc(50% - 8px);
+  left: calc(50% - 3px);
+}
+.notificationError {
+  width: 14px;
+  position: absolute;
+  margin: 0 !important;
+  top: -8px;
+  left: 103px;
+  border-radius: 23px;
+  background-color: #ff0000;
+  height: 14px;
+  z-index: 2;
+}
+.container {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  justify-content: flex-start;
+  padding: 0px 3px;
+  position: relative;
+  gap: 10px;
+}
+.everyDayBonus {
+  width: 126px;
+  flex: 1;
+  border-radius: 14px;
+  background-color: #191919;
+  overflow: hidden;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: flex-start;
+  padding: 10px 4px 10px 6px;
+  box-sizing: border-box;
+}
+.profileBlock {
+  align-self: stretch;
+  border-radius: 16px;
+  background-color: #2e2e2e;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: flex-start;
+  padding: 4px;
+  gap: 6px;
+  text-align: left;
+  color: #fff;
+}
+.topSection {
+  align-self: stretch;
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  justify-content: flex-start;
+  gap: 8px;
+  font-size: 12px;
+  color: #aeaeae;
+}
+.component13Icon {
+  width: 36px;
+  position: relative;
+  height: 36px;
+  object-fit: cover;
+}
+.highlightedFigure {
+  position: relative;
+  font-weight: 600;
+}
+.highlightedInfo {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 8px;
+}
+.frame172 {
+  align-self: center;
+  position: relative;
+  max-width: 100%;
+  overflow: hidden;
+  height: 377px;
+  flex-shrink: 0;
+}
+.contentBlock {
+  align-self: stretch;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 16px;
+}
+.batartyChild {
+  width: 44px;
+  position: relative;
+  height: 19px;
+}
+.div6 {
+  position: relative;
+  line-height: 110%;
+  font-weight: 600;
+}
+.batarty {
+  align-self: stretch;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 6px;
+  font-size: 14px;
+}
+.component11Child {
+  width: 32px;
+  position: relative;
+  height: 32px;
+}
+.home {
+  width: 46px;
+  position: relative;
+  display: inline-block;
+}
+.component11 {
+  flex: 1;
+  border-radius: 12px;
+  background-color: #c6d101;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  padding: 4px 10px;
+  color: #0c0c0c;
+}
+.frameGroup {
+  flex: 1;
+  border-radius: 12px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  padding: 4px 10px;
+}
+.navigationbar {
+  align-self: stretch;
+  border-radius: 16px;
+  background-color: #303030;
+  height: 63px;
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  justify-content: flex-start;
+  padding: 4px;
+  box-sizing: border-box;
+  gap: 4px;
+}
+.footerSection {
+  align-self: stretch;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  font-size: 12px;
+  color: #666;
+}
+.mainSection {
+  align-self: stretch;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: flex-end;
+  gap: 16px;
+  font-size: 34px;
+}
+.homeScreen {
+  width: 100%;
+  position: relative;
+  background-color: #191919;
+  height: 844px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  padding: 0px 16px;
+  box-sizing: border-box;
+  gap: 16px;
+  text-align: center;
+  font-size: 17px;
+  color: #fff;
+  font-family: Inter;
+}
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap');
+body {
+  	margin: 0; line-height: normal;
+}

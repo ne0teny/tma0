@@ -1,0 +1,236 @@
+.caretleftIcon {
+    width: 32px;
+    position: relative;
+    height: 32px;
+}
+.frameChild {
+    width: 170px;
+    position: relative;
+    border-radius: 24px;
+    height: 170px;
+}
+.caretleftParent {
+    align-self: stretch;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+}
+.skufolog {
+    position: relative;
+    font-weight: 600;
+}
+.skuff {
+    width: 39px;
+    position: relative;
+    display: none;
+}
+.div {
+    width: 4px;
+    position: relative;
+    display: none;
+}
+.frameItem {
+    width: 16px;
+    position: relative;
+    height: 16px;
+    object-fit: cover;
+}
+.instanceParent {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 4px;
+    color: #aeaeae;
+}
+.m {
+    width: 43px;
+    position: relative;
+    font-size: 10px;
+    color: #aeaeae;
+    display: none;
+}
+.skuffParent {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    font-size: 12px;
+    color: #fff;
+}
+.progressBarBackground {
+    width: 61px;
+    border-radius: 32px;
+    background: linear-gradient(-68.48deg, #e1ff02, #6a7800 98%);
+    height: 4px;
+}
+.progressBarBackgroundWrapper {
+    align-self: stretch;
+    border-radius: 28px;
+    background-color: #2e2e2e;
+    height: 8px;
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+    justify-content: flex-start;
+    padding: 2px 13px 2px 2px;
+    box-sizing: border-box;
+}
+.skufologParent {
+    align-self: stretch;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 8px;
+}
+.frameParent {
+    align-self: stretch;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    padding: 16px;
+    gap: 2px;
+}
+.legueInner {
+    align-self: stretch;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: flex-start;
+    font-size: 24px;
+}
+.actionsheedImageIcon {
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    border-radius: 5.04px;
+    width: 42px;
+    height: 42px;
+    overflow: hidden;
+    object-fit: cover;
+}
+.ilias {
+    width: 253px;
+    position: relative;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+}
+.instanceGroup {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 4px;
+}
+.frameWrapper {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+}
+.iliasParent {
+    position: absolute;
+    top: 0px;
+    left: 52px;
+    width: 187px;
+    height: 42px;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: flex-start;
+    padding: 1px 0px;
+    box-sizing: border-box;
+    gap: 4px;
+}
+.actionsheedImageParent {
+    width: 239px;
+    position: relative;
+    height: 42px;
+}
+.kWrapper {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: flex-end;
+    text-align: center;
+    font-size: 24px;
+}
+.friens {
+    align-self: stretch;
+    border-radius: 12px;
+    background-color: #292929;
+    height: 54px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    padding: 6px;
+    box-sizing: border-box;
+}
+.friensParent {
+    align-self: stretch;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: flex-start;
+    gap: 8px;
+}
+.kWrapper3 {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: flex-end;
+    text-align: center;
+    font-size: 24px;
+    color: #aeaeae;
+}
+.friens5 {
+    align-self: stretch;
+    border-radius: 12px;
+    background-color: #292929;
+    border: 1px solid #c6d101;
+    box-sizing: border-box;
+    height: 54px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    padding: 6px;
+}
+.friensWrapper {
+    align-self: stretch;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: flex-start;
+    color: #fff;
+}
+.legue {
+    width: 100%;
+    position: relative;
+    background-color: #191919;
+    height: 756px;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    padding: 0px 16px 24px;
+    box-sizing: border-box;
+    gap: 16px;
+    text-align: left;
+    font-size: 14px;
+    color: #aeaeae;
+    font-family: Inter;
+}
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap');
+body {
+  	margin: 0; line-height: normal;
+}
