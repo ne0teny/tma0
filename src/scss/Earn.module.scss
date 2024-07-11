@@ -1,0 +1,288 @@
+.div {
+    width: 358px;
+    position: relative;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+}
+.div1 {
+    width: 358px;
+    position: relative;
+    font-size: 14px;
+    color: #aeaeae;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.parent {
+    align-self: stretch;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 24px;
+    z-index: 0;
+    font-size: 24px;
+    padding: 0 16px;
+}
+.div2 {
+    width: 53px;
+    position: relative;
+    font-weight: 600;
+    display: inline-block;
+}
+.frameChild {
+    position: absolute;
+    top: calc(50% - 21.5px);
+    left: calc(50% - 22.5px);
+    width: 46px;
+    height: 46px;
+    object-fit: cover;
+    opacity: 0.3;
+}
+.frameItem {
+    position: absolute;
+    top: calc(50% - 18.5px);
+    left: calc(50% - 13.5px);
+    width: 32px;
+    height: 32px;
+    object-fit: cover;
+}
+.instanceParent {
+    width: 47px;
+    position: relative;
+    height: 43px;
+}
+.div3 {
+    width: 67px;
+    position: relative;
+    font-size: 14px;
+    font-weight: 600;
+    display: inline-block;
+}
+.everyDarErning {
+    flex: 1;
+    border-radius: 14px;
+    background-color: #292929;
+    border: 1px solid #c6d101;
+    box-sizing: border-box;
+    height: 103px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+    padding: 8px 4px;
+}
+.everyDarErning1 {
+    flex: 1;
+    border-radius: 14px;
+    background-color: #292929;
+    border: 1px solid #c6d101;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 8px 4px;
+    gap: 6px;
+    opacity: 0.5;
+}
+.everyDarErningParent {
+    width: 100%;
+    overflow: hidden;
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+    justify-content: flex-start;
+    gap: 24px;
+    overflow-x: auto;
+}
+.earmMainInner {
+    align-self: stretch;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: flex-start;
+    z-index: 1;
+    font-size: 12px;
+    
+}
+.div18 {
+    position: relative;
+    font-weight: 600;
+}
+.button {
+    align-self: stretch;
+    border-radius: 12px;
+    background-color: #c6d101;
+    overflow: hidden;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    padding: 12px 122px;
+    z-index: 2;
+    color: #0c0c0c;
+}
+.div19 {
+    width: 358px;
+    position: relative;
+    letter-spacing: 0.6px;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+}
+.actionsheedImageIcon {
+    width: 42px;
+    position: relative;
+    border-radius: 5.04px;
+    height: 42px;
+    overflow: hidden;
+    flex-shrink: 0;
+    object-fit: cover;
+}
+.div20 {
+    width: 253px;
+    position: relative;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+}
+.frameChild13 {
+    width: 16px;
+    position: relative;
+    height: 16px;
+    object-fit: cover;
+}
+.div21 {
+    width: 235px;
+    position: relative;
+    font-weight: 600;
+    display: inline-block;
+    flex-shrink: 0;
+}
+.instanceParent5 {
+    height: 18px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 2px;
+    color: #fff;
+}
+.container {
+    width: 253px;
+    height: 42px;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: center;
+    padding: 1px 0px;
+    box-sizing: border-box;
+    gap: 4px;
+}
+.actionsheedImageParent {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 24px;
+}
+.icon {
+    width: 32px;
+    position: relative;
+    height: 32px;
+}
+.everyDarErning8 {
+    align-self: stretch;
+    border-radius: 12px;
+    background-color: #292929;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    padding: 8px;
+    color: #aeaeae;
+}
+.group {
+    align-self: stretch;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: flex-start;
+    gap: 24px;
+    z-index: 3;
+    text-align: left;
+}
+.div22 {
+    width: 358px;
+    position: relative;
+    letter-spacing: 0.6px;
+    font-weight: 600;
+    color: #fff;
+    display: flex;
+    align-items: center;
+}
+.everyDarErning9 {
+    align-self: stretch;
+    border-radius: 12px;
+    background-color: #292929;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    padding: 8px;
+}
+.parent1 {
+    align-self: stretch;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: flex-start;
+    gap: 24px;
+    z-index: 4;
+    text-align: left;
+    color: #aeaeae;
+}
+.iphoneXhomeIndicatorhomeIChild {
+    position: absolute;
+    bottom: 9px;
+    left: calc(50% - 66.5px);
+    border-radius: 100px;
+    background-color: rgba(174, 168, 178, 0.2);
+    width: 134px;
+    height: 5px;
+}
+.iphoneXhomeIndicatorhomeI {
+    width: 375px;
+    position: absolute;
+    margin: 0 !important;
+    top: 810px;
+    left: 7.5px;
+    height: 34px;
+    z-index: 5;
+}
+.earmMain {
+    width: 100%;
+    position: relative;
+    background-color: #191919;
+    height: 844px;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    box-sizing: border-box;
+    gap: 24px;
+    text-align: center;
+    font-size: 14px;
+    color: #fff;
+    font-family: Inter;
+}
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap');
+body {
+  	margin: 0; line-height: normal;
+    padding: 16px;
+}

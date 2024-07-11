@@ -19,7 +19,6 @@ function App() {
           headers: {
             'Content-Type': 'application/json',
           },
-          // Отправляем пустой объект, если данные пользователя Telegram недоступны
           body: JSON.stringify({ data: window.Telegram?.WebApp?.initDataUnsafe?.user || {} }),
         });
 

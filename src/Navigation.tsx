@@ -1,34 +1,34 @@
-import { FunctionComponent } from 'react';
-import { Link } from 'react-router-dom'; // Импортируем Link из react-router-dom
-import styles from './scss/Navigation.module.scss';
+import React, { FC } from 'react'; // Импортируем FC
+import { Link } from 'react-router-dom';
+import styles from './scss/NavigationBar.module.scss';
 
-import homeSvg from './img/Home.svg';
-import earnSvg from './img/Earn.svg';
-import friendsSvg from './img/Friends.svg';
-import airdropSvg from './img/Airdrop.svg';
-import mineSvg from './img/Mine.svg';
+import HomeIcon from './img/Home.svg';
+import MineIcon from './img/Mine.svg';
+import FriendsIcon from './img/Friends.svg';
+import EarnIcon from './img/Earn.svg';
+import AirdropIcon from './img/Airdrop.svg';
 
-const NavigationBar: FunctionComponent = () => {
+const NavigationBar: FC = () => {  // Используем FC вместо FunctionComponent
   return (
     <div className={styles.navigationbar}>
-      <Link to="/" className={styles.component11}> {/* Используем Link для перехода */}
-        <img className={styles.component11Child} alt="Home" src={homeSvg} />
+      <Link to="/" className={styles.component11}> 
+        <img className={styles.component11Child} alt="Home" src={HomeIcon} />
         <div className={styles.home}>Home</div>
       </Link>
-      <Link to="/mine" className={styles.frameParent}> {/* Используем Link для перехода */}
-        <img className={styles.component11Child} alt="Mine" src={mineSvg} />
+      <Link to="/mine" className={styles.frameParent}>
+        <img className={styles.component11Child} alt="Mine" src={MineIcon} />
         <div className={styles.home}>Mine</div>
       </Link>
-      <Link to="/friends" className={styles.frameParent}> {/* Используем Link для перехода */}
-        <img className={styles.component11Child} alt="Friends" src={friendsSvg} />
+      <Link to="/friends" className={styles.frameParent}>
+        <img className={styles.component11Child} alt="Friends" src={FriendsIcon} />
         <div className={styles.home}>Friends</div>
       </Link>
-      <Link to="/earn" className={styles.frameParent}> {/* Используем Link для перехода */}
-        <img className={styles.component11Child} alt="Earn" src={earnSvg} />
+      <Link to="/earn" className={styles.frameParent}>
+        <img className={styles.component11Child} alt="Earn" src={EarnIcon} />
         <div className={styles.home}>Earn</div>
       </Link>
-      <Link to="/airdrop" className={styles.frameParent}> {/* Используем Link для перехода */}
-        <img className={styles.component11Child} alt="Airdrop" src={airdropSvg} />
+      <Link to="/airdrop" className={styles.frameParent}>
+        <img className={styles.component11Child} alt="Airdrop" src={AirdropIcon} />
         <div className={styles.home}>Airdrop</div>
       </Link>
     </div>

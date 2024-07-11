@@ -1,7 +1,8 @@
 import React from 'react';
+import NavigationBar from './Navigation'; 
+
 import styles from './scss/HomeScreen.module.scss';
 import { ReactComponent as Frame122 } from './img/Frame 122.svg';
-import Navigation from './Navigation';
 import { ReactComponent as IconPoints } from './img/Icon.svg';
 import { ReactComponent as IconFollowers } from './img/Icon3.svg';
 import { ReactComponent as IconSkuff } from './img/Icon2.svg';
@@ -95,14 +96,19 @@ const HomeScreen: React.FC = () => {
         <div className={styles.batarty}>
           <img className={styles.batartyChild} alt="Батарея" src={frame109} />
           <div className={styles.div6}>6500/7000</div>
-          <Navigation /> 
           </div>
+         
 
         </div>
+        <div className={styles.navigationContainer}> {/* Добавляем новый класс */}
+        <NavigationBar /> 
+      </div>  
       </div>
+     
     </div>
     
   );
+  
 };
 
 export default HomeScreen;
