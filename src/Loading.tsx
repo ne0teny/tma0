@@ -15,6 +15,7 @@ const Loading: FunctionComponent = () => {
     // Получаем данные пользователя
     const user = tg.initDataUnsafe.user;
 
+    // Обновляем имя пользователя в заголовке
     if (user) {
       const headerTitle = document.querySelector('.header-title');
       if (headerTitle) {
@@ -25,7 +26,7 @@ const Loading: FunctionComponent = () => {
 
       const sendUserData = async () => {
         try {
-          const response = await fetch('https://69cc-89-107-97-177.ngrok-free.app/user/create_user', {
+          const response = await fetch('https://your-vercel-app-url/webhook', {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json',
@@ -35,7 +36,7 @@ const Loading: FunctionComponent = () => {
 
           if (!response.ok) {
             if (response.status === 409) {
-              const loginResponse = await fetch('https://69cc-89-107-97-177.ngrok-free.app/user/login', {
+              const loginResponse = await fetch('https://your-vercel-app-url/login', {
                 method: 'POST',
                 headers: {
                   'Content-Type': 'application/json',
