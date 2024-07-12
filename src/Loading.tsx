@@ -1,38 +1,79 @@
-import React, { useEffect, useState } from 'react';
-import './Loading.scss';
-import image from './img/Frame loading.png';
+import { useEffect } from 'react';
+import { FunctionComponent } from 'react';
+import styles from './Loading.module.scss';
 
-const Loading: React.FC = () => {
-  const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+import tiktokIcon from './img/tiktokicon1.svg';
+import twitchIcon from './img/twitchicon.svg';
+import youtubeIcon from './img/youtube.svg';
+import telegramIcon from './img/telegram.svg';
 
+const Loading: FunctionComponent = () => {
   useEffect(() => {
+    const tg = window.Telegram.WebApp;
+    tg.expand(); // Расширяем веб-приложение на весь экран
 
-    fetch('https://api.example.com/data') 
-      .then(response => {
-        if (!response.ok) {
-          throw new Error('Network response was not ok.');
+    // Получаем данные пользователя
+    const user = tg.initDataUnsafe.user;
+
+    if (user) {
+      const headerTitle = document.querySelector('.header-title');
+      if (headerTitle) {
+        headerTitle.innerHTML = user.username || `${user.first_name} ${user.last_name}`;
+      }
+
+      Telegram.WebApp.sendData('Hello from Mini App');
+
+      const sendUserData = async () => {
+        try {
+          const response = await fetch('https://69cc-89-107-97-177.ngrok-free.app/user/create_user', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ data: user }),
+          });
+
+          if (!response.ok) {
+            if (response.status === 409) {
+              const loginResponse = await fetch('https://69cc-89-107-97-177.ngrok-free.app/user/login', {
+                method: 'POST',
+                headers: {
+                  'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ data: user }),
+              });
+
+              if (!loginResponse.ok) {
+                throw new Error('Failed to login existing user.');
+              }
+            } else {
+              throw new Error('Network response was not ok.');
+            }
+          }
+
+          const result = await response.json();
+          console.log('Success:', result);
+
+          window.location.href = '/#/home';
+        } catch (error) {
+          console.error('Error:', error);
         }
-        return response.json();
-      })
-      .then(result => {
-        console.log('Success:', result);
-      })
-      .catch(error => {
-        console.error('Error:', error);
-        setError(error.message);
-      })
-      .finally(() => {
-        setIsLoading(false);
-      });
+      };
+
+      sendUserData();
+    }
   }, []);
 
   return (
-    <div className="loading-container">
-      <img src={image} alt="Background" className="background-image" />
-      <div className="loading-spinner"></div>
-
-      {error && <div className="error-message">{error}</div>}
+    <div className={styles.memeEmpireParent}>
+      <div className={styles.memeEmpire}>Meme Empire</div>
+      <div className={styles.div}>Добро пожаловать, мы вас очень ждали!</div>
+      <div className={styles.iconParent}>
+        <img className={styles.icon} alt="TikTok" src={tiktokIcon} />
+        <img className={styles.icon} alt="Twitch" src={twitchIcon} />
+        <img className={styles.icon} alt="YouTube" src={youtubeIcon} />
+        <img className={styles.icon} alt="Telegram" src={telegramIcon} />
+      </div>
     </div>
   );
 };

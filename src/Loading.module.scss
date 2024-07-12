@@ -1,0 +1,53 @@
+
+.memeEmpire {
+  position: absolute;
+  top: 532px;
+  left: calc(50% - 113px);
+  font-weight: 600;
+}
+.div {
+  position: absolute;
+  top: 587px;
+  left: calc(50% - 101px);
+  font-size: 14px;
+  color: #aeaeae;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 202px;
+}
+.icon {
+  width: 32px;
+  position: relative;
+  height: 32px;
+}
+.iconParent {
+  position: absolute;
+  top: 665px;
+  left: calc(50% - 88px);
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 16px;
+}
+
+.memeEmpireParent {
+  width: 100%;
+  position: relative;
+  height: 753px;
+  overflow: hidden;
+  background-image: url('./Loading1.png'); 
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: top;
+  text-align: center;
+  font-size: 34px;
+  color: #fff;
+  font-family: Inter;
+}
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap');
+body {
+  	margin: 0; line-height: normal;
+}
