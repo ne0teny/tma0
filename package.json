@@ -1,5 +1,5 @@
 {
-  "homepage": "https://ne0teny.github.io/tma-project",
+  "homepage": ".",
   "name": "my-tma-app",
   "version": "0.1.0",
   "private": true,
@@ -52,6 +52,7 @@
     ]
   },
   "devDependencies": {
+    "@babel/plugin-proposal-private-property-in-object": "^7.21.11",
     "@svgr/webpack": "^8.1.0",
     "@types/telegram-web-app": "^7.3.1",
     "gh-pages": "^6.1.1",

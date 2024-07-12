@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import { HashRouter, Routes, Route } from 'react-router-dom';
 import './App.css';
 import Main from './Homescreen';
 
@@ -7,6 +6,8 @@ import Earn from './Earn';
 
 import Loading from './Loading';
 import WebApp from '@twa-dev/sdk';
+import { Routes, Route } from 'react-router-dom';
+
 
 WebApp.ready();
 

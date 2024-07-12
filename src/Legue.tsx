@@ -1,12 +1,10 @@
 import React from 'react';
 import styles from './TopSection.module.scss';
 
-// Импорт SVG и PNG изображений
 import { ReactComponent as CaretLeftIcon } from './assets/CaretLeft.svg';
 import { ReactComponent as CaretRightIcon } from './assets/CaretRight.svg';
 import { ReactComponent as Frame122Icon } from './assets/Frame 122.svg';
 import { ReactComponent as Frame201Icon } from './assets/Frame 201.svg';
-import { ReactComponent as Frame62Icon } from './assets/Frame 62.svg';
 
 import ActionSheetImage from './assets/ActionSheed image.png'; // PNG
 
