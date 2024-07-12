@@ -6,6 +6,9 @@ import Main from './Homescreen';
 import Earn from './Earn';
 
 import Loading from './Loading';
+import WebApp from '@twa-dev/sdk';
+
+WebApp.ready();
 
 function App() {
   const [isLoading, setIsLoading] = useState(true);
