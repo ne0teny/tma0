@@ -3,14 +3,12 @@ import NavigationBar from './Navigation';
 
 import styles from './scss/HomeScreen.module.scss';
 import { ReactComponent as Frame122 } from './img/Frame 122.svg';
-import { ReactComponent as IconPoints } from './img/Icon.svg';
 import { ReactComponent as IconFollowers } from './img/Icon3.svg';
 import { ReactComponent as IconSkuff } from './img/Icon2.svg';
 import { ReactComponent as IconProfile } from './img/Icon4.svg';
 
 import { ReactComponent as Component13 } from './img/Component 13.svg'; 
 import { ReactComponent as AdditionalInfo } from './img/Additional Info.svg';
-import { ReactComponent as FrameIcon } from './img/Frame 170.svg';
 import frame109 from './img/Frame 109.svg';
 import avatar from './img/Avatar.png';
 import imageКубок from './img/image кубок.png';
