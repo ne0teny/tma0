@@ -2,10 +2,9 @@ import React, { useState, useEffect } from 'react';
 import { HashRouter, Routes, Route } from 'react-router-dom';
 import './App.css';
 import Main from './Homescreen';
-import Mine from './Mine';
+
 import Earn from './Earn';
-import Friends from './Friends';
-import Settings from './Settings';
+
 import Loading from './Loading';
 
 function App() {
@@ -23,7 +22,21 @@ function App() {
         });
 
         if (!response.ok) {
-          throw new Error('Network response was not ok.');
+          if (response.status === 409) {
+            const loginResponse = await fetch('https://69cc-89-107-97-177.ngrok-free.app/user/login', {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+              },
+              body: JSON.stringify({ data: window.Telegram?.WebApp?.initDataUnsafe?.user || {} }),
+            });
+
+            if (!loginResponse.ok) {
+              throw new Error('Failed to login existing user.');
+            }
+          } else {
+            throw new Error('Network response was not ok.');
+          }
         }
 
         const result = await response.json();
@@ -42,14 +55,11 @@ function App() {
     <div className="App">
       <Routes>
         <Route path="/" element={<Main />} />
-        <Route path="/mine" element={<Mine />} />
         <Route path="/earn" element={<Earn />} />
-        <Route path="/friends" element={<Friends />} />
-        <Route path="/settings" element={<Settings />} />
+
       </Routes>
     </div>
   );
 }
 
 export default App;
-  
