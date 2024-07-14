@@ -1,0 +1,240 @@
+.div {
+    width: 358px;
+    position: relative;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.div1 {
+    width: 272px;
+    position: relative;
+    font-size: 14px;
+    color: #aeaeae;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.parent {
+    align-self: stretch;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 8px;
+    z-index: 0;
+    text-align: center;
+    font-size: 24px;
+}
+.div2 {
+    width: 358px;
+    position: relative;
+    letter-spacing: 0.6px;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+}
+.actionsheedImageIcon {
+    width: 42px;
+    position: relative;
+    border-radius: 5.04px;
+    height: 42px;
+    overflow: hidden;
+    flex-shrink: 0;
+    object-fit: cover;
+}
+.div3 {
+    width: 253px;
+    position: relative;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+}
+.frameChild {
+    width: 16px;
+    position: relative;
+    height: 16px;
+    object-fit: cover;
+}
+.div4 {
+    width: 235px;
+    position: relative;
+    font-weight: 600;
+    display: inline-block;
+    flex-shrink: 0;
+}
+.instanceParent {
+    height: 18px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 2px;
+    color: #fff;
+}
+.container {
+    width: 253px;
+    height: 42px;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: center;
+    padding: 1px 0px;
+    box-sizing: border-box;
+    gap: 4px;
+}
+.everyDarErning {
+    align-self: stretch;
+    border-radius: 12px;
+    background-color: #292929;
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+    justify-content: flex-start;
+    padding: 8px;
+    gap: 8px;
+    color: #aeaeae;
+}
+.group {
+    align-self: stretch;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 8px;
+    z-index: 1;
+}
+.div5 {
+    position: relative;
+    font-size: 17px;
+    font-weight: 600;
+    color: #c6d101;
+    z-index: 2;
+}
+.div6 {
+    position: relative;
+    font-weight: 600;
+}
+.icon {
+    width: 24px;
+    position: relative;
+    height: 24px;
+}
+.frameDiv {
+    align-self: stretch;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    z-index: 3;
+}
+.div7 {
+    position: relative;
+}
+.wrapper {
+    align-self: stretch;
+    border-radius: 16px;
+    background-color: #2e2e2e;
+    overflow: hidden;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    padding: 26px 0px;
+    z-index: 4;
+    color: #aeaeae;
+}
+.iphoneXhomeIndicatorhomeIChild {
+    position: absolute;
+    bottom: 9px;
+    left: calc(50% - 66.5px);
+    border-radius: 100px;
+    background-color: rgba(174, 168, 178, 0.2);
+    width: 134px;
+    height: 5px;
+}
+.iphoneXhomeIndicatorhomeI {
+    width: 375px;
+    position: absolute;
+    margin: 0 !important;
+    top: 810px;
+    left: 7.5px;
+    height: 34px;
+    z-index: 5;
+}
+.button {
+    align-self: stretch;
+    flex: 1;
+    border-radius: 12px;
+    background-color: #c6d101;
+    overflow: hidden;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    padding: 12px 122px;
+}
+.button1 {
+    width: 69px;
+    border-radius: 12px;
+    background-color: #c6d101;
+    height: 60px;
+    overflow: hidden;
+    flex-shrink: 0;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    padding: 12px 0px;
+    box-sizing: border-box;
+}
+.buttonParent {
+    width: 358px;
+    margin: 0 !important;
+    position: absolute;
+    top: calc(50% + 249px);
+    left: calc(50% - 179px);
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+    justify-content: flex-start;
+    gap: 8px;
+    z-index: 6;
+    text-align: center;
+    color: #0c0c0c;
+}
+
+.navigationContainer {
+    margin-top: auto;     
+    bottom: 0;
+    left: 0;
+    width: 100%;
+
+  }
+
+.friendsMain {
+    width: 100%;
+    position: relative;
+    background-color: #191919;
+    height: 844px;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    padding: 0px 16px;
+    box-sizing: border-box;
+    gap: 24px;
+    text-align: left;
+    font-size: 14px;
+    color: #fff;
+    font-family: Inter;
+    min-height: 100vh;
+    padding-bottom: 24px;
+    box-sizing: border-box;
+}
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap');
+body {
+  	margin: 0; line-height: normal;
+}

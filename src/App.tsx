@@ -7,6 +7,7 @@ import Earn from './Earn';
 import Loading from './Loading';
 import WebApp from '@twa-dev/sdk';
 import { Routes, Route } from 'react-router-dom';
+import Friends from './Friends';
 
 
 WebApp.ready();
@@ -60,6 +61,7 @@ function App() {
       <Routes>
         <Route path="/" element={<Main />} />
         <Route path="/earn" element={<Earn />} />
+        <Route path="/friends" element={<Friends />} />
 
       </Routes>
     </div>

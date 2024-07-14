@@ -1,98 +1,81 @@
-import { FunctionComponent } from 'react';
+import { FunctionComponent, useRef, useState } from 'react';
 import styles from './scss/Earn.module.scss';
 import NavigationBar from './Navigation'; 
 
+import frame122 from './img/Frame 122.png';
+import actionSheedImage from './img/ActionSheed image.png';
+import iconSvg from './img/Icon.svg'; 
 
-import frame122 from './img/Frame 122.svg';
-import actionSheedImage from './img/ActionSheed image.svg';
-import iconSvg from './img/Icon.svg';
+const EarmMain: FunctionComponent = () => {
+  const scrollRef = useRef<HTMLDivElement>(null);
+  const [startX, setStartX] = useState(0);
 
-const EarnMain: FunctionComponent = () => {
+  const handleTouchStart = (event: React.TouchEvent) => {
+    setStartX(event.touches[0].clientX);
+  };
+
+  const handleTouchMove = (event: React.TouchEvent) => {
+    event.preventDefault();
+    if (!scrollRef.current) return;
+  
+    const currentX = event.touches[0].clientX;
+
+    
+    
+  
+    requestAnimationFrame(() => { 
+      const diffX = startX - currentX;
+      const scrollAmount = diffX * 0.5;
+      scrollRef.current!.scrollLeft += scrollAmount; 
+    });
+  };
+
   return (
-    <div className={styles.earnMain}>
+    <div className={styles.earmMain}>
       <div className={styles.parent}>
         <div className={styles.div}>Ежедневные награды</div>
-        <div className={styles.div1}>
-          Заходите каждый день без пропусков и вы сможете получить увеличенный бонус на следующий день! Иначе счетчик начнется заново
+        <div className={styles.div1}>Заходите каждый день без пропусков и вы сможете получить увеличенный бонус на следующий день! Иначе счетчик начнется заново</div>
+      </div>
+
+      <div 
+        className={styles.earmMainInner}
+        onTouchStart={handleTouchStart}
+        onTouchMove={handleTouchMove}
+      >
+        <div className={styles.everyDarErningParent} ref={scrollRef}>
+          {[...Array(7)].map((_, index) => ( 
+            <div className={index === 0 ? styles.everyDarErning : styles.everyDarErning1} key={index}> 
+              <div className={styles.div2}>День {index + 1}</div>
+              <div className={styles.instanceParent}>
+                <img className={styles.frameChild} alt="Награда за день" src={frame122} />
+                <img className={styles.frameItem} alt="Награда за день" src={frame122} />
+              </div>
+              <div className={styles.div3}>
+                {index === 0 ? 500 : (index === 1 || index === 2) ? 1000 : (index === 6 ? "5k" : "2,5k")}
+              </div>
+            </div>
+          ))}
         </div>
       </div>
-      <div className={styles.earnMainInner}>
-        <div className={styles.everyDarErningParent}>
-          <div className={styles.everyDarErning}>
-            <div className={styles.div2}>День 1</div>
-            <div className={styles.instanceParent}>
-              <img className={styles.frameChild} alt="" src={frame122} />
-              <img className={styles.frameItem} alt="" src={frame122} />
-            </div>
-            <div className={styles.div3}>500</div>
-          </div>
-          <div className={styles.everyDarErning1}>
-            <div className={styles.div2}>День 2</div>
-            <div className={styles.instanceParent}>
-              <img className={styles.frameChild} alt="" src={frame122} />
-              <img className={styles.frameItem} alt="" src={frame122} />
-            </div>
-            <div className={styles.div3}>1000</div>
-          </div>
-          <div className={styles.everyDarErning1}>
-            <div className={styles.div2}>День 3</div>
-            <div className={styles.instanceParent}>
-              <img className={styles.frameChild} alt="" src={frame122} />
-              <img className={styles.frameItem} alt="" src={frame122} />
-            </div>
-            <div className={styles.div3}>2,5к</div>
-          </div>
-          <div className={styles.everyDarErning1}>
-            <div className={styles.div2}>День 4</div>
-            <div className={styles.instanceParent}>
-              <img className={styles.frameChild} alt="" src={frame122} />
-              <img className={styles.frameItem} alt="" src={frame122} />
-            </div>
-            <div className={styles.div3}>5к</div>
-          </div>
-          <div className={styles.everyDarErning1}>
-            <div className={styles.div2}>День 5</div>
-            <div className={styles.instanceParent}>
-              <img className={styles.frameChild} alt="" src={frame122} />
-              <img className={styles.frameItem} alt="" src={frame122} />
-            </div>
-            <div className={styles.div3}>10к</div>
-          </div>
-          <div className={styles.everyDarErning1}>
-            <div className={styles.div2}>День 6</div>
-            <div className={styles.instanceParent}>
-              <img className={styles.frameChild} alt="" src={frame122} />
-              <img className={styles.frameItem} alt="" src={frame122} />
-            </div>
-            <div className={styles.div3}>25к</div>
-          </div>
-          <div className={styles.everyDarErning1}>
-            <div className={styles.div2}>День 7</div>
-            <div className={styles.instanceParent}>
-              <img className={styles.frameChild} alt="" src={frame122} />
-              <img className={styles.frameItem} alt="" src={frame122} />
-            </div>
-            <div className={styles.div3}>50к</div>
-          </div>
-        </div>
-      </div>
+
       <div className={styles.button}>
         <div className={styles.div18}>Получить</div>
       </div>
+
       <div className={styles.group}>
         <div className={styles.div19}>Подпишись на тик ток</div>
         <div className={styles.everyDarErning8}>
           <div className={styles.actionsheedImageParent}>
-            <img className={styles.actionsheedImageIcon} alt="" src={actionSheedImage} />
+            <img className={styles.actionsheedImageIcon} alt="ТикТок" src={actionSheedImage} />
             <div className={styles.container}>
               <div className={styles.div20}>Обновления и новости</div>
               <div className={styles.instanceParent5}>
-                <img className={styles.frameChild13} alt="" src={frame122} />
+                <img className={styles.frameChild13} alt="Подписчики" src={frame122} />
                 <div className={styles.div21}>+580 000</div>
               </div>
             </div>
           </div>
-          <img className={styles.icon} alt="" src={iconSvg} />
+          <img className={styles.icon} alt="Стрелка" src={iconSvg} />
         </div>
       </div>
 
@@ -100,44 +83,39 @@ const EarnMain: FunctionComponent = () => {
         <div className={styles.div22}>Подпишись на тик ток</div>
         <div className={styles.everyDarErning9}>
           <div className={styles.actionsheedImageParent}>
-            <img className={styles.actionsheedImageIcon} alt="" src={actionSheedImage} />
+            <img className={styles.actionsheedImageIcon} alt="ТикТок" src={actionSheedImage} />
             <div className={styles.container}>
               <div className={styles.div20}>Обновления и новости</div>
               <div className={styles.instanceParent5}>
-                <img className={styles.frameChild13} alt="" src={frame122} />
+                <img className={styles.frameChild13} alt="Подписчики" src={frame122} />
                 <div className={styles.div21}>+580 000</div>
               </div>
             </div>
           </div>
-          <img className={styles.icon} alt="" src={iconSvg} />
+          <img className={styles.icon} alt="Стрелка" src={iconSvg} />
         </div>
         <div className={styles.everyDarErning9}>
           <div className={styles.actionsheedImageParent}>
-            <img className={styles.actionsheedImageIcon} alt="" src={actionSheedImage} />
+            <img className={styles.actionsheedImageIcon} alt="ТикТок" src={actionSheedImage} />
             <div className={styles.container}>
               <div className={styles.div20}>Обновления и новости</div>
               <div className={styles.instanceParent5}>
-                <img className={styles.frameChild13} alt="" src={frame122} />
+                <img className={styles.frameChild13} alt="Подписчики" src={frame122} />
                 <div className={styles.div21}>+580 000</div>
               </div>
             </div>
           </div>
-          <img className={styles.icon} alt="" src={iconSvg} />
+          <img className={styles.icon} alt="Стрелка" src={iconSvg} />
         </div>
- 
-
-        
-        <div className={styles.navigationContainer}> 
       </div>
-	    
-	
-	  </div>
-	  <div>
-	  <NavigationBar /> 
-      </div>  
+
+      <div className={styles.navigationContainer}>
+      <NavigationBar /> 
+     
+
+      </div>
     </div>
-	
   );
 };
 
-export default EarnMain;
+export default EarmMain;

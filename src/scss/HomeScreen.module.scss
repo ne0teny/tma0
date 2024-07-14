@@ -129,24 +129,8 @@
   width: 130px;
   height: 42px;
 }
-.topnavigationContent {
-  align-self: stretch;
-  position: relative;
-  height: 42px;
-  text-align: left;
-}
-.topnavigation {
-  width: 390px;
-  backdrop-filter: blur(20px);
-  background-color: #1c1c1e;
-  border-bottom: 0.5px solid rgba(60, 60, 67, 0.36);
-  box-sizing: border-box;
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  justify-content: flex-start;
-  gap: 2px;
-}
+
+
 .div {
   width: 91px;
   position: relative;
@@ -508,17 +492,11 @@
   padding: 4px 10px;
 }
 .navigationbar {
-  align-self: stretch;
-  border-radius: 16px;
-  background-color: #303030;
-  height: 63px;
-  display: flex;
-  flex-direction: row;
-  align-items: flex-start;
-  justify-content: flex-start;
-  padding: 4px;
-  box-sizing: border-box;
-  gap: 4px;
+  margin-top: auto;     
+  bottom: 0;
+  left: 0;
+  width: 100%;
+
 }
 .footerSection {
   align-self: stretch;
@@ -540,21 +518,60 @@
 }
 .homeScreen {
   width: 100%;
-  position: relative;
-  background-color: #191919;
-  height: 844px;
-  overflow: hidden;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: flex-start;
-  padding: 0px 16px;
-  box-sizing: border-box;
-  gap: 16px;
-  text-align: center;
-  font-size: 17px;
-  color: #fff;
-  font-family: Inter;
+    position: relative;
+    background-color: #191919;
+    height: 844px;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    padding: 0px 16px;
+    box-sizing: border-box;
+    gap: 24px;
+    text-align: left;
+    font-size: 14px;
+    color: #fff;
+    font-family: Inter;
+    min-height: 100vh;
+    padding-bottom: 24px;
+    box-sizing: border-box;
+
+    .additionalInfoIcon {
+      transition: transform 0.1s ease;
+    
+      &.clicking {
+        transform: scale(0.9);
+      }
+    }
+    
+    .clickAnimation {
+      position: absolute;
+      font-size: 20px;
+      color: white;
+      opacity: 0;
+      pointer-events: none; 
+      animation: clickAnimation 2s ease-out forwards; 
+    }
+    
+    @keyframes clickAnimation {
+      0% {
+        opacity: 0;
+        transform: translate(-50%, -50%) scale(1); 
+      }
+      20% {
+        opacity: 1; 
+      }
+      80% {
+        opacity: 1;
+        transform: translate(-50%, -100%) scale(1.2); 
+      }
+      100% {
+        opacity: 0;
+        transform: translate(-50%, -150%) scale(1.5); 
+      }
+    }
+  
 }
 
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap');
