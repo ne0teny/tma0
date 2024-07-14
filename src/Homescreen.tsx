@@ -31,6 +31,7 @@ const HomeScreen: React.FC = () => {
   const additionalInfoRef = useRef<SVGSVGElement>(null);
 
   useEffect(() => {
+    // Загрузка данных из localStorage с обработкой ошибок
     try {
       const storedBalance = localStorage.getItem('balance');
       const storedEnergy = localStorage.getItem('energy');
@@ -103,7 +104,7 @@ const HomeScreen: React.FC = () => {
       setClickAnimations((prevAnimations) =>
         prevAnimations.filter((animation) => Date.now() - animation.startTime < 1000)
       );
-    }, 100); // Проверяем каждые 100 мс
+    }, 100); 
 
     return () => clearInterval(intervalId);
   }, []);
