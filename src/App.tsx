@@ -11,7 +11,7 @@ function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   useEffect(() => {
-    WebApp.ready(); // Инициализируем Telegram Web App SDK
+    WebApp.ready(); 
 
     const sendData = async () => {
       const user = window.Telegram?.WebApp?.initDataUnsafe?.user || {};

@@ -31,7 +31,6 @@ const HomeScreen: React.FC = () => {
   const additionalInfoRef = useRef<SVGSVGElement>(null);
 
   useEffect(() => {
-    // Загрузка данных из localStorage с обработкой ошибок
     try {
       const storedBalance = localStorage.getItem('balance');
       const storedEnergy = localStorage.getItem('energy');
@@ -75,12 +74,29 @@ const HomeScreen: React.FC = () => {
     return () => clearInterval(intervalId);
   }, [balance, energy]);
 
-  const handleClick = () => {
+  const handleClick = (event: React.TouchEvent<HTMLDivElement>) => {
+    event.preventDefault();
+    const touches = event.touches;
+    for (let i = 0; i < touches.length; i++) {
+      const touch = touches[i];
+      // Явно указываем тип для target как HTMLElement или SVGElement
+      const targetElement = touch.target as HTMLElement | SVGElement;
+      const rect = targetElement.getBoundingClientRect();
+      const newAnimation: ClickAnimation = {
+        style: {
+          left: `${touch.clientX - rect.left}px`,
+          top: `${touch.clientY - rect.top}px`,
+        },
+        startTime: Date.now(),
+      };
+      setClickAnimations((prevAnimations) => [...prevAnimations, newAnimation]);
+    }
+  
     if (energy > 0) {
       setBalance(balance + clickValue);
       setEnergy(energy - 1);
       setIsClicking(true);
-
+  
       if (additionalInfoRef.current) {
         const rect = additionalInfoRef.current.getBoundingClientRect();
         const newAnimation: ClickAnimation = {
@@ -92,19 +108,20 @@ const HomeScreen: React.FC = () => {
         };
         setClickAnimations((prevAnimations) => [...prevAnimations, newAnimation]);
       }
-
+  
       setTimeout(() => {
         setIsClicking(false);
       }, 100);
     }
   };
+  
 
   useEffect(() => {
     const intervalId = setInterval(() => {
       setClickAnimations((prevAnimations) =>
         prevAnimations.filter((animation) => Date.now() - animation.startTime < 1000)
       );
-    }, 100); 
+    }, 100);
 
     return () => clearInterval(intervalId);
   }, []);
@@ -179,7 +196,7 @@ const HomeScreen: React.FC = () => {
         </div>
 
         <div className={styles.mainSection}>
-          <div className={styles.contentBlock} onClick={handleClick}>
+          <div className={`${styles.contentBlock} ${styles.touchable}`} onTouchStart={handleClick}>
             <div className={styles.highlightedInfo}>
               <Component13 className={styles.component13Icon} aria-label="Компонент 13" />
               <div className={styles.highlightedFigure}>{balance}</div>
@@ -215,4 +232,4 @@ const HomeScreen: React.FC = () => {
   );
 };
 
-export default HomeScreen
+export default HomeScreen;
