@@ -1,7 +1,7 @@
 import { FunctionComponent } from 'react';
 import styles from './scss/Airdrop.module.scss';
 
-import Image7 from './img/image7.png';
+import Image7 from './img/image 7.png';
 
 const Airdrop: FunctionComponent = () => {
   return (
