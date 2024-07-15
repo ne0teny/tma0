@@ -233,11 +233,12 @@ const MineCard: FunctionComponent = () => {
               </div>
             </div>
           </div>
-          <div className={styles.navigationContainer}>
+        
+        </div>
+        <div className={styles.navigationContainer}>
         <NavigationBar />
       </div>
-        </div>
-      </div>
+    </div>
     </div>
     
   );
