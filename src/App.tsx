@@ -56,7 +56,17 @@ function App() {
     sendData();
   }, []); 
 
-  return isLoading ? <Loading /> : (
+  // return isLoading ? <Loading /> : (
+  //   <div className="App">
+  //     <Routes>
+  //       <Route path="/" element={<Main />} />
+  //       <Route path="/earn" element={<Earn />} />
+  //       <Route path="/friends" element={<Friends />} />
+  //     </Routes>
+  //   </div>
+  // );
+
+  return (
     <div className="App">
       <Routes>
         <Route path="/" element={<Main />} />
