@@ -29,7 +29,7 @@ const HomeScreen: React.FC = () => {
   const clickValue = 1;
 
   const additionalInfoRef = useRef<SVGSVGElement>(null);
-  const contentBlockRef = useRef<HTMLDivElement>(null); // Ссылка на контейнер для обработки событий касания
+  const contentBlockRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     try {
@@ -98,19 +98,6 @@ const HomeScreen: React.FC = () => {
       setBalance(balance + clickValue);
       setEnergy(energy - 1);
       setIsClicking(true);
-
-      // Пример случайного расположения +1 при нажатии на дополнительную информацию
-      if (additionalInfoRef.current) {
-        const additionalInfoRect = additionalInfoRef.current.getBoundingClientRect();
-        const newAnimation: ClickAnimation = {
-          style: {
-            left: `${additionalInfoRect.left + Math.random() * additionalInfoRect.width}px`,
-            top: `${additionalInfoRect.top + Math.random() * additionalInfoRect.height}px`,
-          },
-          startTime: Date.now(),
-        };
-        setClickAnimations((prevAnimations) => [...prevAnimations, newAnimation]);
-      }
 
       setTimeout(() => {
         setIsClicking(false);
