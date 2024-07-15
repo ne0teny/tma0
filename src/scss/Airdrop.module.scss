@@ -1,0 +1,67 @@
+.iphoneXhomeIndicatorhomeIChild {
+    position: absolute;
+    bottom: 9px;
+    left: calc(50% - 66.5px);
+    border-radius: 100px;
+    background-color: rgba(174, 168, 178, 0.2);
+    width: 134px;
+    height: 5px;
+}
+.iphoneXhomeIndicatorhomeI {
+    width: 375px;
+    position: absolute;
+    margin: 0 !important;
+    top: 810px;
+    left: 7.5px;
+    height: 34px;
+    z-index: 0;
+}
+.image7Icon {
+    width: 106px;
+    position: relative;
+    height: 182.5px;
+    object-fit: cover;
+}
+.comingSoon {
+    width: 358px;
+    position: relative;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.image7Parent {
+    margin: 0 !important;
+    position: absolute;
+    top: calc(50% - 110px);
+    left: 16px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    z-index: 1;
+}
+.airdrop {
+    width: 100%;
+    position: relative;
+    background-color: #191919;
+    height: 844px;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    padding: 0px 16px;
+    box-sizing: border-box;
+    gap: 24px;
+    text-align: center;
+    font-size: 24px;
+    color: #fff;
+    font-family: Inter;
+}
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@600&display=swap');
+body {
+  	margin: 0; line-height: normal;
+}
