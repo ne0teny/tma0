@@ -27,7 +27,7 @@ function App() {
 
         console.log('Create user response:', response);
 
-        if (!response.ok) {
+        if (response.status !== 200) {
           if (response.status === 409) {
             console.log('User already exists, attempting to log in...');
             const loginResponse = await fetch('https://1ded-89-107-97-177.ngrok-free.app/user/login', {
