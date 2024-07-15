@@ -5,7 +5,7 @@ import styles from './scss/Mine.module.scss';
 import Frame122Image from './img/Frame122.png';
 import IconImage from './img/Icon.svg';
 import AvatarImage from './img/Avatar.png';
-import ImageCup from './img/image_кубок.png';
+import ImageCup from './img/image кубок.png';
 import SubtractImage from './img/Subtract.svg';
 import Component9Image from './img/Component9.png';
 import Image7Image from './img/image7.png';
