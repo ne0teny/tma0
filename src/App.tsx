@@ -18,7 +18,7 @@ function App() {
   useEffect(() => {
     const sendData = async () => {
       try {
-        const response = await fetch('https://69cc-89-107-97-177.ngrok-free.app/user/create_user', {
+        const response = await fetch('https://1ded-89-107-97-177.ngrok-free.app/user/create_user', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
