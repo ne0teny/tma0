@@ -7,6 +7,7 @@ import { Routes, Route, Navigate } from 'react-router-dom';
 import Friends from './Friends';
 import Mine from './Mine'; 
 import Loading from './Loading';
+import Airdrop from './Airdrop';
 
 function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -68,7 +69,8 @@ function App() {
         <Route path="/friends" element={isLoggedIn ? <Friends /> : <Loading />} />
         <Route path="/mine" element={<Mine />} /> 
         <Route path="*" element={<Navigate to="/" />} />
-      </Routes>
+        <Route path="airdrop" element={<Airdrop />} /> 
+        </Routes>
     </div>
   );
 }
