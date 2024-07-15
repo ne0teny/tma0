@@ -2,7 +2,7 @@ import { FunctionComponent } from 'react';
 import styles from './scss/Mine.module.scss';
 
 // Импорты изображений
-import Frame122Image from './img/Frame1 22.png';
+import Frame122Image from './img/Frame 122.png';
 import IconImage from './img/Icon.svg';
 import AvatarImage from './img/Avatar.png';
 import ImageCup from './img/image кубок.png';
