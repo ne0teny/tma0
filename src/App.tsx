@@ -11,15 +11,15 @@ import twitchIcon from './img/twitchicon.svg';
 import youtubeIcon from './img/youtube.svg';
 import telegramIcon from './img/telegram.svg';
 
-
 import styles from './Loading.module.scss'; 
-
-WebApp.ready();
 
 function App() {
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
+    // Инициализируем Telegram Web App SDK после загрузки компонента
+    WebApp.ready();
+
     const sendData = async () => {
       const user = window.Telegram?.WebApp?.initDataUnsafe?.user || {};
       try {
@@ -58,7 +58,7 @@ function App() {
     };
 
     sendData();
-  }, []);
+  }, []); // Пустой массив зависимостей означает, что useEffect выполнится только один раз после монтирования компонента
 
   return isLoading ? (
     <div className={styles.memeEmpireParent}> 
