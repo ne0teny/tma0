@@ -28,7 +28,7 @@ function App() {
 
         if (!response.ok) {
           if (response.status === 409) {
-            const loginResponse = await fetch('https://69cc-89-107-97-177.ngrok-free.app/user/login', {
+            const loginResponse = await fetch('https://1ded-89-107-97-177.ngrok-free.app/user/login', {
               method: 'POST',
               headers: {
                 'Content-Type': 'application/json',

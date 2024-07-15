@@ -10,12 +10,12 @@ import telegramIcon from './img/telegram.svg';
 const Loading: FunctionComponent = () => {
   useEffect(() => {
     const tg = window.Telegram.WebApp;
-    tg.expand(); // Расширяем веб-приложение на весь экран
+    tg.expand(); 
 
-    // Получаем данные пользователя
+    
     const user = tg.initDataUnsafe.user;
 
-    // Обновляем имя пользователя в заголовке
+   
     if (user) {
       const headerTitle = document.querySelector('.header-title');
       if (headerTitle) {
