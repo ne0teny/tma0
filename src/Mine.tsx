@@ -1,5 +1,5 @@
 import { FunctionComponent } from 'react';
-import styles from './img/Mine.module.scss';
+import styles from './scss/Mine.module.scss';
 
 // Импорты изображений
 import Frame122Image from './img/Frame122.png';
