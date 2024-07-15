@@ -12,7 +12,7 @@ const Loading: FunctionComponent = () => {
     const tg = window.Telegram.WebApp;
     tg.expand(); 
 
-    const user = tg.initDataUnsafe.user;
+    const user = tg.initDataUnsafe?.user;
 
     if (user) {
       const headerTitle = document.querySelector('.header-title');
@@ -45,15 +45,20 @@ const Loading: FunctionComponent = () => {
               if (!loginResponse.ok) {
                 throw new Error('Failed to login existing user.');
               }
+
+              const loginResult = await loginResponse.json();
+              console.log('Login success:', loginResult);
+
+              window.location.href = '/#/home';
             } else {
               throw new Error('Network response was not ok.');
             }
+          } else {
+            const createUserResult = await response.json();
+            console.log('User created successfully:', createUserResult);
+
+            window.location.href = '/#/home';
           }
-
-          const result = await response.json();
-          console.log('Success:', result);
-
-          window.location.href = '/#/home';
         } catch (error) {
           console.error('Error:', error);
         }
