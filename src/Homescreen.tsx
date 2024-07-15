@@ -79,7 +79,6 @@ const HomeScreen: React.FC = () => {
     event.preventDefault();
     const touches = event.touches;
 
-    // Определяем точный контейнер для расчета позиции +1
     const rect = contentBlockRef.current?.getBoundingClientRect();
 
     for (let i = 0; i < touches.length; i++) {
