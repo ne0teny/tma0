@@ -10,8 +10,9 @@ const Airdrop: FunctionComponent = () => {
       
       <div className={styles.image15Parent}>
         <img className={styles.image15Icon} alt="" src={Image15} />
-        <div className={styles.comingSoon}>Coming soon 🤍🤍🤍</div>
+     
       </div>
+      <div className={styles.comingSoon}>Coming soon 🤍🤍🤍</div> 
     </div>
   );
 };
