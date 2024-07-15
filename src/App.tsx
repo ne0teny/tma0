@@ -17,7 +17,7 @@ function App() {
       try {
         const user = window.Telegram?.WebApp?.initDataUnsafe?.user || {};
 
-        const response = await fetch('https://1ded-89-107-97-177.ngrok-free.app/user/create_user', {
+        const createUserResponse = await fetch('https://1ded-89-107-97-177.ngrok-free.app/user/create_user', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -25,43 +25,41 @@ function App() {
           body: JSON.stringify({ data: user }),
         });
 
-        console.log('Create user response:', response);
+        console.log('Create user response:', createUserResponse);
 
-        if (response.status !== 200) {
-          if (response.status === 409) {
-            console.log('User already exists, attempting to log in...');
-            const loginResponse = await fetch('https://1ded-89-107-97-177.ngrok-free.app/user/login', {
-              method: 'POST',
-              headers: {
-                'Content-Type': 'application/json',
-              },
-              body: JSON.stringify({ data: user }),
-            });
+        if (!createUserResponse.ok) {
+          const loginResponse = await fetch('https://1ded-89-107-97-177.ngrok-free.app/user/login', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ data: user }),
+          });
 
-            console.log('Login response:', loginResponse);
+          console.log('Login response:', loginResponse);
 
-            if (!loginResponse.ok) {
-              throw new Error('Failed to login existing user.');
-            }
+          if (!loginResponse.ok) { 
+            throw new Error('Failed to login existing user.'); 
+          } 
 
-            const loginResult = await loginResponse.json();
-            console.log('Login success:', loginResult);
-          } else {
-            throw new Error('Network response was not ok.');
-          }
-        } else {
-          const createUserResult = await response.json();
-          console.log('User created successfully:', createUserResult);
-        }
+         
+          const loginResult = await loginResponse.json();
+          console.log('Login success:', loginResult); 
+        } 
+
+       
+        const createUserResult = await createUserResponse.json();
+        console.log('User created successfully:', createUserResult); 
+
       } catch (error) {
         console.error('Error sending data:', error);
       } finally {
-        setIsLoading(false);
+        setIsLoading(false); 
       }
     };
 
     sendData();
-  }, []);
+  }, []); 
 
   return isLoading ? <Loading /> : (
     <div className="App">
