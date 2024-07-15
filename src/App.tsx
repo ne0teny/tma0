@@ -25,9 +25,11 @@ function App() {
           body: JSON.stringify({ data: user }),
         });
 
+        console.log('Create user response:', response);
+
         if (!response.ok) {
           if (response.status === 409) {
-            // Если пользователь уже существует, выполняем вход
+            console.log('User already exists, attempting to log in...');
             const loginResponse = await fetch('https://1ded-89-107-97-177.ngrok-free.app/user/login', {
               method: 'POST',
               headers: {
@@ -35,6 +37,8 @@ function App() {
               },
               body: JSON.stringify({ data: user }),
             });
+
+            console.log('Login response:', loginResponse);
 
             if (!loginResponse.ok) {
               throw new Error('Failed to login existing user.');
