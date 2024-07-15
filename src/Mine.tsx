@@ -1,5 +1,5 @@
 import { FunctionComponent } from 'react';
-import styles from './MineCard.module.css';
+import styles from './scss/Mine.module.scss';
 import AvatarImage from './Avatar.png';
 import Frame122Image from './Frame 122.png';
 import IconImage from './Icon.svg';
