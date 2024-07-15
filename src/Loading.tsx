@@ -12,10 +12,8 @@ const Loading: FunctionComponent = () => {
     const tg = window.Telegram.WebApp;
     tg.expand(); 
 
-    
     const user = tg.initDataUnsafe.user;
 
-   
     if (user) {
       const headerTitle = document.querySelector('.header-title');
       if (headerTitle) {
@@ -26,7 +24,7 @@ const Loading: FunctionComponent = () => {
 
       const sendUserData = async () => {
         try {
-          const response = await fetch('https://your-vercel-app-url/webhook', {
+          const response = await fetch('https://tma0-lokd.vercel.app/webhook', {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json',
@@ -36,7 +34,7 @@ const Loading: FunctionComponent = () => {
 
           if (!response.ok) {
             if (response.status === 409) {
-              const loginResponse = await fetch('https://your-vercel-app-url/login', {
+              const loginResponse = await fetch('https://tma0-lokd.vercel.app/login', {
                 method: 'POST',
                 headers: {
                   'Content-Type': 'application/json',
