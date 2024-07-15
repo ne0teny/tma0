@@ -1,7 +1,7 @@
 import { FunctionComponent } from 'react';
 import styles from './scss/Mine.module.scss';
 
-// Импорты изображений
+import NavigationBar from './Navigation';
 import Frame122Image from './img/Frame 122.png';
 import IconImage from './img/Icon.svg';
 import AvatarImage from './img/Avatar.png';
@@ -233,9 +233,13 @@ const MineCard: FunctionComponent = () => {
               </div>
             </div>
           </div>
+          <div className={styles.navigationContainer}>
+        <NavigationBar />
+      </div>
         </div>
       </div>
     </div>
+    
   );
 };
 
