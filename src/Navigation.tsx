@@ -7,10 +7,9 @@ import MineIcon from './img/Mine.svg';
 import FriendsIcon from './img/Friends.svg';
 import EarnIcon from './img/Earn.svg';
 import AirdropIcon from './img/Airdrop.svg';
-import Friends from './Friends'; 
 
 const NavigationBar: FC = () => {
-  const location = useLocation(); 
+  const location = useLocation();
 
   return (
     <div className={styles.navigationbar}>
@@ -18,13 +17,15 @@ const NavigationBar: FC = () => {
         <img className={styles.component11Child} alt="Home" src={HomeIcon} />
         <div className={styles.home}>Home</div>
       </Link>
+      <div> 
       <Link to="/mine" className={styles.frameParent}>
         <img className={styles.component11Child} alt="Mine" src={MineIcon} />
         <div className={styles.home}>Mine</div>
       </Link>
-      <Link 
-        to="/friends" 
-        className={`${styles.frameParent} ${location.pathname === '/friends' ? styles.active : ''}`} 
+      </div>
+      <Link
+        to="/friends"
+        className={`${styles.frameParent} ${location.pathname === '/friends' ? styles.active : ''}`}
       >
         <img className={styles.component11Child} alt="Friends" src={FriendsIcon} />
         <div className={styles.home}>Friends</div>
