@@ -29,6 +29,7 @@ const HomeScreen: React.FC = () => {
   const clickValue = 1;
 
   const additionalInfoRef = useRef<SVGSVGElement>(null);
+  const contentBlockRef = useRef<HTMLDivElement>(null); // Ссылка на контейнер для обработки событий касания
 
   useEffect(() => {
     try {
@@ -77,44 +78,45 @@ const HomeScreen: React.FC = () => {
   const handleClick = (event: React.TouchEvent<HTMLDivElement>) => {
     event.preventDefault();
     const touches = event.touches;
+
+    // Определяем точный контейнер для расчета позиции +1
+    const rect = contentBlockRef.current?.getBoundingClientRect();
+
     for (let i = 0; i < touches.length; i++) {
       const touch = touches[i];
-      // Явно указываем тип для target как HTMLElement или SVGElement
-      const targetElement = touch.target as HTMLElement | SVGElement;
-      const rect = targetElement.getBoundingClientRect();
       const newAnimation: ClickAnimation = {
         style: {
-          left: `${touch.clientX - rect.left}px`,
-          top: `${touch.clientY - rect.top}px`,
+          left: `${touch.clientX - (rect?.left ?? 0)}px`,
+          top: `${touch.clientY - (rect?.top ?? 0)}px`,
         },
         startTime: Date.now(),
       };
       setClickAnimations((prevAnimations) => [...prevAnimations, newAnimation]);
     }
-  
+
     if (energy > 0) {
       setBalance(balance + clickValue);
       setEnergy(energy - 1);
       setIsClicking(true);
-  
+
+      // Пример случайного расположения +1 при нажатии на дополнительную информацию
       if (additionalInfoRef.current) {
-        const rect = additionalInfoRef.current.getBoundingClientRect();
+        const additionalInfoRect = additionalInfoRef.current.getBoundingClientRect();
         const newAnimation: ClickAnimation = {
           style: {
-            left: `${rect.left + Math.random() * rect.width}px`,
-            top: `${rect.top + Math.random() * rect.height}px`,
+            left: `${additionalInfoRect.left + Math.random() * additionalInfoRect.width}px`,
+            top: `${additionalInfoRect.top + Math.random() * additionalInfoRect.height}px`,
           },
           startTime: Date.now(),
         };
         setClickAnimations((prevAnimations) => [...prevAnimations, newAnimation]);
       }
-  
+
       setTimeout(() => {
         setIsClicking(false);
       }, 100);
     }
   };
-  
 
   useEffect(() => {
     const intervalId = setInterval(() => {
@@ -196,7 +198,11 @@ const HomeScreen: React.FC = () => {
         </div>
 
         <div className={styles.mainSection}>
-          <div className={`${styles.contentBlock} ${styles.touchable}`} onTouchStart={handleClick}>
+          <div
+            ref={contentBlockRef}
+            className={`${styles.contentBlock} ${styles.touchable}`}
+            onTouchStart={handleClick}
+          >
             <div className={styles.highlightedInfo}>
               <Component13 className={styles.component13Icon} aria-label="Компонент 13" />
               <div className={styles.highlightedFigure}>{balance}</div>
