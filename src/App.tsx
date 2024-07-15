@@ -5,6 +5,7 @@ import Earn from './Earn';
 import WebApp from '@twa-dev/sdk';
 import { Routes, Route, Navigate } from 'react-router-dom';
 import Friends from './Friends';
+import Mine from './Mine'; 
 import Loading from './Loading';
 
 function App() {
@@ -27,7 +28,7 @@ function App() {
 
         console.log('Create user response:', response);
 
-        if (!response.ok) { // Проверяем на любой неуспешный статус (не только 200)
+        if (!response.ok) { 
           console.log('User already exists, attempting to log in...');
           const loginResponse = await fetch('https://1ded-89-107-97-177.ngrok-free.app/user/login_user', {
             method: 'POST',
@@ -45,7 +46,6 @@ function App() {
             setIsLoggedIn(true);
           } else {
             console.error('Login failed:', loginResponse.statusText);
-            // Здесь можно добавить обработку неудачного логина (например, сообщение об ошибке)
           }
         } else {
           const createUserResult = await response.json();
@@ -54,24 +54,22 @@ function App() {
         }
       } catch (error) {
         console.error('Error sending data:', error);
-        // Здесь можно добавить обработку ошибок сети или сервера
       }
     };
 
     sendData();
   }, []);
 
-  return isLoggedIn ? (
+  return (
     <div className="App">
       <Routes>
-        <Route path="/" element={<Homescreen />} />
-        <Route path="/earn" element={<Earn />} />
-        <Route path="/friends" element={<Friends />} />
-        <Route path="*" element={<Navigate to="/" />} /> 
+        <Route path="/" element={isLoggedIn ? <Homescreen /> : <Loading />} />
+        <Route path="/earn" element={isLoggedIn ? <Earn /> : <Loading />} />
+        <Route path="/friends" element={isLoggedIn ? <Friends /> : <Loading />} />
+        <Route path="/mine" element={<Mine />} /> 
+        <Route path="*" element={<Navigate to="/" />} />
       </Routes>
     </div>
-  ) : (
-    <Loading />
   );
 }
 

@@ -1,5 +1,5 @@
 import React, { FC } from 'react';
-import { Link, useLocation } from 'react-router-dom'; 
+import { Link, useLocation } from 'react-router-dom';
 import styles from './scss/NavigationBar.module.scss';
 
 import HomeIcon from './img/Home.svg';
@@ -17,11 +17,11 @@ const NavigationBar: FC = () => {
         <img className={styles.component11Child} alt="Home" src={HomeIcon} />
         <div className={styles.home}>Home</div>
       </Link>
-      <div> 
-      <Link to="/mine" className={styles.frameParent}>
-        <img className={styles.component11Child} alt="Mine" src={MineIcon} />
-        <div className={styles.home}>Mine</div>
-      </Link>
+      <div> {/* Обертка для Link */}
+        <Link to="/mine" className={styles.frameParent}>
+          <img className={styles.component11Child} alt="Mine" src={MineIcon} />
+          <div className={styles.home}>Mine</div>
+        </Link>
       </div>
       <Link
         to="/friends"
