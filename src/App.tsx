@@ -14,33 +14,34 @@ function App() {
 
   useEffect(() => {
     const sendData = async () => {
+      const user = window.Telegram?.WebApp?.initDataUnsafe?.user || {}; 
       try {
-        const user = window.Telegram?.WebApp?.initDataUnsafe?.user || {};
-
         const response = await fetch('https://1ded-89-107-97-177.ngrok-free.app/user/create_user', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
           },
-          body: JSON.stringify({ data: user }),
+          body: JSON.stringify({ data: user }), 
         });
 
         console.log('Create user response:', response);
 
         if (response.status !== 200) { 
+          
           console.log('User already exists, attempting to log in...');
           const loginResponse = await fetch('https://1ded-89-107-97-177.ngrok-free.app/user/login', {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json',
             },
-            body: JSON.stringify({ data: user }),
+            body: JSON.stringify({ data: user }), 
           });
 
           console.log('Login response:', loginResponse);
           const loginResult = await loginResponse.json();
           console.log('Login success:', loginResult); 
         } else {
+         
           const createUserResult = await response.json();
           console.log('User created successfully:', createUserResult);
         }
