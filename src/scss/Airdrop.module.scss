@@ -24,11 +24,11 @@
 }
 .comingSoon {
     width: 358px;
-    position: relative;
     font-weight: 600;
     display: flex;
     align-items: center;
     justify-content: center;
+    text-align: center; /* Центрирование текста */
 }
 .image7Parent {
     margin: 0 !important;
@@ -48,10 +48,10 @@
     background-color: #191919;
     height: 844px;
     overflow: hidden;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: flex-start;
+    display: flex; /* Flexbox для центрирования */
+    flex-direction: column; /* Вертикальное расположение */
+    align-items: center; /* Центрирование по горизонтали */
+    justify-content: center; /* Центрирование по вертикали */
     padding: 0px 16px;
     box-sizing: border-box;
     gap: 24px;
@@ -60,7 +60,7 @@
     color: #fff;
     font-family: Inter;
     min-height: 100vh;
-    padding-bottom: 24px; 
+    padding-bottom: 24px;
 }
 
 
@@ -76,3 +76,17 @@
 body {
   	margin: 0; line-height: normal;
 }
+
+.image15Parent {
+    display: flex; /* Flexbox для центрирования содержимого */
+    flex-direction: column;
+    align-items: center;
+  } 
+
+  .image15Icon {
+    width: 106px;
+    height: 182.5px;
+    object-fit: cover;
+  }
+
+  
