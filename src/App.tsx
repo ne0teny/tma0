@@ -29,7 +29,7 @@ function App() {
         if (response.status !== 200) { 
           
           console.log('User already exists, attempting to log in...');
-          const loginResponse = await fetch('https://1ded-89-107-97-177.ngrok-free.app/user/login', {
+          const loginResponse = await fetch('https://1ded-89-107-97-177.ngrok-free.app/user/login_user', {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json',
