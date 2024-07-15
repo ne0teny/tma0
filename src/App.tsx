@@ -1,27 +1,21 @@
-import React, { FunctionComponent, useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import './App.css';
-import Main from './Homescreen';
+import Homescreen from './Homescreen';
 import Earn from './Earn';
 import WebApp from '@twa-dev/sdk';
-import { Routes, Route } from 'react-router-dom';
+import { Routes, Route, Navigate } from 'react-router-dom';
 import Friends from './Friends';
-
-import tiktokIcon from './img/tiktokicon1.svg';
-import twitchIcon from './img/twitchicon.svg';
-import youtubeIcon from './img/youtube.svg';
-import telegramIcon from './img/telegram.svg';
-
-import styles from './Loading.module.scss'; 
+import Loading from './Loading';
 
 function App() {
-  const [isLoading, setIsLoading] = useState(true);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   useEffect(() => {
-    // Инициализируем Telegram Web App SDK после загрузки компонента
-    WebApp.ready();
+    WebApp.ready(); // Инициализируем Telegram Web App SDK
 
     const sendData = async () => {
       const user = window.Telegram?.WebApp?.initDataUnsafe?.user || {};
+
       try {
         const response = await fetch('https://1ded-89-107-97-177.ngrok-free.app/user/create_user', {
           method: 'POST',
@@ -33,7 +27,7 @@ function App() {
 
         console.log('Create user response:', response);
 
-        if (response.status !== 200) {
+        if (!response.ok) { // Проверяем на любой неуспешный статус (не только 200)
           console.log('User already exists, attempting to log in...');
           const loginResponse = await fetch('https://1ded-89-107-97-177.ngrok-free.app/user/login_user', {
             method: 'POST',
@@ -44,41 +38,40 @@ function App() {
           });
 
           console.log('Login response:', loginResponse);
-          const loginResult = await loginResponse.json();
-          console.log('Login success:', loginResult);
+
+          if (loginResponse.ok) {
+            const loginResult = await loginResponse.json();
+            console.log('Login success:', loginResult);
+            setIsLoggedIn(true);
+          } else {
+            console.error('Login failed:', loginResponse.statusText);
+            // Здесь можно добавить обработку неудачного логина (например, сообщение об ошибке)
+          }
         } else {
           const createUserResult = await response.json();
           console.log('User created successfully:', createUserResult);
+          setIsLoggedIn(true);
         }
       } catch (error) {
         console.error('Error sending data:', error);
-      } finally {
-        setIsLoading(false);
+        // Здесь можно добавить обработку ошибок сети или сервера
       }
     };
 
     sendData();
-  }, []); // Пустой массив зависимостей означает, что useEffect выполнится только один раз после монтирования компонента
+  }, []);
 
-  return isLoading ? (
-    <div className={styles.memeEmpireParent}> 
-      <div className={styles.memeEmpire}>Meme Empire</div>
-      <div className={styles.div}>Добро пожаловать, мы вас очень ждали!</div>
-      <div className={styles.iconParent}>
-        <img className={styles.icon} alt="TikTok" src={tiktokIcon} />
-        <img className={styles.icon} alt="Twitch" src={twitchIcon} />
-        <img className={styles.icon} alt="YouTube" src={youtubeIcon} />
-        <img className={styles.icon} alt="Telegram" src={telegramIcon} />
-      </div>
-    </div>
-  ) : (
+  return isLoggedIn ? (
     <div className="App">
       <Routes>
-        <Route path="/" element={<Main />} />
+        <Route path="/" element={<Homescreen />} />
         <Route path="/earn" element={<Earn />} />
         <Route path="/friends" element={<Friends />} />
+        <Route path="*" element={<Navigate to="/" />} /> 
       </Routes>
     </div>
+  ) : (
+    <Loading />
   );
 }
 
