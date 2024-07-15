@@ -24,7 +24,7 @@ const Loading: FunctionComponent = () => {
 
       const sendUserData = async () => {
         try {
-          const response = await fetch('https://tma0-lokd-ivutu66ee-ne0tenys-projects.vercel.app//webhook', {
+          const response = await fetch('https://telegramminiapp-seven.vercel.app/webhook', {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json',
@@ -34,7 +34,7 @@ const Loading: FunctionComponent = () => {
 
           if (!response.ok) {
             if (response.status === 409) {
-              const loginResponse = await fetch('https://tma0-lokd-ivutu66ee-ne0tenys-projects.vercel.app//login', {
+              const loginResponse = await fetch('https://telegramminiapp-seven.vercel.app/login', {
                 method: 'POST',
                 headers: {
                   'Content-Type': 'application/json',
