@@ -1,15 +1,15 @@
 import { FunctionComponent } from 'react';
 import styles from './scss/Mine.module.scss';
-import AvatarImage from './Avatar.png';
-import Frame122Image from './Frame 122.png';
-import IconImage from './Icon.svg';
-import SubtractImage from './Subtract.svg';
-import ImageКубокImage from './image кубок.png';
-import Image7Image from './image 7.png';
-import Component9Image from './Component 9.png';
-import Frame170Image from './Frame 170.svg';
-import Frame172Image from './Frame 172.svg';
-import Frame109Image from './Frame 109.svg';
+import AvatarImage from './img/Avatar.png';
+import Frame122Image from './img/Frame 122.png';
+import IconImage from './img/Icon.svg';
+import SubtractImage from './img/Subtract.svg';
+import ImageКубокImage from './img/image кубок.png';
+import Image7Image from './img/image 7.png';
+import Component9Image from './img/Component 9.png';
+import Frame170Image from './img/Frame 170.svg';
+import Frame172Image from './img/Frame 172.svg';
+import Frame109Image from './img/Frame 109.svg';
 import NavigationBar from './Navigation';
 
 
