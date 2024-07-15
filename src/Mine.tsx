@@ -2,13 +2,13 @@ import { FunctionComponent } from 'react';
 import styles from './scss/Mine.module.scss';
 
 // Импорты изображений
-import Frame122Image from './img/Frame122.png';
+import Frame122Image from './img/Frame1 22.png';
 import IconImage from './img/Icon.svg';
 import AvatarImage from './img/Avatar.png';
 import ImageCup from './img/image кубок.png';
 import SubtractImage from './img/Subtract.svg';
-import Component9Image from './img/Component9.png';
-import Image7Image from './img/image7.png';
+import Component9Image from './img/Component 9.png';
+import Image7Image from './img/image 7.png';
 
 const MineCard: FunctionComponent = () => {
   return (
