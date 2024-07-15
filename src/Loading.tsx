@@ -21,50 +21,6 @@ const Loading: FunctionComponent = () => {
       }
 
       Telegram.WebApp.sendData('Hello from Mini App');
-
-      const sendUserData = async () => {
-        try {
-          const response = await fetch('https://telegramminiapp-seven.vercel.app/webhook', {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({ data: user }),
-          });
-
-          if (!response.ok) {
-            if (response.status === 409) {
-              const loginResponse = await fetch('https://telegramminiapp-seven.vercel.app/login', {
-                method: 'POST',
-                headers: {
-                  'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({ data: user }),
-              });
-
-              if (!loginResponse.ok) {
-                throw new Error('Failed to login existing user.');
-              }
-
-              const loginResult = await loginResponse.json();
-              console.log('Login success:', loginResult);
-
-              window.location.href = '/#/home';
-            } else {
-              throw new Error('Network response was not ok.');
-            }
-          } else {
-            const createUserResult = await response.json();
-            console.log('User created successfully:', createUserResult);
-
-            window.location.href = '/#/home';
-          }
-        } catch (error) {
-          console.error('Error:', error);
-        }
-      };
-
-      sendUserData();
     }
   }, []);
 
