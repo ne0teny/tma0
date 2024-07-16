@@ -10,7 +10,7 @@ import telegramIcon from './img/telegram.svg';
 const Loading: FunctionComponent = () => {
   useEffect(() => {
     const tg = window.Telegram.WebApp;
-    tg.expand(); 
+    tg.expand();
 
     const user = tg.initDataUnsafe?.user;
 

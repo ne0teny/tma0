@@ -13,13 +13,13 @@ function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   useEffect(() => {
-    WebApp.ready(); 
+    WebApp.ready();
 
     const sendData = async () => {
       const user = window.Telegram?.WebApp?.initDataUnsafe?.user || {};
 
       try {
-        const response = await fetch('https://1ded-89-107-97-177.ngrok-free.app/user/create_user', {
+        const response = await fetch('http://localhost:8000/user/create_user', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -29,9 +29,9 @@ function App() {
 
         console.log('Create user response:', response);
 
-        if (!response.ok) { 
+        if (!response.ok) {
           console.log('User already exists, attempting to log in...');
-          const loginResponse = await fetch('https://1ded-89-107-97-177.ngrok-free.app/user/login_user', {
+          const loginResponse = await fetch('http://localhost:8000/user/login_user', {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json',
@@ -70,7 +70,7 @@ function App() {
         <Route path="/mine" element={<Mine />} /> 
         <Route path="*" element={<Navigate to="/" />} />
         <Route path="airdrop" element={<Airdrop />} /> 
-        </Routes>
+      </Routes>
     </div>
   );
 }
