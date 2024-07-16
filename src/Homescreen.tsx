@@ -11,6 +11,8 @@ import frame109 from './img/Frame 109.svg';
 import avatar from './img/Avatar.png';
 import imageКубок from './img/image кубок.png';
 
+const API_URL = 'https://5b44-89-107-97-177.ngrok-free.app'; 
+
 interface User {
   level: number;
   league: string;
@@ -27,8 +29,12 @@ interface ClickAnimation {
   startTime: number;
 }
 
-const HomeScreen: React.FC = () => {
-  const [user, setUser] = useState<User | null>(null);
+interface HomeScreenProps {
+  userData: User | null;
+}
+
+const HomeScreen: React.FC<HomeScreenProps> = ({ userData }) => {
+  const [user, setUser] = useState<User | null>(userData);
   const [isClicking, setIsClicking] = useState(false);
   const [clickAnimations, setClickAnimations] = useState<ClickAnimation[]>([]);
   const [energy, setEnergy] = useState(7000);
@@ -43,12 +49,15 @@ const HomeScreen: React.FC = () => {
   useEffect(() => {
     const fetchUserData = async () => {
       try {
-        const response = await fetch('https://1ded-89-107-97-177.ngrok-free.app/user/get_user_data', {
+        const response = await fetch(`${API_URL}/user/get_user_data`, {
           method: 'GET',
           headers: {
             'Content-Type': 'application/json',
           },
         });
+        if (!response.ok) {
+          throw new Error('Network response was not ok.');
+        }
         const userData = await response.json();
         setUser(userData);
         setEnergy(userData.energy);
@@ -57,8 +66,10 @@ const HomeScreen: React.FC = () => {
       }
     };
 
-    fetchUserData();
-  }, []);
+    if (!userData) {
+      fetchUserData(); 
+    }
+  }, [userData]);
 
   useEffect(() => {
     const intervalId = setInterval(() => {
@@ -197,7 +208,7 @@ const HomeScreen: React.FC = () => {
             onTouchStart={handleClick}
           >
             <div className={styles.highlightedInfo}>
-              <Component13 className={styles.component13Icon} aria-label="Компонент 13" />
+              <Component13 className={styles.component13Icon} aria-label="Компонент               13" />
               <div className={styles.highlightedFigure}>{currentUser.balance}</div>
             </div>
 
@@ -232,3 +243,4 @@ const HomeScreen: React.FC = () => {
 };
 
 export default HomeScreen;
+

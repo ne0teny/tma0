@@ -1,14 +1,59 @@
-import { FunctionComponent, useRef, useState } from 'react';
+import { FunctionComponent, useRef, useState, useEffect } from 'react';
 import styles from './scss/Earn.module.scss';
-import NavigationBar from './Navigation'; 
+import NavigationBar from './Navigation';
 
 import frame122 from './img/Frame 122.png';
 import actionSheedImage from './img/ActionSheed image.png';
 import iconSvg from './img/Icon.svg'; 
 
-const EarmMain: FunctionComponent = () => {
+const API_URL = 'https://5b44-89-107-97-177.ngrok-free.app';
+
+interface User {
+  id: number; 
+  level: number;
+  league: string;
+  balance: number;
+  income: number;
+  avatar: string;
+  name: string;
+  energy: number;
+  followers: number;
+}
+
+interface EarnProps {
+  userData: User | null;
+}
+
+const Earn: FunctionComponent<EarnProps> = ({ userData }) => {
   const scrollRef = useRef<HTMLDivElement>(null);
   const [startX, setStartX] = useState(0);
+  const [dailyRewards, setDailyRewards] = useState<number[]>([]);
+  const [claimedDays, setClaimedDays] = useState<number[]>([]);
+
+  useEffect(() => {
+    const fetchDailyRewards = async () => {
+      try {
+        if (userData) {
+          const response = await fetch(`${API_URL}/user/daily_rewards?user_id=${userData.id}`, { 
+            method: 'GET',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+          });
+          if (!response.ok) {
+            throw new Error('Network response was not ok.');
+          }
+          const data = await response.json();
+          setDailyRewards(data.rewards); 
+          setClaimedDays(data.claimed_days); 
+        }
+      } catch (error) {
+        console.error('Error fetching daily rewards:', error);
+        
+      }
+    };
+    fetchDailyRewards();
+  }, [userData]); 
 
   const handleTouchStart = (event: React.TouchEvent) => {
     setStartX(event.touches[0].clientX);
@@ -17,17 +62,38 @@ const EarmMain: FunctionComponent = () => {
   const handleTouchMove = (event: React.TouchEvent) => {
     event.preventDefault();
     if (!scrollRef.current) return;
-  
+
     const currentX = event.touches[0].clientX;
 
-    
-    
-  
-    requestAnimationFrame(() => { 
+    requestAnimationFrame(() => {
       const diffX = startX - currentX;
       const scrollAmount = diffX * 0.5;
-      scrollRef.current!.scrollLeft += scrollAmount; 
+      scrollRef.current!.scrollLeft += scrollAmount;
     });
+  };
+
+  const handleClaimReward = async (day: number) => {
+    try {
+      const response = await fetch(`${API_URL}/user/claim_daily_reward`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ day }),
+      });
+
+      if (!response.ok) {
+        throw new Error('Network response was not ok.');
+      }
+
+      
+      console.log('Reward claimed successfully!');
+      setClaimedDays([...claimedDays, day]);
+     
+    } catch (error) {
+      console.error('Error claiming reward:', error);
+     
+    }
   };
 
   return (
@@ -43,7 +109,7 @@ const EarmMain: FunctionComponent = () => {
         onTouchMove={handleTouchMove}
       >
         <div className={styles.everyDarErningParent} ref={scrollRef}>
-          {[...Array(7)].map((_, index) => ( 
+          {dailyRewards.map((reward, index) => ( 
             <div className={index === 0 ? styles.everyDarErning : styles.everyDarErning1} key={index}> 
               <div className={styles.div2}>День {index + 1}</div>
               <div className={styles.instanceParent}>
@@ -51,8 +117,14 @@ const EarmMain: FunctionComponent = () => {
                 <img className={styles.frameItem} alt="Награда за день" src={frame122} />
               </div>
               <div className={styles.div3}>
-                {index === 0 ? 500 : (index === 1 || index === 2) ? 1000 : (index === 6 ? "5k" : "2,5k")}
+                {reward}
               </div>
+              <button 
+                onClick={() => handleClaimReward(index + 1)}
+                disabled={claimedDays.includes(index + 1)} 
+              >
+                {claimedDays.includes(index + 1) ? 'Получено' : 'Получить'}
+              </button>
             </div>
           ))}
         </div>
@@ -110,12 +182,10 @@ const EarmMain: FunctionComponent = () => {
       </div>
 
       <div className={styles.navigationContainer}>
-      <NavigationBar /> 
-     
-
+        <NavigationBar /> 
       </div>
     </div>
   );
 };
 
-export default EarmMain;
+export default Earn;

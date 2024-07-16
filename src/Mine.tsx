@@ -1,7 +1,7 @@
-import { FunctionComponent } from 'react';
+import { FunctionComponent, useState, useEffect } from 'react';
 import styles from './scss/Mine.module.scss';
-
 import NavigationBar from './Navigation';
+
 import Frame122Image from './img/Frame 122.png';
 import IconImage from './img/Icon.svg';
 import AvatarImage from './img/Avatar.png';
@@ -10,7 +10,97 @@ import SubtractImage from './img/Subtract.svg';
 import Component9Image from './img/Component 9.png';
 import Image7Image from './img/image 7.png';
 
-const MineCard: FunctionComponent = () => {
+const API_URL = 'https://5b44-89-107-97-177.ngrok-free.app';
+
+interface User {
+  level: number;
+  league: string;
+  balance: number;
+  income: number;
+  avatar: string;
+  name: string;
+  energy: number;
+  followers: number;
+}
+
+interface Miner {
+  id: number;
+  name: string;
+  cost: number;
+  income: number;
+  level: number;
+  image: string; 
+}
+
+interface MineProps {
+  userData: User | null;
+}
+
+const Mine: FunctionComponent<MineProps> = ({ userData }) => {
+  const [miners, setMiners] = useState<Miner[]>([]);
+  const [ownedMiners, setOwnedMiners] = useState<Miner[]>([]);
+  const [selectedTab, setSelectedTab] = useState<'shop' | 'owned'>('shop'); 
+
+  useEffect(() => {
+    const fetchMiners = async () => {
+      try {
+        const response = await fetch(`${API_URL}/miners`);
+        if (!response.ok) {
+          throw new Error('Network response was not ok.');
+        }
+        const data = await response.json();
+        setMiners(data);
+      } catch (error) {
+        console.error('Error fetching miners:', error);
+      }
+    };
+
+    const fetchOwnedMiners = async () => {
+      if (userData) {
+        try {
+          const response = await fetch(`<span class="math-inline">\{API\_URL\}/user/miners?user\_id\=</span>{userData.id}`);
+          if (!response.ok) {
+            throw new Error('Network response was not ok.');
+          }
+          const data = await response.json();
+          setOwnedMiners(data);
+        } catch (error) {
+          console.error('Error fetching owned miners:', error);
+        }
+      }
+    };
+
+    fetchMiners();
+    fetchOwnedMiners();
+  }, [userData]); 
+
+  const handleBuyMiner = async (minerId: number) => {
+    if (!userData) {
+      // Обработка ситуации, когда пользователь не вошел в систему
+      return;
+    }
+
+    try {
+      const response = await fetch(`<span class="math-inline">\{API\_URL\}/user/buy\_miner/</span>{minerId}`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+
+      if (!response.ok) {
+        throw new Error('Network response was not ok.');
+      }
+
+      // Обработка успешной покупки майнера
+      console.log('Miner bought successfully!');
+      // Обновить данные пользователя и список ownedMiners
+    } catch (error) {
+      console.error('Error buying miner:', error);
+      // Обработка ошибки
+    }
+  };
+
   return (
     <div className={styles.mineCard}>
       <div className={styles.blockOfInfoParent}>
@@ -22,7 +112,7 @@ const MineCard: FunctionComponent = () => {
                   <div className={styles.div}>Поинты за час</div>
                   <div className={styles.instanceParent}>
                     <img className={styles.frameChild} alt="" src={Frame122Image} />
-                    <div className={styles.softSkill}>+580 000</div>
+                    <div className={styles.softSkill}>+{userData?.income || 0}</div>
                   </div>
                 </div>
               </div>
@@ -34,7 +124,7 @@ const MineCard: FunctionComponent = () => {
                   </div>
                   <div className={styles.instanceParent}>
                     <img className={styles.icon1} alt="" src={IconImage} />
-                    <div className={styles.softSkill}>580 000</div>
+                    <div className={styles.softSkill}>{userData?.followers || 0}</div>
                   </div>
                 </div>
               </div>
@@ -46,7 +136,7 @@ const MineCard: FunctionComponent = () => {
               <img className={styles.icon2} alt="" src={IconImage} />
             </div>
             <div className={styles.level89Parent}>
-              <div className={styles.level89}>level 8/9</div>
+              <div className={styles.level89}>level {userData?.level || 0}/{userData?.level || 0 + 1}</div> 
               <div className={styles.frameWrapper}>
                 <div className={styles.progressBarBackgroundWrapper}>
                   <div className={styles.progressBarBackground} />
@@ -57,10 +147,10 @@ const MineCard: FunctionComponent = () => {
         </div>
         <div className={styles.profileBlock}>
           <div className={styles.avatarParent}>
-            <img className={styles.avatarIcon} alt="" src={AvatarImage} />
+            <img className={styles.avatarIcon} alt="" src={userData?.avatar || AvatarImage} />
             <div className={styles.nameAndRunk}>
-              <div className={styles.namee}>Namee...</div>
-              <div className={styles.meme}>(meme)</div>
+              <div className={styles.namee}>{userData?.name || 'Namee...'}</div>
+              <div className={styles.meme}>{userData?.league || '(meme)'}</div>
             </div>
             <img className={styles.icon1} alt="" src={IconImage} />
           </div>
@@ -79,17 +169,42 @@ const MineCard: FunctionComponent = () => {
         </div>
       </div>
       <div className={styles.tapbarButtonParent}>
-        <div className={styles.tapbarButton}>
-          <div className={styles.softSkill}>{`S&H skills`}</div>
+        <div className={selectedTab === 'shop' ? styles.tapbarButtonActive : styles.tapbarButton} onClick={() => setSelectedTab('shop')}>
+          <div className={styles.softSkill}>Shop</div>
         </div>
-        <div className={styles.tapbarButton1}>
-          <div className={styles.div2}>Internet</div>
-        </div>
-        <div className={styles.tapbarButton1}>
-          <div className={styles.div2}>Special</div>
+        <div className={selectedTab === 'owned' ? styles.tapbarButtonActive : styles.tapbarButton} onClick={() => setSelectedTab('owned')}>
+          <div className={styles.div2}>Owned</div>
         </div>
       </div>
-      <div className={styles.div6}>
+
+      {selectedTab === 'shop' && (
+        <div className={styles.div6}> 
+          {miners.map((miner) => (
+            <div key={miner.id} className={styles.minerCard}>
+              <img src={miner.image} alt={miner.name} className={styles.minerImage} />
+              <div className={styles.minerName}>{miner.name}</div>
+              <div className={styles.minerCost}>Стоимость: {miner.cost}</div>
+              <div className={styles.minerIncome}>Доход: {miner.income} в час</div>
+              <button onClick={() => handleBuyMiner(miner.id)}>Купить</button>
+            </div>
+          ))}
+        </div>
+      )}
+
+      {selectedTab === 'owned' && (
+        <div className={styles.div6}> 
+          {ownedMiners.map((miner) => (
+            <div key={miner.id} className={styles.minerCard}>
+              <img src={miner.image} alt={miner.name} className={styles.minerImage} />
+              <div className={styles.minerName}>{miner.name}</div>
+              <div className={styles.minerCost}>Уровень: {miner.level}</div>
+              <div className={styles.minerIncome}>Доход: {miner.income} в час</div>
+            </div>
+          ))}
+        </div>
+      )}
+
+      <div       className={styles.div6}>
         <div className={styles.blockOfInfoParent}>
           <div className={styles.subtractParent}>
             <img className={styles.subtractIcon} alt="" src={SubtractImage} />
@@ -233,15 +348,11 @@ const MineCard: FunctionComponent = () => {
               </div>
             </div>
           </div>
-        
         </div>
-        <div className={styles.navigationContainer}>
-        <NavigationBar />
       </div>
     </div>
-    </div>
-    
   );
 };
 
-export default MineCard;
+export default Mine;
+
