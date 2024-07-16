@@ -23,10 +23,16 @@ interface User {
   followers: number;
 }
 
+interface ComponentProps {
+  userData: User | null;
+  token: string | null;
+  setUserData?: (userData: User | null) => void; // setUserData необязателен для некоторых компонентов
+}
+
 function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [userData, setUserData] = useState<User | null>(null);
-  const [token, setToken] = useState<string | null>(localStorage.getItem('token'));
+  const [userData, setUserData] = useState<User | null>(null); 
+  const [token, setToken] = useState<string | null>(localStorage.getItem('token')); 
 
   useEffect(() => {
     WebApp.ready();
@@ -80,9 +86,9 @@ function App() {
     <div className="App">
       <Routes>
         <Route path="/" element={isLoggedIn ? <Homescreen userData={userData} token={token} /> : <Loading />} />
-        <Route path="/earn" element={isLoggedIn ? <Earn userData={userData} token={token} setUserData={setUserData} /> : <Loading />} />
+        <Route path="/earn" element={isLoggedIn ? <Earn userData={userData} token={token} setUserData={setUserData} /> : <Loading />} /> 
         <Route path="/friends" element={isLoggedIn ? <Friends userData={userData} token={token} /> : <Loading />} />
-        <Route path="/mine" element={isLoggedIn ? <Mine userData={userData} token={token} setUserData={setUserData} /> : <Loading />} />
+        <Route path="/mine" element={isLoggedIn ? <Mine userData={userData} token={token} setUserData={setUserData} /> : <Loading />} /> 
         <Route path="*" element={<Navigate to="/" />} />
         <Route path="airdrop" element={isLoggedIn ? <Airdrop userData={userData} token={token} /> : <Loading />} />
       </Routes>

@@ -13,6 +13,13 @@ import imageКубок from './img/image кубок.png';
 
 const API_URL = 'https://5b44-89-107-97-177.ngrok-free.app'; 
 
+
+interface ComponentProps {
+  userData: User | null;
+  token: string | null;
+}
+
+interface HomeScreenProps extends ComponentProps {} 
 interface User {
   level: number;
   league: string;
@@ -55,12 +62,12 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ userData, token }) => {
           method: 'GET',
           headers: {
             'Content-Type': 'application/json',
-            'Authorization': `Bearer ${token}`, // Передаем токен в заголовке
+            'Authorization': `Bearer ${token}`, 
           },
         });
         if (!response.ok) {
           if (response.status === 401) {
-            // Токен недействителен, перенаправляем на страницу входа (логика перенаправления)
+        
             setError('Ошибка авторизации')
           } else {
             throw new Error('Network response was not ok.');
@@ -71,14 +78,14 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ userData, token }) => {
         setEnergy(userData.energy);
       } catch (error) {
         console.error('Error fetching user data:', error);
-        setError('Ошибка при загрузке данных пользователя'); // Устанавливаем сообщение об ошибке
+        setError('Ошибка при загрузке данных пользователя'); 
       }
     };
 
     if (!userData) {
       fetchUserData(); 
     }
-  }, [userData, token]); // Добавляем token в зависимости
+  }, [userData, token]); 
 
   useEffect(() => {
     const intervalId = setInterval(() => {
