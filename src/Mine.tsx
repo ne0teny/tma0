@@ -76,7 +76,6 @@ const Mine: FunctionComponent<MineProps> = ({ userData }) => {
 
   const handleBuyMiner = async (minerId: number) => {
     if (!userData) {
-      // Обработка ситуации, когда пользователь не вошел в систему
       return;
     }
 
@@ -92,12 +91,9 @@ const Mine: FunctionComponent<MineProps> = ({ userData }) => {
         throw new Error('Network response was not ok.');
       }
 
-      // Обработка успешной покупки майнера
       console.log('Miner bought successfully!');
-      // Обновить данные пользователя и список ownedMiners
     } catch (error) {
       console.error('Error buying miner:', error);
-      // Обработка ошибки
     }
   };
 

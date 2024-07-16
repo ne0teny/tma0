@@ -8,7 +8,7 @@ import actionsheedImage from './img/ActionSheed image.png';
 import frame122 from './img/Frame 122.png';
 import icon from './img/Icon.svg'; 
 
-const API_URL = 'https://1ded-89-107-97-177.ngrok-free.app';
+const API_URL = 'https://5b44-89-107-97-177.ngrok-free.app';
 
 interface User {
   id: number;
