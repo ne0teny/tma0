@@ -12,7 +12,7 @@ import Airdrop from './Airdrop';
 const API_URL = 'https://5b44-89-107-97-177.ngrok-free.app';
 
 interface User {
-  id: number; // Добавили id
+  id: number;
   level: number;
   league: string;
   balance: number;
@@ -25,12 +25,10 @@ interface User {
 
 function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [userData, setUserData] = useState<User | null>(null); 
-  const [token, setToken] = useState<string | null>(localStorage.getItem('token')); 
+  const [userData, setUserData] = useState<User | null>(null);
+  const [token, setToken] = useState<string | null>(localStorage.getItem('token'));
 
   useEffect(() => {
-
-
     WebApp.ready();
 
     const sendData = async () => {
@@ -57,9 +55,15 @@ function App() {
 
         if (response.ok) {
           const loginResult = await response.json();
-          setUserData(loginResult.user); // Сохраняем данные пользователя
-          setToken(loginResult.token); // Сохраняем токен
-          localStorage.setItem('token', loginResult.token); // Сохраняем токен в localStorage
+
+          const userWithId: User = {
+            id: loginResult.user_id,
+            ...loginResult.user,
+          };
+
+          setUserData(userWithId);
+          setToken(loginResult.token);
+          localStorage.setItem('token', loginResult.token);
           setIsLoggedIn(true);
         } else {
           console.error('Login or registration failed:', response.statusText);
@@ -76,9 +80,9 @@ function App() {
     <div className="App">
       <Routes>
         <Route path="/" element={isLoggedIn ? <Homescreen userData={userData} token={token} /> : <Loading />} />
-        <Route path="/earn" element={isLoggedIn ? <Earn userData={userData} token={token} setUserData={setUserData} /> : <Loading />} /> 
+        <Route path="/earn" element={isLoggedIn ? <Earn userData={userData} token={token} setUserData={setUserData} /> : <Loading />} />
         <Route path="/friends" element={isLoggedIn ? <Friends userData={userData} token={token} /> : <Loading />} />
-        <Route path="/mine" element={isLoggedIn ? <Mine userData={userData} token={token} setUserData={setUserData} /> : <Loading />} /> 
+        <Route path="/mine" element={isLoggedIn ? <Mine userData={userData} token={token} setUserData={setUserData} /> : <Loading />} />
         <Route path="*" element={<Navigate to="/" />} />
         <Route path="airdrop" element={isLoggedIn ? <Airdrop userData={userData} token={token} /> : <Loading />} />
       </Routes>
