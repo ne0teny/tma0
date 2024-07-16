@@ -19,6 +19,7 @@ interface User {
   avatar: string;
   name: string;
   energy: number;
+  followers: number;
 }
 
 interface ClickAnimation {
@@ -85,7 +86,9 @@ const HomeScreen: React.FC = () => {
     }
 
     if (energy > 0) {
-      setUser((prevUser) => (prevUser ? { ...prevUser, balance: prevUser.balance + clickValue } : prevUser));
+      setUser((prevUser) =>
+        prevUser ? { ...prevUser, balance: prevUser.balance + clickValue } : prevUser
+      );
       setEnergy(energy - 1);
       setIsClicking(true);
 
@@ -105,9 +108,18 @@ const HomeScreen: React.FC = () => {
     return () => clearInterval(intervalId);
   }, []);
 
-  if (!user) {
-    return <div>Loading...</div>;
-  }
+  const defaultUser: User = {
+    level: 1,
+    league: 'No league',
+    balance: 0,
+    income: 0,
+    avatar: avatar,
+    name: 'New User',
+    energy: 7000,
+    followers: 0,
+  };
+
+  const currentUser = user || defaultUser;
 
   return (
     <div>
@@ -121,7 +133,7 @@ const HomeScreen: React.FC = () => {
                     <div className={styles.div}>Поинты за час</div>
                     <div className={styles.instanceParent}>
                       <Frame122 className={styles.frameChild} aria-label="Иконка поинтов за час" />
-                      <div className={styles.highlightedFigure}>+580 000</div>
+                      <div className={styles.highlightedFigure}>+{currentUser.income}</div>
                     </div>
                   </div>
                 </div>
@@ -133,7 +145,7 @@ const HomeScreen: React.FC = () => {
                     </div>
                     <div className={styles.instanceParent}>
                       <IconFollowers className={styles.iconFollowers} aria-label="Иконка подписчиков" />
-                      <div className={styles.highlightedFigure}>580 000</div>
+                      <div className={styles.highlightedFigure}>{currentUser.followers}</div>
                     </div>
                   </div>
                 </div>
@@ -145,7 +157,7 @@ const HomeScreen: React.FC = () => {
                 <IconSkuff className={styles.iconSkuff} aria-label="Иконка Skuffolog" />
               </div>
               <div className={styles.level89Parent}>
-                <div className={styles.level89}>level {user.level}</div>
+                <div className={styles.level89}>level {currentUser.level}</div>
                 <div className={styles.frameWrapper}>
                   <div className={styles.progressBarBackgroundWrapper}>
                     <div className={styles.progressBarBackground} />
@@ -156,10 +168,10 @@ const HomeScreen: React.FC = () => {
           </div>
           <div className={styles.profileBlock}>
             <div className={styles.avatarParent}>
-              <img className={styles.avatarIcon} alt="Аватар пользователя" src={user.avatar || avatar} />
+              <img className={styles.avatarIcon} alt="Аватар пользователя" src={currentUser.avatar} />
               <div className={styles.nameAndRunk}>
-                <div className={styles.namee}>{user.name}</div>
-                <div className={styles.meme}>{user.league}</div>
+                <div className={styles.namee}>{currentUser.name}</div>
+                <div className={styles.meme}>{currentUser.league}</div>
               </div>
               <IconProfile className={styles.iconProfile} aria-label="Иконка профиля" />
             </div>
@@ -186,7 +198,7 @@ const HomeScreen: React.FC = () => {
           >
             <div className={styles.highlightedInfo}>
               <Component13 className={styles.component13Icon} aria-label="Компонент 13" />
-              <div className={styles.highlightedFigure}>{user.balance}</div>
+              <div className={styles.highlightedFigure}>{currentUser.balance}</div>
             </div>
 
             <AdditionalInfo
