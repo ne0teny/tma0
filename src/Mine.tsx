@@ -13,6 +13,7 @@ import Image7Image from './img/image 7.png';
 const API_URL = 'https://5b44-89-107-97-177.ngrok-free.app';
 
 interface User {
+  id: number;
   level: number;
   league: string;
   balance: number;
@@ -34,12 +35,15 @@ interface Miner {
 
 interface MineProps {
   userData: User | null;
+  token: string | null;
+  setUserData: (userData: User | null) => void;
 }
 
-const Mine: FunctionComponent<MineProps> = ({ userData }) => {
+const Mine: FunctionComponent<MineProps> = ({ userData, token, setUserData }) => {
   const [miners, setMiners] = useState<Miner[]>([]);
   const [ownedMiners, setOwnedMiners] = useState<Miner[]>([]);
   const [selectedTab, setSelectedTab] = useState<'shop' | 'owned'>('shop'); 
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     const fetchMiners = async () => {
@@ -56,9 +60,13 @@ const Mine: FunctionComponent<MineProps> = ({ userData }) => {
     };
 
     const fetchOwnedMiners = async () => {
-      if (userData) {
+      if (userData && token) { // Проверяем наличие userData и token
         try {
-          const response = await fetch(`<span class="math-inline">\{API\_URL\}/user/miners?user\_id\=</span>{userData.id}`);
+          const response = await fetch(`${API_URL}/user/miners?user_id=${userData.id}`, {
+            headers: {
+              'Authorization': `Bearer ${token}`
+            }
+          });
           if (!response.ok) {
             throw new Error('Network response was not ok.');
           }
@@ -72,18 +80,20 @@ const Mine: FunctionComponent<MineProps> = ({ userData }) => {
 
     fetchMiners();
     fetchOwnedMiners();
-  }, [userData]); 
+  }, [userData, token]); 
 
   const handleBuyMiner = async (minerId: number) => {
-    if (!userData) {
-      return;
+    if (!userData || !token) {
+        setError('Ошибка авторизации');
+        return;
     }
 
     try {
-      const response = await fetch(`<span class="math-inline">\{API\_URL\}/user/buy\_miner/</span>{minerId}`, {
+      const response = await fetch(`${API_URL}/user/buy_miner/${minerId}`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`, // Передаем токен в заголовке
         },
       });
 
@@ -91,9 +101,15 @@ const Mine: FunctionComponent<MineProps> = ({ userData }) => {
         throw new Error('Network response was not ok.');
       }
 
+      // Обработка успешной покупки майнера
       console.log('Miner bought successfully!');
+      // Обновить данные пользователя и список ownedMiners
+      const updatedUserData = await response.json();
+      setUserData(updatedUserData.user); // Обновляем данные пользователя
+      setOwnedMiners(updatedUserData.miners); // Обновляем список майнеров
     } catch (error) {
       console.error('Error buying miner:', error);
+      setError('Ошибка при покупке майнера'); // Устанавливаем сообщение об ошибке
     }
   };
 

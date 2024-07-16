@@ -18,6 +18,7 @@ interface User {
 
 interface AirdropProps {
   userData: User | null;
+  token: string | null;
 }
 
 const Airdrop: FunctionComponent<AirdropProps> = ({ userData }) => {

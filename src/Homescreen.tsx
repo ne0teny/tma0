@@ -31,9 +31,10 @@ interface ClickAnimation {
 
 interface HomeScreenProps {
   userData: User | null;
+  token: string | null; 
 }
 
-const HomeScreen: React.FC<HomeScreenProps> = ({ userData }) => {
+const HomeScreen: React.FC<HomeScreenProps> = ({ userData, token }) => {
   const [user, setUser] = useState<User | null>(userData);
   const [isClicking, setIsClicking] = useState(false);
   const [clickAnimations, setClickAnimations] = useState<ClickAnimation[]>([]);
@@ -42,6 +43,7 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ userData }) => {
   const energyRecoveryRate = 10;
   const energyRecoveryInterval = 60000;
   const clickValue = 1;
+  const [error, setError] = useState<string | null>(null);
 
   const additionalInfoRef = useRef<SVGSVGElement>(null);
   const contentBlockRef = useRef<HTMLDivElement>(null);
@@ -53,23 +55,30 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ userData }) => {
           method: 'GET',
           headers: {
             'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`, // Передаем токен в заголовке
           },
         });
         if (!response.ok) {
-          throw new Error('Network response was not ok.');
+          if (response.status === 401) {
+            // Токен недействителен, перенаправляем на страницу входа (логика перенаправления)
+            setError('Ошибка авторизации')
+          } else {
+            throw new Error('Network response was not ok.');
+          }
         }
         const userData = await response.json();
         setUser(userData);
         setEnergy(userData.energy);
       } catch (error) {
         console.error('Error fetching user data:', error);
+        setError('Ошибка при загрузке данных пользователя'); // Устанавливаем сообщение об ошибке
       }
     };
 
     if (!userData) {
       fetchUserData(); 
     }
-  }, [userData]);
+  }, [userData, token]); // Добавляем token в зависимости
 
   useEffect(() => {
     const intervalId = setInterval(() => {
@@ -132,6 +141,10 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ userData }) => {
 
   const currentUser = user || defaultUser;
 
+  if (error) {
+    return <div>{error}</div>;
+  }
+  
   return (
     <div>
       <div className={styles.homeScreen}>

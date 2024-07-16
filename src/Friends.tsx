@@ -31,9 +31,10 @@ interface Friend {
 
 interface FriendsMainProps {
   userData: User | null;
+  token: string | null;
 }
 
-const FriendsMain: FunctionComponent<FriendsMainProps> = ({ userData }) => {
+const FriendsMain: FunctionComponent<FriendsMainProps> = ({ userData, token }) => {
   const navigate = useNavigate();
   const [referralLink, setReferralLink] = useState<string | null>(null);
   const [invitedFriends, setInvitedFriends] = useState<Friend[]>([]);
@@ -57,9 +58,13 @@ const FriendsMain: FunctionComponent<FriendsMainProps> = ({ userData }) => {
 
   useEffect(() => {
     const fetchReferralLink = async () => {
-      if (userData) {
+      if (userData && token) { // Проверяем наличие userData и token
         try {
-          const response = await fetch(`${API_URL}/user/get_referral_link?user_id=${userData.id}`);
+          const response = await fetch(`${API_URL}/user/get_referral_link?user_id=${userData.id}`, {
+            headers: {
+              'Authorization': `Bearer ${token}`
+            }
+          });
           if (!response.ok) {
             throw new Error('Network response was not ok.');
           }
@@ -75,9 +80,13 @@ const FriendsMain: FunctionComponent<FriendsMainProps> = ({ userData }) => {
     };
 
     const fetchInvitedFriends = async () => {
-      if (userData) {
+      if (userData && token) { // Проверяем наличие userData и token
         try {
-          const response = await fetch(`${API_URL}/user/get_friends?user_id=${userData.id}`);
+          const response = await fetch(`${API_URL}/user/get_friends?user_id=${userData.id}`, {
+            headers: {
+              'Authorization': `Bearer ${token}`
+            }
+          });
           if (!response.ok) {
             throw new Error('Network response was not ok.');
           }
@@ -92,7 +101,7 @@ const FriendsMain: FunctionComponent<FriendsMainProps> = ({ userData }) => {
 
     fetchReferralLink();
     fetchInvitedFriends();
-  }, [userData]);
+  }, [userData, token]); // Добавляем token в зависимости
 
   useEffect(() => {
     const initMainButton = async () => {
@@ -101,7 +110,7 @@ const FriendsMain: FunctionComponent<FriendsMainProps> = ({ userData }) => {
         WebApp.MainButton.setText('Поделиться ссылкой');
         WebApp.MainButton.show();
 
-        WebApp.MainButton.onClick(handleInviteClick); // Используем handleInviteClick напрямую
+        WebApp.MainButton.onClick(handleInviteClick);
       }
     };
 
