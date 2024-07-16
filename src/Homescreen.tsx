@@ -1,17 +1,25 @@
 import React, { useState, useEffect, useRef } from 'react';
 import NavigationBar from './Navigation';
-
 import styles from './scss/HomeScreen.module.scss';
 import { ReactComponent as Frame122 } from './img/Frame 122.svg';
 import { ReactComponent as IconFollowers } from './img/Icon3.svg';
 import { ReactComponent as IconSkuff } from './img/Icon2.svg';
 import { ReactComponent as IconProfile } from './img/Icon4.svg';
-
 import { ReactComponent as Component13 } from './img/Component 13.svg';
 import { ReactComponent as AdditionalInfo } from './img/Additional Info.svg';
 import frame109 from './img/Frame 109.svg';
 import avatar from './img/Avatar.png';
 import imageКубок from './img/image кубок.png';
+
+interface User {
+  level: number;
+  league: string;
+  balance: number;
+  income: number;
+  avatar: string;
+  name: string;
+  energy: number;
+}
 
 interface ClickAnimation {
   style: React.CSSProperties;
@@ -19,7 +27,7 @@ interface ClickAnimation {
 }
 
 const HomeScreen: React.FC = () => {
-  const [balance, setBalance] = useState(0);
+  const [user, setUser] = useState<User | null>(null);
   const [isClicking, setIsClicking] = useState(false);
   const [clickAnimations, setClickAnimations] = useState<ClickAnimation[]>([]);
   const [energy, setEnergy] = useState(7000);
@@ -32,53 +40,36 @@ const HomeScreen: React.FC = () => {
   const contentBlockRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    try {
-      const storedBalance = localStorage.getItem('balance');
-      const storedEnergy = localStorage.getItem('energy');
-      const lastEnergyUpdateTime = localStorage.getItem('lastEnergyUpdateTime');
-
-      if (storedBalance) {
-        setBalance(parseInt(storedBalance, 10));
+    const fetchUserData = async () => {
+      try {
+        const response = await fetch('https://1ded-89-107-97-177.ngrok-free.app/user/get_user_data', {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        });
+        const userData = await response.json();
+        setUser(userData);
+        setEnergy(userData.energy);
+      } catch (error) {
+        console.error('Error fetching user data:', error);
       }
+    };
 
-      if (storedEnergy && lastEnergyUpdateTime) {
-        const currentTime = Date.now();
-        const timePassed = currentTime - parseInt(lastEnergyUpdateTime, 10);
-        const recoveredEnergy = Math.min(
-          Math.floor(timePassed / energyRecoveryInterval) * energyRecoveryRate,
-          maxEnergy - parseInt(storedEnergy, 10)
-        );
-        setEnergy(parseInt(storedEnergy, 10) + recoveredEnergy);
-      } else {
-        setEnergy(maxEnergy);
-      }
-    } catch (error) {
-      console.error('Error loading data from localStorage:', error);
-      setBalance(0);
-      setEnergy(maxEnergy);
-    }
+    fetchUserData();
   }, []);
 
   useEffect(() => {
-    try {
-      localStorage.setItem('balance', balance.toString());
-      localStorage.setItem('energy', energy.toString());
-      localStorage.setItem('lastEnergyUpdateTime', Date.now().toString());
-    } catch (error) {
-      console.error('Error saving data to localStorage:', error);
-    }
-
     const intervalId = setInterval(() => {
       setEnergy((prevEnergy) => Math.min(prevEnergy + energyRecoveryRate, maxEnergy));
     }, energyRecoveryInterval);
 
     return () => clearInterval(intervalId);
-  }, [balance, energy]);
+  }, [energy]);
 
   const handleClick = (event: React.TouchEvent<HTMLDivElement>) => {
     event.preventDefault();
     const touches = event.touches;
-
     const rect = contentBlockRef.current?.getBoundingClientRect();
 
     for (let i = 0; i < touches.length; i++) {
@@ -94,7 +85,7 @@ const HomeScreen: React.FC = () => {
     }
 
     if (energy > 0) {
-      setBalance(balance + clickValue);
+      setUser((prevUser) => (prevUser ? { ...prevUser, balance: prevUser.balance + clickValue } : prevUser));
       setEnergy(energy - 1);
       setIsClicking(true);
 
@@ -113,6 +104,10 @@ const HomeScreen: React.FC = () => {
 
     return () => clearInterval(intervalId);
   }, []);
+
+  if (!user) {
+    return <div>Loading...</div>;
+  }
 
   return (
     <div>
@@ -150,7 +145,7 @@ const HomeScreen: React.FC = () => {
                 <IconSkuff className={styles.iconSkuff} aria-label="Иконка Skuffolog" />
               </div>
               <div className={styles.level89Parent}>
-                <div className={styles.level89}>level 8/9</div>
+                <div className={styles.level89}>level {user.level}</div>
                 <div className={styles.frameWrapper}>
                   <div className={styles.progressBarBackgroundWrapper}>
                     <div className={styles.progressBarBackground} />
@@ -161,10 +156,10 @@ const HomeScreen: React.FC = () => {
           </div>
           <div className={styles.profileBlock}>
             <div className={styles.avatarParent}>
-              <img className={styles.avatarIcon} alt="Аватар пользователя" src={avatar} />
+              <img className={styles.avatarIcon} alt="Аватар пользователя" src={user.avatar || avatar} />
               <div className={styles.nameAndRunk}>
-                <div className={styles.namee}>Namee...</div>
-                <div className={styles.meme}>(meme)</div>
+                <div className={styles.namee}>{user.name}</div>
+                <div className={styles.meme}>{user.league}</div>
               </div>
               <IconProfile className={styles.iconProfile} aria-label="Иконка профиля" />
             </div>
@@ -191,7 +186,7 @@ const HomeScreen: React.FC = () => {
           >
             <div className={styles.highlightedInfo}>
               <Component13 className={styles.component13Icon} aria-label="Компонент 13" />
-              <div className={styles.highlightedFigure}>{balance}</div>
+              <div className={styles.highlightedFigure}>{user.balance}</div>
             </div>
 
             <AdditionalInfo
