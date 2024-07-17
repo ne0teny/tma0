@@ -52,13 +52,9 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ userData, token }) => {
   // Состояние для отслеживания заработанных поинтов в текущей сессии
   const [pointsGained, setPointsGained] = useState(0);
 
-  // Состояние для контроля отправки запроса при закрытии приложения
-  const [isAppClosing, setIsAppClosing] = useState(false);
-
-  // Оборачиваем updateBalanceOnServer в useCallback
   const updateBalanceOnServer = useCallback(async () => {
     try {
-      if (!user || !isAppClosing) return; // Отправляем запрос только при закрытии
+      if (!user) return;
 
       const response = await fetch(`${API_URL}/user/update_points`, {
         method: 'PATCH',
@@ -82,10 +78,8 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ userData, token }) => {
     } catch (error) {
       console.error('Ошибка обновления баланса на сервере:', error);
       setError('Ошибка сети. Проверьте подключение к интернету.');
-    } finally {
-      setIsAppClosing(false); // Сбрасываем флаг закрытия
     }
-  }, [isAppClosing, pointsGained, token, user]); // Зависимости useCallback
+  }, [pointsGained, token, user]);
 
   useEffect(() => {
     const fetchUserData = async () => {
@@ -109,7 +103,7 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ userData, token }) => {
         setEnergy(userData.energy);
 
         // Инициализируем pointsGained при получении данных пользователя
-        setPointsGained(userData.balance); 
+        setPointsGained(0);
       } catch (error) {
         console.error('Ошибка:', error);
         setError('Ошибка при загрузке данных пользователя');
@@ -121,14 +115,13 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ userData, token }) => {
     // Обработчик закрытия приложения
     const handleVisibilityChange = () => {
       if (document.visibilityState === 'hidden') {
-        setIsAppClosing(true); // Помечаем, что приложение закрывается
         updateBalanceOnServer(); // Отправляем запрос на обновление баланса
       }
     };
 
     document.addEventListener('visibilitychange', handleVisibilityChange);
     return () => document.removeEventListener('visibilitychange', handleVisibilityChange);
-  }, [token, updateBalanceOnServer]); // Зависимости useEffect
+  }, [token, updateBalanceOnServer]);
 
   useEffect(() => {
     const intervalId = setInterval(() => {
