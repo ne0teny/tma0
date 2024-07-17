@@ -184,8 +184,6 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ userData, token }) => {
     return () => document.removeEventListener('visibilitychange', updateBalanceOnServer);
   }, [user, token, pointsGained]); // Добавляем pointsGained в зависимости
 
-
-
   return (
     <div>
       <div className={styles.homeScreen}>
@@ -236,6 +234,7 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ userData, token }) => {
               <img className={styles.avatarIcon} alt="Аватар пользователя" src={currentUser.avatar} />
               <div className={styles.nameAndRunk}>
                 <div className={styles.namee}>{currentUser.name}</div>
+                <div className={styles.meme}>{currentUser.league}</div>
                 <div className={styles.meme}>{currentUser.league}</div>
               </div>
               <IconProfile className={styles.iconProfile} aria-label="Иконка профиля" />
@@ -297,3 +296,4 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ userData, token }) => {
 };
 
 export default HomeScreen;
+
