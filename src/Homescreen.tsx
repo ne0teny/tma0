@@ -13,14 +13,8 @@ import imageКубок from './img/image кубок.png';
 
 const API_URL = 'https://47bc-89-107-97-177.ngrok-free.app'; 
 
-
-interface ComponentProps {
-  userData: User | null;
-  token: string | null;
-}
-
-interface HomeScreenProps extends ComponentProps {} 
 interface User {
+  id: number; // Добавляем свойство id
   level: number;
   league: string;
   balance: number;
@@ -67,7 +61,7 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ userData, token }) => {
         });
         if (!response.ok) {
           if (response.status === 401) {
-        
+            // Токен недействителен, перенаправляем на страницу входа (логика перенаправления)
             setError('Ошибка авторизации')
           } else {
             throw new Error('Network response was not ok.');
@@ -115,7 +109,7 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ userData, token }) => {
     if (energy > 0) {
       setUser((prevUser) =>
         prevUser ? { ...prevUser, balance: prevUser.balance + clickValue } : prevUser
-      );
+      ); // Обновляем баланс локально
       setEnergy(energy - 1);
       setIsClicking(true);
 
@@ -136,6 +130,7 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ userData, token }) => {
   }, []);
 
   const defaultUser: User = {
+    id: 0, // Изначально id = 0, чтобы не было ошибки при первом рендере
     level: 1,
     league: 'No league',
     balance: 0,
@@ -147,6 +142,37 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ userData, token }) => {
   };
 
   const currentUser = user || defaultUser;
+
+  // useEffect для отправки баланса при закрытии приложения
+  useEffect(() => {
+    const handleVisibilityChange = () => {
+      if (document.visibilityState === 'hidden' && userData && token) {
+        // Приложение стало невидимым (закрыто), отправляем запрос на обновление баланса
+        const updateBalanceOnServer = async () => {
+          try {
+            const response = await fetch(`${API_URL}/user/update_points`, {
+              method: 'PATCH',
+              headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`,
+              },
+              body: JSON.stringify({ user_id: userData.id, points: user?.balance }), // Отправляем актуальный баланс
+            });
+            if (!response.ok) {
+              throw new Error('Network response was not ok.');
+            }
+          } catch (error) {
+            console.error('Error updating balance on server:', error);
+            // Здесь можно добавить логику для обработки ошибки, например, сохранение баланса локально для повторной отправки позже
+          }
+        };
+        updateBalanceOnServer();
+      }
+    };
+
+    document.addEventListener('visibilitychange', handleVisibilityChange);
+    return () => document.removeEventListener('visibilitychange', handleVisibilityChange);
+  }, [userData, token, user?.balance]); // Добавляем user.balance в зависимости
 
   if (error) {
     return <div>{error}</div>;
@@ -186,7 +212,7 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ userData, token }) => {
               <div className={styles.pointBlock2}>
                 <div className={styles.skufsdff}>Skuffolog...</div>
                 <IconSkuff className={styles.iconSkuff} aria-label="Иконка Skuffolog" />
-              </div>
+                </div>
               <div className={styles.level89Parent}>
                 <div className={styles.level89}>level {currentUser.level}</div>
                 <div className={styles.frameWrapper}>
@@ -228,7 +254,7 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ userData, token }) => {
             onTouchStart={handleClick}
           >
             <div className={styles.highlightedInfo}>
-              <Component13 className={styles.component13Icon} aria-label="Компонент               13" />
+              <Component13 className={styles.component13Icon} aria-label="Компонент 13" />
               <div className={styles.highlightedFigure}>{currentUser.balance}</div>
             </div>
 
@@ -263,4 +289,3 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ userData, token }) => {
 };
 
 export default HomeScreen;
-
