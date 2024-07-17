@@ -161,12 +161,15 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ userData, token }) => {
     const updateBalanceOnServer = async () => {
       try {
         const response = await fetch(`${API_URL}/user/update_points`, {
-          method: 'PATCH',        // Используем PATCH вместо PUT
+          method: 'PATCH',
           headers: {
             'Content-Type': 'application/json',
             'Authorization': `Bearer ${token}`,
           },
-          body: JSON.stringify({ user_id: userData.id, gain_points: user.balance }),
+          body: JSON.stringify({
+            user_id: userData.id,
+            gain_points: user.balance, 
+          }),
         });
         
         if (!response.ok) {
