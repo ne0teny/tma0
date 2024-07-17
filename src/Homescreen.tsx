@@ -52,6 +52,9 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ userData, token }) => {
   // Состояние для отслеживания заработанных поинтов в текущей сессии
   const [pointsGained, setPointsGained] = useState(0);
 
+  // Состояние для контроля отправки запроса при закрытии приложения
+  const [isAppClosing, setIsAppClosing] = useState(false);
+
   useEffect(() => {
     const fetchUserData = async () => {
       try {
@@ -74,17 +77,26 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ userData, token }) => {
         setEnergy(userData.energy);
 
         // Инициализируем pointsGained при получении данных пользователя
-        setPointsGained(userData.balance); 
+        setPointsGained(userData.balance);
       } catch (error) {
         console.error('Ошибка:', error);
         setError('Ошибка при загрузке данных пользователя');
       }
     };
 
-    if (!userData) {
-      fetchUserData();
-    }
-  }, [userData, token]);
+    fetchUserData(); // Вызываем сразу при монтировании компонента
+
+    // Обработчик закрытия приложения
+    const handleVisibilityChange = () => {
+      if (document.visibilityState === 'hidden') {
+        setIsAppClosing(true); // Помечаем, что приложение закрывается
+        updateBalanceOnServer(); // Отправляем запрос на обновление баланса
+      }
+    };
+
+    document.addEventListener('visibilitychange', handleVisibilityChange);
+    return () => document.removeEventListener('visibilitychange', handleVisibilityChange);
+  }, [token]); // Зависимость только от токена
 
   useEffect(() => {
     const intervalId = setInterval(() => {
@@ -149,42 +161,36 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ userData, token }) => {
 
   const currentUser = user || defaultUser;
 
-  useEffect(() => {
-    const updateBalanceOnServer = async () => {
-      try {
-        if (!user) return; 
+  const updateBalanceOnServer = async () => {
+    try {
+      if (!user || !isAppClosing) return; // Отправляем запрос только при закрытии
 
-        // Отправляем pointsGained на сервер
-        const response = await fetch(`${API_URL}/user/update_points`, {
-          method: 'PATCH',
-          headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${token}`,
-          },
-          body: JSON.stringify({
-            gain_points: pointsGained.toString(), // Отправляем заработанные поинты
-          }),
-        });
+      const response = await fetch(`${API_URL}/user/update_points`, {
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`,
+        },
+        body: JSON.stringify({
+          gain_points: pointsGained.toString(),
+        }),
+      });
 
-        if (!response.ok) {
-          const errorData = await response.json();
-          console.error('Ошибка сервера:', errorData);
-          setError(errorData.detail || 'Произошла ошибка при обновлении баланса');
-        } else {
-          console.log("Баланс успешно обновлён");
-          setError(null);
-        }
-      } catch (error) {
-        console.error('Ошибка обновления баланса на сервере:', error);
-        setError('Ошибка сети. Проверьте подключение к интернету.');
+      if (!response.ok) {
+        const errorData = await response.json();
+        console.error('Ошибка сервера:', errorData);
+        setError(errorData.detail || 'Произошла ошибка при обновлении баланса');
+      } else {
+        console.log("Баланс успешно обновлён");
+        setError(null);
       }
-    };
-
-    document.addEventListener('visibilitychange', updateBalanceOnServer);
-    return () => document.removeEventListener('visibilitychange', updateBalanceOnServer);
-  }, [user, token, pointsGained]); // Добавляем pointsGained в зависимости
-
-
+    } catch (error) {
+      console.error('Ошибка обновления баланса на сервере:', error);
+      setError('Ошибка сети. Проверьте подключение к интернету.');
+    } finally {
+      setIsAppClosing(false); // Сбрасываем флаг закрытия
+    }
+  };
 
   return (
     <div>
