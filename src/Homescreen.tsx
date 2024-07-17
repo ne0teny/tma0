@@ -82,6 +82,7 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ userData, token }) => {
   }, [pointsGained, token, user]);
 
   useEffect(() => {
+    let isFirstFetch = true; // Флаг первого запроса
     const fetchUserData = async () => {
       try {
         if (!token) {
@@ -103,18 +104,24 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ userData, token }) => {
         setEnergy(userData.energy);
 
         // Инициализируем pointsGained при получении данных пользователя
-        setPointsGained(0);
+        setPointsGained(0); 
       } catch (error) {
         console.error('Ошибка:', error);
         setError('Ошибка при загрузке данных пользователя');
       }
     };
 
-    fetchUserData(); // Вызываем сразу при монтировании компонента
+    if (isFirstFetch) {
+        fetchUserData();
+        isFirstFetch = false;
+    }
+
+    let isRequestSent = false; // Флаг для отслеживания отправки запроса
 
     // Обработчик закрытия приложения
     const handleVisibilityChange = () => {
-      if (document.visibilityState === 'hidden') {
+      if (document.visibilityState === 'hidden' && !isRequestSent) {
+        isRequestSent = true; // Помечаем, что запрос отправлен
         updateBalanceOnServer(); // Отправляем запрос на обновление баланса
       }
     };
@@ -216,85 +223,86 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ userData, token }) => {
                   </div>
                 </div>
               </div>
-            </div>
-            <div className={styles.pointBlockGroup}>
-              <div className={styles.pointBlock2}>
-                <div className={styles.skufsdff}>Skuffolog...</div>
-                <IconSkuff className={styles.iconSkuff} aria-label="Иконка Skuffolog" />
+              <div className={styles.pointBlockGroup}>
+                <div className={styles.pointBlock2}>
+                  <div className={styles.skufsdff}>Skuffolog...</div>
+                  <IconSkuff className={styles.iconSkuff} aria-label="Иконка Skuffolog" />
+                </div>
+                <div className={styles.level89Parent}>
+                  <div className={styles.level89}>level {currentUser.level}</div>
+                  <div className={styles.frameWrapper}>
+                    <div className={styles.progressBarBackgroundWrapper}>
+                      <div className={styles.progressBarBackground} />
+                    </div>
+                  </div>
+                </div>
               </div>
-              <div className={styles.level89Parent}>
-                <div className={styles.level89}>level {currentUser.level}</div>
-                <div className={styles.frameWrapper}>
-                  <div className={styles.progressBarBackgroundWrapper}>
-                    <div className={styles.progressBarBackground} />
+            </div>
+            <div className={styles.profileBlock}>
+              <div className={styles.avatarParent}>
+                <img className={styles.avatarIcon} alt="Аватар пользователя" src={currentUser.avatar} />
+                <div className={styles.nameAndRunk}>
+                  <div className={styles.namee}>{currentUser.name}</div>
+                  <div className={styles.meme}>{currentUser.league}</div>
+                </div>
+                <IconProfile className={styles.iconProfile} aria-label="Иконка профиля" />
+              </div>
+              <div className={styles.everyDayBonus}>
+                <div className={styles.container}>
+                  <div className={styles.div4}>
+                    <p className={styles.p}>Ежедневный</p>
+                    <p className={styles.p}>бонус</p>
+                  </div>
+                  <img className={styles.imageIcon} alt="Иконка кубка" src={imageКубок} />
+                  <div className={styles.notificationError}>
+                    <div className={styles.div5}>1</div>
                   </div>
                 </div>
               </div>
             </div>
           </div>
-          <div className={styles.profileBlock}>
-            <div className={styles.avatarParent}>
-              <img className={styles.avatarIcon} alt="Аватар пользователя" src={currentUser.avatar} />
-              <div className={styles.nameAndRunk}>
-                <div className={styles.namee}>{currentUser.name}</div>
-                <div className={styles.meme}>{currentUser.league}</div>
+
+          <div className={styles.mainSection}>
+            <div
+              ref={contentBlockRef}
+              className={`${styles.contentBlock} ${styles.touchable}`}
+              onTouchStart={handleClick}
+            >
+              <div className={styles.highlightedInfo}>
+                <Component13 className={styles.component13Icon} aria-label="Компонент 13" />
+                <div className={styles.highlightedFigure}>{currentUser.balance + pointsGained}</div>
               </div>
-              <IconProfile className={styles.iconProfile} aria-label="Иконка профиля" />
+
+              <AdditionalInfo
+                className={`${styles.additionalInfoIcon} ${isClicking ? styles.clicking : ''}`}
+                aria-label="Дополнительная информация"
+                ref={additionalInfoRef}
+              />
+              {clickAnimations.map((animation, index) => (
+                <div
+                  key={index}
+                  className={styles.clickAnimation}
+                  style={animation.style}
+                >
+                  +{clickValue}
+                </div>
+              ))}
             </div>
-            <div className={styles.everyDayBonus}>
-              <div className={styles.container}>
-                <div className={styles.div4}>
-                  <p className={styles.p}>Ежедневный</p>
-                  <p className={styles.p}>бонус</p>
-                </div>
-                <img className={styles.imageIcon} alt="Иконка кубка" src={imageКубок} />
-                <div className={styles.notificationError}>
-                  <div className={styles.div5}>1</div>
-                </div>
-              </div>
+
+            <div className={styles.batarty}>
+              <img className={styles.batartyChild} alt="Батарея" src={frame109} />
+              <div className={styles.div6}>{energy}/{maxEnergy}</div>
             </div>
           </div>
         </div>
 
-        <div className={styles.mainSection}>
-          <div
-            ref={contentBlockRef}
-            className={`${styles.contentBlock} ${styles.touchable}`}
-            onTouchStart={handleClick}
-          >
-            <div className={styles.highlightedInfo}>
-              <Component13 className={styles.component13Icon} aria-label="Компонент 13" />
-              <div className={styles.highlightedFigure}>{isNaN(pointsGained) ? 0 : pointsGained}</div> 
-              </div>
-
-            <AdditionalInfo
-              className={`${styles.additionalInfoIcon} ${isClicking ? styles.clicking : ''}`}
-              aria-label="Дополнительная информация"
-              ref={additionalInfoRef}
-            />
-            {clickAnimations.map((animation, index) => (
-              <div
-                key={index}
-                className={styles.clickAnimation}
-                style={animation.style}
-              >
-                +{clickValue}
-              </div>
-            ))}
-          </div>
-
-          <div className={styles.batarty}>
-            <img className={styles.batartyChild} alt="Батарея" src={frame109} />
-            <div className={styles.div6}>{energy}/{maxEnergy}</div>
-          </div>
+        <div className={styles.navigationContainer}>
+          <NavigationBar />
         </div>
-      </div>
-
-      <div className={styles.navigationContainer}>
-        <NavigationBar />
       </div>
     </div>
   );
 };
 
 export default HomeScreen;
+
