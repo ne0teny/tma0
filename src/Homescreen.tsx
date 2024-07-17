@@ -158,7 +158,7 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ userData, token }) => {
       if (document.visibilityState === 'hidden' && userData && token && user) { 
         const updateBalanceOnServer = async () => {
           try {
-            const payload = { user_id: userData.id, points: user.balance };
+            const payload = { gain_points: user.balance };
             console.log('Updating balance with payload:', payload);
 
             const response = await fetch(`${API_URL}/user/update_points`, {
