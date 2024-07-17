@@ -115,10 +115,12 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ userData, token }) => {
       setClickAnimations((prevAnimations) => [...prevAnimations, newAnimation]);
     }
 
-    if (energy > 0 && user) { 
+    if (energy > 0 && user) {
       const newBalance = user.balance + clickValue;
 
-      setUser((prevUser) => prevUser ? { ...prevUser, balance: newBalance } : prevUser);
+      setUser((prevUser) =>
+        prevUser ? { ...prevUser, balance: newBalance } : prevUser
+      );
 
       setEnergy(energy - 1);
       setIsClicking(true);
@@ -132,7 +134,9 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ userData, token }) => {
   useEffect(() => {
     const intervalId = setInterval(() => {
       setClickAnimations((prevAnimations) =>
-        prevAnimations.filter((animation) => Date.now() - animation.startTime < 1000)
+        prevAnimations.filter(
+          (animation) => Date.now() - animation.startTime < 1000
+        )
       );
     }, 100);
 
@@ -154,37 +158,41 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ userData, token }) => {
   const currentUser = user || defaultUser;
 
   useEffect(() => {
-    const handleVisibilityChange = () => {
-      if (document.visibilityState === 'hidden' && userData && token && user) {
-        const updateBalanceOnServer = async () => {
-          try {
-            const response = await fetch(`${API_URL}/user/update_points`, {
-              method: 'PATCH',
-              headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${token}`,
-              },
-              body: JSON.stringify({ user_id: userData.id, gain_points: user.balance }),
-            });
-            if (!response.ok) {
-              const errorText = await response.text();
-              console.error('Error response:', errorText);
-              throw new Error('Network response was not ok.');
-            }
-          } catch (error) {
-            console.error('Error updating balance on server:', error);
-          }
-        };
-        updateBalanceOnServer();
+    const updateBalanceOnServer = async () => {
+      try {
+        const response = await fetch(`${API_URL}/user/update_points`, {
+          method: 'PUT',        
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`,
+          },
+          body: JSON.stringify({ 
+            user_id: userData.id, 
+            gain_points: user ? user.balance : 0 
+          }),
+        });
+        
+        if (!response.ok) {
+          const errorData = await response.json();
+          console.error('Ошибка сервера:', errorData);
+          setError(errorData.detail || 'Произошла ошибка при обновлении баланса'); 
+        } else {
+          console.log("Баланс успешно обновлён");
+          setError(null); 
+        }
+      } catch (error) {
+        console.error('Ошибка обновления баланса на сервере:', error);
+        setError('Ошибка сети. Проверьте подключение к интернету.');
       }
     };
 
-    document.addEventListener('visibilitychange', handleVisibilityChange);
-    return () => document.removeEventListener('visibilitychange', handleVisibilityChange);
+    document.addEventListener('visibilitychange', updateBalanceOnServer);
+    return () => document.removeEventListener('visibilitychange', updateBalanceOnServer);
   }, [userData, token, user]);
 
+  
   if (error) {
-    return <div>{error}</div>;
+    return <div className={styles.error}>{error}</div>; 
   }
 
   return (
