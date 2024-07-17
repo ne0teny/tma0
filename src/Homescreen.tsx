@@ -39,7 +39,7 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ userData, token }) => {
   const [user, setUser] = useState<User | null>(userData);
   const [isClicking, setIsClicking] = useState(false);
   const [clickAnimations, setClickAnimations] = useState<ClickAnimation[]>([]);
-  const [energy, setEnergy] = useState(7000);
+  const [energy, setEnergy] = useState(userData ? userData.energy : 7000);
   const maxEnergy = 7000;
   const energyRecoveryRate = 10;
   const energyRecoveryInterval = 60000;
@@ -50,7 +50,7 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ userData, token }) => {
   const contentBlockRef = useRef<HTMLDivElement>(null);
 
   // Состояние для отслеживания заработанных поинтов в текущей сессии
-  const [pointsGained, setPointsGained] = useState(0);
+  const [pointsGained, setPointsGained] = useState(userData ? userData.balance : 0);
 
   useEffect(() => {
     const fetchUserData = async () => {
@@ -230,7 +230,7 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ userData, token }) => {
           </div>
           <div className={styles.profileBlock}>
             <div className={styles.avatarParent}>
-            <img className={styles.avatarIcon} alt="Аватар пользователя" src={currentUser.avatar} />
+              <img className={styles.avatarIcon} alt="Аватар пользователя" src={currentUser.avatar} />
               <div className={styles.nameAndRunk}>
                 <div className={styles.namee}>{currentUser.name}</div>
                 <div className={styles.meme}>{currentUser.league}</div>
