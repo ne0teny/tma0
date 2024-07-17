@@ -53,34 +53,24 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ userData, token }) => {
     const fetchUserData = async () => {
       try {
         if (!token) {
-          console.error("Token is missing");
+          console.error("Токен отсутствует");
           setError('Токен отсутствует');
           return;
         }
 
         const response = await fetch(`${API_URL}/user/get_user_data`, {
-          method: 'GET',
-          headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${token}`,
-          },
+          headers: { Authorization: `Bearer ${token}` },
         });
 
         if (!response.ok) {
-          const errorText = await response.text();
-          console.error('Error response:', errorText);
-          if (response.status === 401) {
-            setError('Ошибка авторизации');
-          } else {
-            throw new Error('Network response was not ok.');
-          }
-        } else {
-          const userData = await response.json();
-          setUser(userData);
-          setEnergy(userData.energy);
+          throw new Error('Ошибка при получении данных пользователя');
         }
+
+        const userData = await response.json();
+        setUser(userData);
+        setEnergy(userData.energy);
       } catch (error) {
-        console.error('Error fetching user data:', error);
+        console.error('Ошибка:', error);
         setError('Ошибка при загрузке данных пользователя');
       }
     };
@@ -161,17 +151,16 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ userData, token }) => {
     const updateBalanceOnServer = async () => {
       try {
         const response = await fetch(`${API_URL}/user/update_points`, {
-          method: 'PUT',         // Или 'PATCH', в зависимости от варианта
+          method: 'PATCH',  
           headers: {
             'Content-Type': 'application/json',
             'Authorization': `Bearer ${token}`,
           },
           body: JSON.stringify({ 
-            user_id: userData.id, 
-            gain_points: user ? user.balance : 0 // Отправка gain_points при PUT, иначе 0
+            gain_points: user?.balance.toString() ?? '0' 
           }),
         });
-        
+
         if (!response.ok) {
           const errorData = await response.json();
           console.error('Ошибка сервера:', errorData);
@@ -190,12 +179,10 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ userData, token }) => {
     return () => document.removeEventListener('visibilitychange', updateBalanceOnServer);
   }, [userData, token, user]);
 
-  // Обработка ошибок
   if (error) {
-    return <div className={styles.error}>{error}</div>; // Отображение ошибки
+    return <div className={styles.error}>{error}</div>; 
   }
 
-  // Рендеринг компонента
   return (
     <div>
       <div className={styles.homeScreen}>
