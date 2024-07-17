@@ -159,8 +159,8 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ userData, token }) => {
 
   useEffect(() => {
     const updateBalanceOnServer = async () => {
-      if (!userData || !token || !user) return; 
-      
+      if (!userData || !token || !user) return;
+  
       try {
         const response = await fetch(`${API_URL}/user/update_points`, {
           method: 'PATCH',
@@ -170,28 +170,27 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ userData, token }) => {
           },
           body: JSON.stringify({
             user_id: userData.id,
-            gain_points: user.balance, 
+            gain_points: user.balance,
           }),
         });
-
+  
         if (!response.ok) {
           const errorData = await response.json();
           console.error('Ошибка сервера:', errorData);
-          setError(errorData.detail || 'Произошла ошибка при обновлении баланса');
+          setError(errorData.detail || 'Ошибка при обновлении баланса');
         } else {
-          console.log("Баланс успешно обновлён");
-          setError(null); 
+          console.log('Баланс успешно обновлен');
+          setError(null);
         }
       } catch (error) {
-        console.error('Ошибка обновления баланса на сервере:', error);
+        console.error('Ошибка при обновлении баланса на сервере:', error);
         setError('Ошибка сети. Проверьте подключение к интернету.');
       }
     };
-
-    document.addEventListener('visibilitychange', updateBalanceOnServer);
-    return () => document.removeEventListener('visibilitychange', updateBalanceOnServer);
+  
+    updateBalanceOnServer();
   }, [userData, token, user]);
-
+  
   
   if (error) {
     return <div className={styles.error}>{error}</div>; 
