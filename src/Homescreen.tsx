@@ -96,7 +96,7 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ userData, token }) => {
     }, energyRecoveryInterval);
 
     return () => clearInterval(intervalId);
-  }, [energy]);
+  }, []);
 
   const handleClick = (event: React.TouchEvent<HTMLDivElement>) => {
     event.preventDefault();
@@ -115,13 +115,10 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ userData, token }) => {
       setClickAnimations((prevAnimations) => [...prevAnimations, newAnimation]);
     }
 
-    if (energy > 0 && userData) { 
-      const newBalance = userData.balance + clickValue;
+    if (energy > 0 && user) { 
+      const newBalance = user.balance + clickValue;
 
-      setUser((prevUser) => ({
-        ...prevUser,
-        balance: newBalance
-      }));
+      setUser((prevUser) => prevUser ? { ...prevUser, balance: newBalance } : prevUser);
 
       setEnergy(energy - 1);
       setIsClicking(true);
@@ -167,7 +164,7 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ userData, token }) => {
                 'Content-Type': 'application/json',
                 'Authorization': `Bearer ${token}`,
               },
-              body: JSON.stringify({ user_id: userData.id, points: user?.balance }),
+              body: JSON.stringify({ user_id: userData.id, points: user.balance }),
             });
             if (!response.ok) {
               const errorText = await response.text();
@@ -184,7 +181,7 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ userData, token }) => {
 
     document.addEventListener('visibilitychange', handleVisibilityChange);
     return () => document.removeEventListener('visibilitychange', handleVisibilityChange);
-  }, [userData, token, user?.balance]); 
+  }, [userData, token, user]);
 
   if (error) {
     return <div>{error}</div>;

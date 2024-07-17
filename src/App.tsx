@@ -23,12 +23,6 @@ interface User {
   followers: number;
 }
 
-interface ComponentProps {
-  userData: User | null;
-  token: string | null;
-  setUserData?: (userData: User | null) => void;
-}
-
 function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [userData, setUserData] = useState<User | null>(null);
