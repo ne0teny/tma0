@@ -159,7 +159,7 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ userData, token }) => {
 
   useEffect(() => {
     const updateBalanceOnServer = async () => {
-      if (!userData || !token || !user) return; // Дополнительная проверка перед запросом
+      if (!userData || !token || !user) return; 
       
       try {
         const response = await fetch(`${API_URL}/user/update_points`, {
@@ -170,7 +170,7 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ userData, token }) => {
           },
           body: JSON.stringify({
             user_id: userData.id,
-            gain_points: user.balance, // Отправляем `balance` (не `points_total`)
+            gain_points: user.balance, 
           }),
         });
 
