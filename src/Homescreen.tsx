@@ -11,7 +11,7 @@ import frame109 from './img/Frame 109.svg';
 import avatar from './img/Avatar.png';
 import imageКубок from './img/image кубок.png';
 
-const API_URL = 'https://47bc-89-107-97-177.ngrok-free.app'; 
+const API_URL = 'https://47bc-89-107-97-177.ngrok-free.app';
 
 interface User {
   id: number;
@@ -32,7 +32,7 @@ interface ClickAnimation {
 
 interface HomeScreenProps {
   userData: User | null;
-  token: string | null; 
+  token: string | null;
 }
 
 const HomeScreen: React.FC<HomeScreenProps> = ({ userData, token }) => {
@@ -140,7 +140,7 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ userData, token }) => {
   }, []);
 
   const defaultUser: User = {
-    id: 0, 
+    id: 0,
     level: 1,
     league: 'No league',
     balance: 0,
@@ -155,21 +155,17 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ userData, token }) => {
 
   useEffect(() => {
     const handleVisibilityChange = () => {
-      if (document.visibilityState === 'hidden' && userData && token && user) { 
+      if (document.visibilityState === 'hidden' && userData && token && user) {
         const updateBalanceOnServer = async () => {
           try {
-            const payload = { user_id: userData.id, points: user.balance };
-            console.log('Updating balance with payload:', payload);
-
             const response = await fetch(`${API_URL}/user/update_points`, {
               method: 'PATCH',
               headers: {
                 'Content-Type': 'application/json',
                 'Authorization': `Bearer ${token}`,
               },
-              body: JSON.stringify(payload),
+              body: JSON.stringify({ user_id: userData.id, gain_points: user.balance }),
             });
-
             if (!response.ok) {
               const errorText = await response.text();
               console.error('Error response:', errorText);
@@ -190,7 +186,7 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ userData, token }) => {
   if (error) {
     return <div>{error}</div>;
   }
-  
+
   return (
     <div>
       <div className={styles.homeScreen}>
