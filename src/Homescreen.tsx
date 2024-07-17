@@ -81,10 +81,9 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ userData, token }) => {
       }
     };
 
-    if (!userData) {
-      fetchUserData();
-    }
-  }, [userData, token]);
+    // Запрашиваем данные пользователя при каждом монтировании компонента
+    fetchUserData();
+  }, [token]);
 
   useEffect(() => {
     const intervalId = setInterval(() => {
@@ -231,10 +230,9 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ userData, token }) => {
           </div>
           <div className={styles.profileBlock}>
             <div className={styles.avatarParent}>
-              <img className={styles.avatarIcon} alt="Аватар пользователя" src={currentUser.avatar} />
+            <img className={styles.avatarIcon} alt="Аватар пользователя" src={currentUser.avatar} />
               <div className={styles.nameAndRunk}>
                 <div className={styles.namee}>{currentUser.name}</div>
-                <div className={styles.meme}>{currentUser.league}</div>
                 <div className={styles.meme}>{currentUser.league}</div>
               </div>
               <IconProfile className={styles.iconProfile} aria-label="Иконка профиля" />
@@ -262,7 +260,7 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ userData, token }) => {
           >
             <div className={styles.highlightedInfo}>
               <Component13 className={styles.component13Icon} aria-label="Компонент 13" />
-              <div className={styles.highlightedFigure}>{isNaN(pointsGained) ? 0 : pointsGained}</div> 
+              <div className={styles.highlightedFigure}>{isNaN(pointsGained) ? 0 : pointsGained}</div>
               </div>
 
             <AdditionalInfo
@@ -296,4 +294,3 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ userData, token }) => {
 };
 
 export default HomeScreen;
-
