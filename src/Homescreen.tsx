@@ -53,24 +53,34 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ userData, token }) => {
     const fetchUserData = async () => {
       try {
         if (!token) {
-          console.error("Токен отсутствует");
+          console.error("Token is missing");
           setError('Токен отсутствует');
           return;
         }
 
         const response = await fetch(`${API_URL}/user/get_user_data`, {
-          headers: { Authorization: `Bearer ${token}` },
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`,
+          },
         });
 
         if (!response.ok) {
-          throw new Error('Ошибка при получении данных пользователя');
+          const errorText = await response.text();
+          console.error('Error response:', errorText);
+          if (response.status === 401) {
+            setError('Ошибка авторизации');
+          } else {
+            throw new Error('Network response was not ok.');
+          }
+        } else {
+          const userData = await response.json();
+          setUser(userData);
+          setEnergy(userData.energy);
         }
-
-        const userData = await response.json();
-        setUser(userData);
-        setEnergy(userData.energy);
       } catch (error) {
-        console.error('Ошибка:', error);
+        console.error('Error fetching user data:', error);
         setError('Ошибка при загрузке данных пользователя');
       }
     };
@@ -149,24 +159,23 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ userData, token }) => {
 
   useEffect(() => {
     const updateBalanceOnServer = async () => {
-      if (!userData || !token || !user) return;
-
       try {
         const response = await fetch(`${API_URL}/user/update_points`, {
-          method: 'PATCH',
+          method: 'PUT',         // Или 'PATCH', в зависимости от варианта
           headers: {
             'Content-Type': 'application/json',
             'Authorization': `Bearer ${token}`,
           },
-          body: JSON.stringify({
-            gain_points: user.balance.toString(), 
+          body: JSON.stringify({ 
+            user_id: userData.id, 
+            gain_points: user ? user.balance : 0 // Отправка gain_points при PUT, иначе 0
           }),
         });
-
+        
         if (!response.ok) {
           const errorData = await response.json();
           console.error('Ошибка сервера:', errorData);
-          setError(errorData.detail || 'Ошибка обновления баланса');
+          setError(errorData.detail || 'Произошла ошибка при обновлении баланса'); 
         } else {
           console.log("Баланс успешно обновлён");
           setError(null); 
@@ -178,15 +187,15 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ userData, token }) => {
     };
 
     document.addEventListener('visibilitychange', updateBalanceOnServer);
-    updateBalanceOnServer(); 
-
     return () => document.removeEventListener('visibilitychange', updateBalanceOnServer);
   }, [userData, token, user]);
 
+  // Обработка ошибок
   if (error) {
-    return <div className={styles.error}>{error}</div>; 
+    return <div className={styles.error}>{error}</div>; // Отображение ошибки
   }
 
+  // Рендеринг компонента
   return (
     <div>
       <div className={styles.homeScreen}>
