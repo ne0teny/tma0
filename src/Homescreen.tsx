@@ -159,8 +159,8 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ userData, token }) => {
 
   useEffect(() => {
     const updateBalanceOnServer = async () => {
-      if (!userData || !token || !user) return;
-  
+      if (!userData || !token || !user) return; 
+
       try {
         const response = await fetch(`${API_URL}/user/update_points`, {
           method: 'PATCH',
@@ -169,29 +169,29 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ userData, token }) => {
             'Authorization': `Bearer ${token}`,
           },
           body: JSON.stringify({
-            user_id: userData.id,
-            gain_points: user.balance,
+            user_id: userData?.id,
+            gain_points: user.balance, 
           }),
         });
-  
+
         if (!response.ok) {
           const errorData = await response.json();
           console.error('Ошибка сервера:', errorData);
-          setError(errorData.detail || 'Ошибка при обновлении баланса');
+          setError(errorData.detail || 'Произошла ошибка при обновлении баланса');
         } else {
-          console.log('Баланс успешно обновлен');
-          setError(null);
+          console.log("Баланс успешно обновлён");
+          setError(null); 
         }
       } catch (error) {
-        console.error('Ошибка при обновлении баланса на сервере:', error);
+        console.error('Ошибка обновления баланса на сервере:', error);
         setError('Ошибка сети. Проверьте подключение к интернету.');
       }
     };
-  
-    updateBalanceOnServer();
+
+    document.addEventListener('visibilitychange', updateBalanceOnServer);
+    return () => document.removeEventListener('visibilitychange', updateBalanceOnServer);
   }, [userData, token, user]);
-  
-  
+
   if (error) {
     return <div className={styles.error}>{error}</div>; 
   }
@@ -254,54 +254,47 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ userData, token }) => {
               <div className={styles.container}>
                 <div className={styles.div4}>
                   <p className={styles.p}>Ежедневный</p>
-                  <p className={styles.p}>бонус</p>
+                  <p className={styles.p}>Бонус</p>
                 </div>
-                <img className={styles.imageIcon} alt="Иконка кубка" src={imageКубок} />
-                <div className={styles.notificationError}>
-                  <div className={styles.div5}>1</div>
+                <div className={styles.frameContainer}>
+                  <div className={styles.frame1}>
+                    <div className={styles.frame2}>
+                      <Component13 className={styles.component13} aria-label="Компонент 13" />
+                    </div>
+                  </div>
                 </div>
               </div>
+              <img className={styles.frame109Icon} alt="Frame 109" src={frame109} />
             </div>
           </div>
         </div>
-
-        <div className={styles.mainSection}>
-          <div
-            ref={contentBlockRef}
-            className={`${styles.contentBlock} ${styles.touchable}`}
-            onTouchStart={handleClick}
-          >
-            <div className={styles.highlightedInfo}>
-              <Component13 className={styles.component13Icon} aria-label="Компонент 13" />
-              <div className={styles.highlightedFigure}>{currentUser.balance}</div>
-            </div>
-
-            <AdditionalInfo
-              className={`${styles.additionalInfoIcon} ${isClicking ? styles.clicking : ''}`}
-              aria-label="Дополнительная информация"
-              ref={additionalInfoRef}
+        <div
+          className={`${styles.contentBlock} ${isClicking ? styles.clicking : ''}`}
+          ref={contentBlockRef}
+          onTouchStart={handleClick}
+        >
+          {clickAnimations.map((animation, index) => (
+            <div
+              key={index}
+              className={styles.clickAnimation}
+              style={animation.style}
             />
-            {clickAnimations.map((animation, index) => (
-              <div
-                key={index}
-                className={styles.clickAnimation}
-                style={animation.style}
-              >
-                +{clickValue}
-              </div>
-            ))}
-          </div>
-
-          <div className={styles.batarty}>
-            <img className={styles.batartyChild} alt="Батарея" src={frame109} />
-            <div className={styles.div6}>{energy}/{maxEnergy}</div>
+          ))}
+          <div className={styles.energyBar}>
+            <div
+              className={styles.energyFill}
+              style={{ width: `${(energy / maxEnergy) * 100}%` }}
+            />
+            <div className={styles.energyText}>{energy}</div>
           </div>
         </div>
+        <AdditionalInfo
+          className={styles.additionalInfo}
+          aria-label="Дополнительная информация"
+          ref={additionalInfoRef}
+        />
       </div>
-
-      <div className={styles.navigationContainer}>
-        <NavigationBar />
-      </div>
+      <NavigationBar />
     </div>
   );
 };
