@@ -158,14 +158,18 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ userData, token }) => {
       if (document.visibilityState === 'hidden' && userData && token && user) { 
         const updateBalanceOnServer = async () => {
           try {
+            const payload = { user_id: userData.id, points: user.balance };
+            console.log('Updating balance with payload:', payload);
+
             const response = await fetch(`${API_URL}/user/update_points`, {
               method: 'PATCH',
               headers: {
                 'Content-Type': 'application/json',
                 'Authorization': `Bearer ${token}`,
               },
-              body: JSON.stringify({ user_id: userData.id, points: user.balance }),
+              body: JSON.stringify(payload),
             });
+
             if (!response.ok) {
               const errorText = await response.text();
               console.error('Error response:', errorText);
