@@ -52,34 +52,43 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ userData, token }) => {
   useEffect(() => {
     const fetchUserData = async () => {
       try {
+        if (!token) {
+          console.error("Token is missing");
+          setError('Токен отсутствует');
+          return;
+        }
+
         const response = await fetch(`${API_URL}/user/get_user_data`, {
           method: 'GET',
           headers: {
             'Content-Type': 'application/json',
-            'Authorization': `Bearer ${token}`, 
+            'Authorization': `Bearer ${token}`,
           },
         });
+
         if (!response.ok) {
+          const errorText = await response.text();
+          console.error('Error response:', errorText);
           if (response.status === 401) {
-            // Токен недействителен, перенаправляем на страницу входа 
-            setError('Ошибка авторизации')
+            setError('Ошибка авторизации');
           } else {
             throw new Error('Network response was not ok.');
           }
+        } else {
+          const userData = await response.json();
+          setUser(userData);
+          setEnergy(userData.energy);
         }
-        const userData = await response.json();
-        setUser(userData);
-        setEnergy(userData.energy);
       } catch (error) {
         console.error('Error fetching user data:', error);
-        setError('Ошибка при загрузке данных пользователя'); 
+        setError('Ошибка при загрузке данных пользователя');
       }
     };
 
     if (!userData) {
-      fetchUserData(); 
+      fetchUserData();
     }
-  }, [userData, token]); 
+  }, [userData, token]);
 
   useEffect(() => {
     const intervalId = setInterval(() => {
@@ -109,7 +118,6 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ userData, token }) => {
     if (energy > 0 && userData) { 
       const newBalance = userData.balance + clickValue;
 
-      // Обновляем баланс локально
       setUser((prevUser) => ({
         ...prevUser,
         balance: newBalance
@@ -148,7 +156,6 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ userData, token }) => {
 
   const currentUser = user || defaultUser;
 
-  // useEffect для отправки баланса при закрытии приложения
   useEffect(() => {
     const handleVisibilityChange = () => {
       if (document.visibilityState === 'hidden' && userData && token && user) { 
@@ -160,14 +167,15 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ userData, token }) => {
                 'Content-Type': 'application/json',
                 'Authorization': `Bearer ${token}`,
               },
-              body: JSON.stringify({ user_id: userData.id, points: user?.balance }), 
+              body: JSON.stringify({ user_id: userData.id, points: user?.balance }),
             });
             if (!response.ok) {
+              const errorText = await response.text();
+              console.error('Error response:', errorText);
               throw new Error('Network response was not ok.');
             }
           } catch (error) {
             console.error('Error updating balance on server:', error);
-            // Здесь можно добавить логику для обработки ошибки, например, сохранение баланса локально для повторной отправки позже
           }
         };
         updateBalanceOnServer();
