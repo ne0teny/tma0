@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
 import NavigationBar from './Navigation';
 import styles from './scss/HomeScreen.module.scss';
 import { ReactComponent as Frame122 } from './img/Frame 122.svg';
@@ -55,6 +55,38 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ userData, token }) => {
   // Состояние для контроля отправки запроса при закрытии приложения
   const [isAppClosing, setIsAppClosing] = useState(false);
 
+  // Оборачиваем updateBalanceOnServer в useCallback
+  const updateBalanceOnServer = useCallback(async () => {
+    try {
+      if (!user || !isAppClosing) return; // Отправляем запрос только при закрытии
+
+      const response = await fetch(`${API_URL}/user/update_points`, {
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`,
+        },
+        body: JSON.stringify({
+          gain_points: pointsGained.toString(),
+        }),
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        console.error('Ошибка сервера:', errorData);
+        setError(errorData.detail || 'Произошла ошибка при обновлении баланса');
+      } else {
+        console.log("Баланс успешно обновлён");
+        setError(null);
+      }
+    } catch (error) {
+      console.error('Ошибка обновления баланса на сервере:', error);
+      setError('Ошибка сети. Проверьте подключение к интернету.');
+    } finally {
+      setIsAppClosing(false); // Сбрасываем флаг закрытия
+    }
+  }, [isAppClosing, pointsGained, token, user]); // Зависимости useCallback
+
   useEffect(() => {
     const fetchUserData = async () => {
       try {
@@ -77,7 +109,7 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ userData, token }) => {
         setEnergy(userData.energy);
 
         // Инициализируем pointsGained при получении данных пользователя
-        setPointsGained(userData.balance);
+        setPointsGained(userData.balance); 
       } catch (error) {
         console.error('Ошибка:', error);
         setError('Ошибка при загрузке данных пользователя');
@@ -96,7 +128,7 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ userData, token }) => {
 
     document.addEventListener('visibilitychange', handleVisibilityChange);
     return () => document.removeEventListener('visibilitychange', handleVisibilityChange);
-  }, [token]); // Зависимость только от токена
+  }, [token, updateBalanceOnServer]); // Зависимости useEffect
 
   useEffect(() => {
     const intervalId = setInterval(() => {
@@ -161,36 +193,6 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ userData, token }) => {
 
   const currentUser = user || defaultUser;
 
-  const updateBalanceOnServer = async () => {
-    try {
-      if (!user || !isAppClosing) return; // Отправляем запрос только при закрытии
-
-      const response = await fetch(`${API_URL}/user/update_points`, {
-        method: 'PATCH',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`,
-        },
-        body: JSON.stringify({
-          gain_points: pointsGained.toString(),
-        }),
-      });
-
-      if (!response.ok) {
-        const errorData = await response.json();
-        console.error('Ошибка сервера:', errorData);
-        setError(errorData.detail || 'Произошла ошибка при обновлении баланса');
-      } else {
-        console.log("Баланс успешно обновлён");
-        setError(null);
-      }
-    } catch (error) {
-      console.error('Ошибка обновления баланса на сервере:', error);
-      setError('Ошибка сети. Проверьте подключение к интернету.');
-    } finally {
-      setIsAppClosing(false); // Сбрасываем флаг закрытия
-    }
-  };
 
   return (
     <div>
