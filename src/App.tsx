@@ -57,7 +57,7 @@ function App() {
           const loginResult = await response.json();
 
           const userWithId: User = {
-            id: loginResult.user_id, 
+            id: loginResult.user_id,
             ...loginResult.user,
           };
 
