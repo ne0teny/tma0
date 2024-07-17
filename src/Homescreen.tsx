@@ -137,7 +137,7 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ userData, token }) => {
     id: 0,
     level: 1,
     league: 'No league',
-    balance: 0,
+    balance: 0, 
     income: 0,
     avatar: avatar,
     name: 'New User',
@@ -150,6 +150,8 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ userData, token }) => {
   useEffect(() => {
     const updateBalanceOnServer = async () => {
       try {
+        if (!user) return; 
+
         const response = await fetch(`${API_URL}/user/update_points`, {
           method: 'PATCH',
           headers: {
@@ -157,7 +159,7 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ userData, token }) => {
             'Authorization': `Bearer ${token}`,
           },
           body: JSON.stringify({
-            gain_points: user?.balance.toString() ?? '0' 
+            gain_points: isNaN(user.balance) ? '0' : user.balance.toString(), 
           }),
         });
 
@@ -177,8 +179,7 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ userData, token }) => {
 
     document.addEventListener('visibilitychange', updateBalanceOnServer);
     return () => document.removeEventListener('visibilitychange', updateBalanceOnServer);
-  }, [userData, token, user]);
-
+  }, [user, token]); 
   if (error) {
     return <div className={styles.error}>{error}</div>; 
   }
