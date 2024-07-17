@@ -9,7 +9,7 @@ import Mine from './Mine';
 import Loading from './Loading';
 import Airdrop from './Airdrop';
 
-const API_URL = 'https://5b44-89-107-97-177.ngrok-free.app';
+const API_URL = 'https://47bc-89-107-97-177.ngrok-free.app';
 
 interface User {
   id: number;
@@ -26,12 +26,12 @@ interface User {
 interface ComponentProps {
   userData: User | null;
   token: string | null;
-  setUserData?: (userData: User | null) => void; // setUserData необязателен для некоторых компонентов
+  setUserData?: (userData: User | null) => void; 
 }
 
 function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [userData, setUserData] = useState<User | null>(null); 
+  const [userData, setUserData] = useState<User | null>(null);
   const [token, setToken] = useState<string | null>(localStorage.getItem('token')); 
 
   useEffect(() => {
@@ -61,9 +61,9 @@ function App() {
 
         if (response.ok) {
           const loginResult = await response.json();
-
+          
           const userWithId: User = {
-            id: loginResult.user_id,
+            id: loginResult.user_id, 
             ...loginResult.user,
           };
 

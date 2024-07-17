@@ -1,4 +1,4 @@
-import { FunctionComponent, useRef, useState, useEffect } from 'react';
+import React, { FunctionComponent, useRef, useState, useEffect } from 'react';
 import styles from './scss/Earn.module.scss';
 import NavigationBar from './Navigation';
 
@@ -6,10 +6,10 @@ import frame122 from './img/Frame 122.png';
 import actionSheedImage from './img/ActionSheed image.png';
 import iconSvg from './img/Icon.svg'; 
 
-const API_URL = 'https://5b44-89-107-97-177.ngrok-free.app';
+const API_URL = 'https://47bc-89-107-97-177.ngrok-free.app';
 
 interface User {
-  id: number; 
+  id: number;
   level: number;
   league: string;
   balance: number;
@@ -20,24 +20,33 @@ interface User {
   followers: number;
 }
 
-interface EarnProps {
-  userData: User | null;
+interface Reward {
+  day: number;
+  amount: number;
+  claimed: boolean; 
 }
 
-const Earn: FunctionComponent<EarnProps> = ({ userData }) => {
+interface EarnProps {
+  userData: User | null;
+  token: string | null;
+  setUserData: (userData: User | null) => void;
+}
+
+const Earn: FunctionComponent<EarnProps> = ({ userData, token, setUserData }) => {
   const scrollRef = useRef<HTMLDivElement>(null);
   const [startX, setStartX] = useState(0);
-  const [dailyRewards, setDailyRewards] = useState<number[]>([]);
-  const [claimedDays, setClaimedDays] = useState<number[]>([]);
+  const [dailyRewards, setDailyRewards] = useState<Reward[]>([]);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     const fetchDailyRewards = async () => {
       try {
-        if (userData) {
-          const response = await fetch(`${API_URL}/user/daily_rewards?user_id=${userData.id}`, { 
+        if (userData && token) {
+          const response = await fetch(`<span class="math-inline">\{API\_URL\}/user/daily\_rewards?user\_id\=</span>{userData.id}`, {
             method: 'GET',
             headers: {
               'Content-Type': 'application/json',
+              'Authorization': `Bearer ${token}`,
             },
           });
           if (!response.ok) {
@@ -45,15 +54,14 @@ const Earn: FunctionComponent<EarnProps> = ({ userData }) => {
           }
           const data = await response.json();
           setDailyRewards(data.rewards); 
-          setClaimedDays(data.claimed_days); 
         }
       } catch (error) {
         console.error('Error fetching daily rewards:', error);
-        
+        setError('Ошибка при загрузке ежедневных наград'); 
       }
     };
     fetchDailyRewards();
-  }, [userData]); 
+  }, [userData, token]); 
 
   const handleTouchStart = (event: React.TouchEvent) => {
     setStartX(event.touches[0].clientX);
@@ -73,26 +81,38 @@ const Earn: FunctionComponent<EarnProps> = ({ userData }) => {
   };
 
   const handleClaimReward = async (day: number) => {
+    if (!userData || !token) {
+        setError('Ошибка авторизации');
+        return;
+    }
     try {
       const response = await fetch(`${API_URL}/user/claim_daily_reward`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`,
         },
-        body: JSON.stringify({ day }),
+        body: JSON.stringify({ day, user_id: userData.id }), 
       });
 
       if (!response.ok) {
         throw new Error('Network response was not ok.');
       }
 
-      
+      // Обработка успешного получения награды
       console.log('Reward claimed successfully!');
-      setClaimedDays([...claimedDays, day]);
-     
+      // Обновляем данные пользователя и список наград
+      const updatedRewards = dailyRewards.map(reward => 
+        reward.day === day ? { ...reward, claimed: true } : reward
+      );
+      setDailyRewards(updatedRewards);
+      
+      // Обновляем баланс пользователя (предполагая, что сервер возвращает обновленный баланс)
+      const updatedUserData = await response.json();
+      setUserData(updatedUserData.user); 
     } catch (error) {
       console.error('Error claiming reward:', error);
-     
+      setError('Ошибка при получении награды'); 
     }
   };
 
@@ -111,19 +131,19 @@ const Earn: FunctionComponent<EarnProps> = ({ userData }) => {
         <div className={styles.everyDarErningParent} ref={scrollRef}>
           {dailyRewards.map((reward, index) => ( 
             <div className={index === 0 ? styles.everyDarErning : styles.everyDarErning1} key={index}> 
-              <div className={styles.div2}>День {index + 1}</div>
+              <div className={styles.div2}>День {reward.day}</div> 
               <div className={styles.instanceParent}>
                 <img className={styles.frameChild} alt="Награда за день" src={frame122} />
                 <img className={styles.frameItem} alt="Награда за день" src={frame122} />
               </div>
               <div className={styles.div3}>
-                {reward}
+                {reward.amount}
               </div>
               <button 
-                onClick={() => handleClaimReward(index + 1)}
-                disabled={claimedDays.includes(index + 1)} 
+                onClick={() => handleClaimReward(reward.day)}
+                disabled={reward.claimed} 
               >
-                {claimedDays.includes(index + 1) ? 'Получено' : 'Получить'}
+                {reward.claimed ? 'Получено' : 'Получить'}
               </button>
             </div>
           ))}
@@ -184,6 +204,8 @@ const Earn: FunctionComponent<EarnProps> = ({ userData }) => {
       <div className={styles.navigationContainer}>
         <NavigationBar /> 
       </div>
+
+      {error && <div className={styles.error}>{error}</div>} 
     </div>
   );
 };
