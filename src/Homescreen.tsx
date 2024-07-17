@@ -263,8 +263,8 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ userData, token }) => {
           >
             <div className={styles.highlightedInfo}>
               <Component13 className={styles.component13Icon} aria-label="Компонент 13" />
-              <div className={styles.highlightedFigure}>{currentUser.balance}</div>
-            </div>
+              <div className={styles.highlightedFigure}>{isNaN(pointsGained) ? 0 : pointsGained}</div> 
+              </div>
 
             <AdditionalInfo
               className={`${styles.additionalInfoIcon} ${isClicking ? styles.clicking : ''}`}
