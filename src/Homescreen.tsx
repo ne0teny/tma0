@@ -49,6 +49,9 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ userData, token }) => {
   const additionalInfoRef = useRef<SVGSVGElement>(null);
   const contentBlockRef = useRef<HTMLDivElement>(null);
 
+  // Состояние для отслеживания заработанных поинтов в текущей сессии
+  const [pointsGained, setPointsGained] = useState(0);
+
   useEffect(() => {
     const fetchUserData = async () => {
       try {
@@ -69,6 +72,9 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ userData, token }) => {
         const userData = await response.json();
         setUser(userData);
         setEnergy(userData.energy);
+
+        // Инициализируем pointsGained при получении данных пользователя
+        setPointsGained(userData.balance); 
       } catch (error) {
         console.error('Ошибка:', error);
         setError('Ошибка при загрузке данных пользователя');
@@ -106,12 +112,8 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ userData, token }) => {
     }
 
     if (energy > 0 && user) {
-      const newBalance = user.balance + clickValue;
-
-      setUser((prevUser) =>
-        prevUser ? { ...prevUser, balance: newBalance } : prevUser
-      );
-
+      // Обновляем pointsGained сразу при клике
+      setPointsGained(pointsGained + clickValue);
       setEnergy(energy - 1);
       setIsClicking(true);
 
@@ -152,6 +154,7 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ userData, token }) => {
       try {
         if (!user) return; 
 
+        // Отправляем pointsGained на сервер
         const response = await fetch(`${API_URL}/user/update_points`, {
           method: 'PATCH',
           headers: {
@@ -159,7 +162,7 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ userData, token }) => {
             'Authorization': `Bearer ${token}`,
           },
           body: JSON.stringify({
-            gain_points: isNaN(user.balance) ? '0' : user.balance.toString(), 
+            gain_points: pointsGained.toString(), // Отправляем заработанные поинты
           }),
         });
 
@@ -179,10 +182,9 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ userData, token }) => {
 
     document.addEventListener('visibilitychange', updateBalanceOnServer);
     return () => document.removeEventListener('visibilitychange', updateBalanceOnServer);
-  }, [user, token]); 
-  if (error) {
-    return <div className={styles.error}>{error}</div>; 
-  }
+  }, [user, token, pointsGained]); // Добавляем pointsGained в зависимости
+
+
 
   return (
     <div>
