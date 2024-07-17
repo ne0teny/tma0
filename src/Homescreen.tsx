@@ -151,12 +151,12 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ userData, token }) => {
     const updateBalanceOnServer = async () => {
       try {
         const response = await fetch(`${API_URL}/user/update_points`, {
-          method: 'PATCH',  
+          method: 'PATCH',
           headers: {
             'Content-Type': 'application/json',
             'Authorization': `Bearer ${token}`,
           },
-          body: JSON.stringify({ 
+          body: JSON.stringify({
             gain_points: user?.balance.toString() ?? '0' 
           }),
         });
@@ -164,10 +164,10 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ userData, token }) => {
         if (!response.ok) {
           const errorData = await response.json();
           console.error('Ошибка сервера:', errorData);
-          setError(errorData.detail || 'Произошла ошибка при обновлении баланса'); 
+          setError(errorData.detail || 'Произошла ошибка при обновлении баланса');
         } else {
           console.log("Баланс успешно обновлён");
-          setError(null); 
+          setError(null);
         }
       } catch (error) {
         console.error('Ошибка обновления баланса на сервере:', error);
