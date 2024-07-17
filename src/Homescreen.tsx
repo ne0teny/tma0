@@ -164,7 +164,7 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ userData, token }) => {
                 'Content-Type': 'application/json',
                 'Authorization': `Bearer ${token}`,
               },
-              body: JSON.stringify({ user_id: userData.id, gain_points: user.balance }),
+              body: JSON.stringify({ gain_points: user.balance }),
             });
             if (!response.ok) {
               const errorText = await response.text();
