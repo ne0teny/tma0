@@ -8,7 +8,9 @@ import actionsheedImage from './img/ActionSheed image.png';
 import frame122 from './img/Frame 122.png';
 import icon from './img/Icon.svg'; 
 
-const API_URL = 'https://5b44-89-107-97-177.ngrok-free.app';
+const API_URL = 'https://47bc-89-107-97-177.ngrok-free.app';
+
+
 
 interface User {
   id: number;
@@ -20,13 +22,13 @@ interface User {
   name: string;
   energy: number;
   followers: number;
-  // ... другие поля, если необходимо
+
 }
 
 interface Friend {
   id: number;
   name: string;
-  // ... другие поля, если необходимо
+
 }
 
 interface FriendsMainProps {
@@ -58,7 +60,7 @@ const FriendsMain: FunctionComponent<FriendsMainProps> = ({ userData, token }) =
 
   useEffect(() => {
     const fetchReferralLink = async () => {
-      if (userData && token) { // Проверяем наличие userData и token
+      if (userData && token) { 
         try {
           const response = await fetch(`${API_URL}/user/get_referral_link?user_id=${userData.id}`, {
             headers: {
@@ -80,7 +82,7 @@ const FriendsMain: FunctionComponent<FriendsMainProps> = ({ userData, token }) =
     };
 
     const fetchInvitedFriends = async () => {
-      if (userData && token) { // Проверяем наличие userData и token
+      if (userData && token) { 
         try {
           const response = await fetch(`${API_URL}/user/get_friends?user_id=${userData.id}`, {
             headers: {
@@ -101,11 +103,11 @@ const FriendsMain: FunctionComponent<FriendsMainProps> = ({ userData, token }) =
 
     fetchReferralLink();
     fetchInvitedFriends();
-  }, [userData, token]); // Добавляем token в зависимости
+  }, [userData, token]); 
 
   useEffect(() => {
     const initMainButton = async () => {
-      await WebApp.ready(); // Ожидаем, пока WebApp будет готов
+      await WebApp.ready(); 
       if (referralLink) {
         WebApp.MainButton.setText('Поделиться ссылкой');
         WebApp.MainButton.show();
@@ -127,7 +129,7 @@ const FriendsMain: FunctionComponent<FriendsMainProps> = ({ userData, token }) =
   };
 
   if (loading) {
-    return <div>Loading...</div>; // или другой индикатор загрузки
+    return <div>Loading...</div>; 
   }
 
   if (error) {

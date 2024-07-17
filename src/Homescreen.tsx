@@ -11,7 +11,7 @@ import frame109 from './img/Frame 109.svg';
 import avatar from './img/Avatar.png';
 import imageКубок from './img/image кубок.png';
 
-const API_URL = 'https://5b44-89-107-97-177.ngrok-free.app'; 
+const API_URL = 'https://47bc-89-107-97-177.ngrok-free.app'; 
 
 
 interface ComponentProps {

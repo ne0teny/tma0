@@ -10,7 +10,7 @@ import SubtractImage from './img/Subtract.svg';
 import Component9Image from './img/Component 9.png';
 import Image7Image from './img/image 7.png';
 
-const API_URL = 'https://5b44-89-107-97-177.ngrok-free.app';
+const API_URL = 'https://47bc-89-107-97-177.ngrok-free.app';
 
 interface User {
   id: number;
@@ -60,7 +60,7 @@ const Mine: FunctionComponent<MineProps> = ({ userData, token, setUserData }) =>
     };
 
     const fetchOwnedMiners = async () => {
-      if (userData && token) { // Проверяем наличие userData и token
+      if (userData && token) { 
         try {
           const response = await fetch(`${API_URL}/user/miners?user_id=${userData.id}`, {
             headers: {
@@ -93,7 +93,7 @@ const Mine: FunctionComponent<MineProps> = ({ userData, token, setUserData }) =>
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`, // Передаем токен в заголовке
+          'Authorization': `Bearer ${token}`, 
         },
       });
 
@@ -101,15 +101,13 @@ const Mine: FunctionComponent<MineProps> = ({ userData, token, setUserData }) =>
         throw new Error('Network response was not ok.');
       }
 
-      // Обработка успешной покупки майнера
       console.log('Miner bought successfully!');
-      // Обновить данные пользователя и список ownedMiners
       const updatedUserData = await response.json();
-      setUserData(updatedUserData.user); // Обновляем данные пользователя
-      setOwnedMiners(updatedUserData.miners); // Обновляем список майнеров
+      setUserData(updatedUserData.user); 
+      setOwnedMiners(updatedUserData.miners); 
     } catch (error) {
       console.error('Error buying miner:', error);
-      setError('Ошибка при покупке майнера'); // Устанавливаем сообщение об ошибке
+      setError('Ошибка при покупке майнера'); 
     }
   };
 
