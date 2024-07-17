@@ -167,7 +167,7 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ userData, token }) => {
                 'Content-Type': 'application/json',
                 'Authorization': `Bearer ${token}`,
               },
-              body: JSON.stringify(payload),
+              body: payload,
             });
 
             if (!response.ok) {
