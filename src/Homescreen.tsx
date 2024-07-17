@@ -14,7 +14,7 @@ import imageКубок from './img/image кубок.png';
 const API_URL = 'https://47bc-89-107-97-177.ngrok-free.app'; 
 
 interface User {
-  id: number; // Добавляем свойство id
+  id: number;
   level: number;
   league: string;
   balance: number;
@@ -61,7 +61,7 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ userData, token }) => {
         });
         if (!response.ok) {
           if (response.status === 401) {
-            // Токен недействителен, перенаправляем на страницу входа (логика перенаправления)
+            // Токен недействителен, перенаправляем на страницу входа 
             setError('Ошибка авторизации')
           } else {
             throw new Error('Network response was not ok.');
@@ -106,10 +106,15 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ userData, token }) => {
       setClickAnimations((prevAnimations) => [...prevAnimations, newAnimation]);
     }
 
-    if (energy > 0) {
-      setUser((prevUser) =>
-        prevUser ? { ...prevUser, balance: prevUser.balance + clickValue } : prevUser
-      ); // Обновляем баланс локально
+    if (energy > 0 && userData) { 
+      const newBalance = userData.balance + clickValue;
+
+      // Обновляем баланс локально
+      setUser((prevUser) => ({
+        ...prevUser,
+        balance: newBalance
+      }));
+
       setEnergy(energy - 1);
       setIsClicking(true);
 
@@ -130,7 +135,7 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ userData, token }) => {
   }, []);
 
   const defaultUser: User = {
-    id: 0, // Изначально id = 0, чтобы не было ошибки при первом рендере
+    id: 0, 
     level: 1,
     league: 'No league',
     balance: 0,
@@ -146,8 +151,7 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ userData, token }) => {
   // useEffect для отправки баланса при закрытии приложения
   useEffect(() => {
     const handleVisibilityChange = () => {
-      if (document.visibilityState === 'hidden' && userData && token) {
-        // Приложение стало невидимым (закрыто), отправляем запрос на обновление баланса
+      if (document.visibilityState === 'hidden' && userData && token && user) { 
         const updateBalanceOnServer = async () => {
           try {
             const response = await fetch(`${API_URL}/user/update_points`, {
@@ -156,7 +160,7 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ userData, token }) => {
                 'Content-Type': 'application/json',
                 'Authorization': `Bearer ${token}`,
               },
-              body: JSON.stringify({ user_id: userData.id, points: user?.balance }), // Отправляем актуальный баланс
+              body: JSON.stringify({ user_id: userData.id, points: user?.balance }), 
             });
             if (!response.ok) {
               throw new Error('Network response was not ok.');
@@ -172,7 +176,7 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ userData, token }) => {
 
     document.addEventListener('visibilitychange', handleVisibilityChange);
     return () => document.removeEventListener('visibilitychange', handleVisibilityChange);
-  }, [userData, token, user?.balance]); // Добавляем user.balance в зависимости
+  }, [userData, token, user?.balance]); 
 
   if (error) {
     return <div>{error}</div>;
@@ -212,7 +216,7 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ userData, token }) => {
               <div className={styles.pointBlock2}>
                 <div className={styles.skufsdff}>Skuffolog...</div>
                 <IconSkuff className={styles.iconSkuff} aria-label="Иконка Skuffolog" />
-                </div>
+              </div>
               <div className={styles.level89Parent}>
                 <div className={styles.level89}>level {currentUser.level}</div>
                 <div className={styles.frameWrapper}>

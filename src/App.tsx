@@ -26,13 +26,13 @@ interface User {
 interface ComponentProps {
   userData: User | null;
   token: string | null;
-  setUserData?: (userData: User | null) => void; 
+  setUserData?: (userData: User | null) => void;
 }
 
 function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [userData, setUserData] = useState<User | null>(null);
-  const [token, setToken] = useState<string | null>(localStorage.getItem('token')); 
+  const [token, setToken] = useState<string | null>(localStorage.getItem('token'));
 
   useEffect(() => {
     WebApp.ready();
@@ -61,7 +61,7 @@ function App() {
 
         if (response.ok) {
           const loginResult = await response.json();
-          
+
           const userWithId: User = {
             id: loginResult.user_id, 
             ...loginResult.user,
@@ -95,5 +95,6 @@ function App() {
     </div>
   );
 }
+
 
 export default App;
