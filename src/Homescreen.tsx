@@ -253,8 +253,8 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ userData, token }) => {
             </div>
 
             <img
-              ref={characterImageRef}
-              className={`${styles.additionalInfoIcon} ${isClicking ? styles.clicking : ''}`}
+              ref={characterImageRef} // Используем ref для изображения
+              className={styles.characterImage} // Новый класс для изображения персонажа
               src={characterImage}
               alt="Персонаж"
             />
