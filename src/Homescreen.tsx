@@ -52,10 +52,10 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ userData, token }) => {
   const [pointsGained, setPointsGained] = useState(userData?.balance || 0);
 
   useEffect(() => {
-    console.log('Обновление userData в HomeScreen: ', userData);
     setUser(userData);
     setEnergy(userData?.energy || 7000);
     setPointsGained(userData?.balance || 0);
+    console.log('Received updated userData in Homescreen:', userData);
   }, [userData]);
 
   useEffect(() => {
@@ -102,9 +102,8 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ userData, token }) => {
       }
 
       try {
-        console.log('Отправка запроса на обновление баланса...');
-        const response = await fetch(`${API_URL}/user/update_points`, {
-          method: 'PATCH',
+        const response = await fetch(`${API_URL}/user/add_points`, {
+          method: 'POST',
           headers: {
             'Content-Type': 'application/json',
             'Authorization': `Bearer ${token}`,
