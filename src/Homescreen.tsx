@@ -102,7 +102,7 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ userData, token }) => {
 
       try {
         const response = await fetch(`${API_URL}/user/update_points`, {
-          method: 'PATCH', 
+          method: 'PATCH',
           headers: {
             'Content-Type': 'application/json',
             'Authorization': `Bearer ${token}`,

@@ -9,7 +9,7 @@ import Mine from './Mine';
 import Loading from './Loading';
 import Airdrop from './Airdrop';
 
-const API_URL = 'https://1178-89-107-97-177.ngrok-free.app';
+const API_URL = 'https://1178-89-107-97-177.ngrok-free.app'; // Замените на ваш актуальный URL
 
 interface User {
   id: number;
@@ -26,6 +26,7 @@ interface User {
 function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [userData, setUserData] = useState<User | null>(null);
+  const [isLoading, setIsLoading] = useState(true); // Индикатор загрузки
 
   useEffect(() => {
     WebApp.ready();
@@ -33,22 +34,27 @@ function App() {
     const initializeApp = async () => {
       const token = localStorage.getItem('token');
       if (token) {
-        // Пользователь уже авторизован, получаем данные с сервера
         try {
-          const response = await fetch(`${API_URL}/user/me`, {
+          // Получаем актуальный баланс пользователя
+          const response = await fetch(`${API_URL}/user/get_points`, {
             headers: { Authorization: `Bearer ${token}` },
           });
+
           if (response.ok) {
-            const userData = await response.json();
-            setUserData(userData);
+            const balanceData = await response.json();
+            setUserData((prevUserData) => ({
+              ...prevUserData!,
+              balance: balanceData,
+            }));
           } else {
-            // Обработка ошибки авторизации
+            console.error('Ошибка получения баланса:', response.statusText);
+            // Добавьте обработку ошибки получения баланса (например, отображение сообщения об ошибке)
           }
         } catch (error) {
-          // Обработка ошибки сети
+          console.error('Ошибка сети:', error);
+          // Добавьте обработку ошибки сети (например, отображение сообщения об ошибке)
         }
       } else {
-        // Пользователь не авторизован, отправляем данные Telegram
         const user = window.Telegram?.WebApp?.initDataUnsafe?.user || {};
         try {
           let response = await fetch(`${API_URL}/user/create_user`, {
@@ -68,13 +74,17 @@ function App() {
             setUserData(loginResult.user);
             localStorage.setItem('token', loginResult.token);
           } else {
-            // Обработка ошибки входа/регистрации
+            console.error('Ошибка входа/регистрации:', response.statusText);
+            // Добавьте обработку ошибки входа/регистрации
           }
         } catch (error) {
-          // Обработка ошибки сети
+          console.error('Ошибка сети:', error);
+          // Добавьте обработку ошибки сети
         }
       }
+
       setIsLoggedIn(true);
+      setIsLoading(false); // Скрываем индикатор загрузки
     };
 
     initializeApp();
@@ -82,7 +92,9 @@ function App() {
 
   return (
     <div className="App">
-      {isLoggedIn ? (
+      {isLoading ? ( // Отображаем индикатор загрузки, пока данные не получены
+        <Loading />
+      ) : isLoggedIn ? (
         <Routes>
           <Route path="/" element={<Homescreen userData={userData} token={localStorage.getItem('token')} />} />
           <Route path="/earn" element={<Earn userData={userData} token={localStorage.getItem('token')} setUserData={setUserData} />} />
@@ -92,7 +104,8 @@ function App() {
           <Route path="airdrop" element={<Airdrop userData={userData} token={localStorage.getItem('token')} />} />
         </Routes>
       ) : (
-        <Loading />
+        // Добавьте сюда компонент или логику для случая, когда пользователь не авторизован
+        <div>Пользователь не авторизован</div> 
       )}
     </div>
   );
