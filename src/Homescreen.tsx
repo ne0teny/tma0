@@ -16,7 +16,7 @@ import lvl4 from './img/lvl4.png';
 import lvl5 from './img/lvl5.png';
 import lvl6 from './img/lvl6.png';
 import lvl7 from './img/lvl7.png';
-import lvl8 from './img/lvд8.png';
+import lvl8 from './img/lvl8.png';
 import lvl9 from './img/lvl9.png';
 
 const API_URL = 'https://1178-89-107-97-177.ngrok-free.app';
