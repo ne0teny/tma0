@@ -83,31 +83,24 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ userData, token }) => {
       setClickAnimations((prevAnimations) => [...prevAnimations, newAnimation]);
     }
 
-    if (energy > 0 && user) {
-      setPointsGained(pointsGained + clickValue);
-      setEnergy(energy - 1);
-      setIsClicking(true);
+    setPointsGained((prevPoints) => prevPoints + clickValue * touches.length);
+    setIsClicking(true);
+    setTimeout(() => setIsClicking(false), 200);
 
-      setTimeout(() => {
-        setIsClicking(false);
-      }, 100);
-    }
+    setTimeout(() => {
+      setClickAnimations((prevAnimations) =>
+        prevAnimations.filter((animation) => Date.now() - animation.startTime < 1000)
+      );
+    }, 1000);
   };
 
   useEffect(() => {
-    const intervalId = setInterval(() => {
-      setClickAnimations((prevAnimations) =>
-        prevAnimations.filter(
-          (animation) => Date.now() - animation.startTime < 1000
-        )
-      );
-    }, 100);
-
-    return () => clearInterval(intervalId);
-  }, []);
-
-  useEffect(() => {
     const updateBalanceOnServer = async () => {
+      if (!token) {
+        setError('Не удалось обновить баланс: отсутствует токен.');
+        return;
+      }
+
       try {
         const response = await fetch(`${API_URL}/user/add_points`, {
           method: 'POST',
@@ -136,7 +129,7 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ userData, token }) => {
 
     document.addEventListener('visibilitychange', updateBalanceOnServer);
     return () => document.removeEventListener('visibilitychange', updateBalanceOnServer);
-  }, [user, token, pointsGained]);
+  }, [token, pointsGained]);
 
   const defaultUser: User = {
     id: 0,
