@@ -34,6 +34,7 @@ function App() {
     const initializeApp = async () => {
       const token = localStorage.getItem('token');
       if (token) {
+        console.log('Token найден:', token);
         try {
           // Получаем актуальный баланс пользователя
           const response = await fetch(`${API_URL}/user/get_points`, {
@@ -46,13 +47,12 @@ function App() {
             setUserData((prevUserData) => prevUserData ? { ...prevUserData, balance: balanceData.balance } : null);
           } else {
             console.error('Ошибка получения баланса:', response.statusText);
-            // Добавьте обработку ошибки получения баланса (например, отображение сообщения об ошибке)
           }
         } catch (error) {
           console.error('Ошибка сети:', error);
-          // Добавьте обработку ошибки сети (например, отображение сообщения об ошибке)
         }
       } else {
+        console.log('Token не найден');
         const user = window.Telegram?.WebApp?.initDataUnsafe?.user || {};
         try {
           let response = await fetch(`${API_URL}/user/create_user`, {
@@ -73,11 +73,9 @@ function App() {
             localStorage.setItem('token', loginResult.token);
           } else {
             console.error('Ошибка входа/регистрации:', response.statusText);
-            // Добавьте обработку ошибки входа/регистрации
           }
         } catch (error) {
           console.error('Ошибка сети:', error);
-          // Добавьте обработку ошибки сети
         }
       }
 
@@ -102,8 +100,7 @@ function App() {
           <Route path="airdrop" element={<Airdrop userData={userData} token={localStorage.getItem('token')} />} />
         </Routes>
       ) : (
-        // Добавьте сюда компонент или логику для случая, когда пользователь не авторизован
-        <div>Пользователь не авторизован</div> 
+        <div>Пользователь не авторизован</div>
       )}
     </div>
   );

@@ -102,6 +102,7 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ userData, token }) => {
       }
 
       try {
+        console.log('Отправка запроса на обновление баланса...');
         const response = await fetch(`${API_URL}/user/update_points`, {
           method: 'PATCH',
           headers: {
