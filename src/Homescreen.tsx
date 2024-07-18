@@ -253,11 +253,11 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ userData, token }) => {
             </div>
 
             <img
-              ref={characterImageRef} // Используем ref для изображения
-              className={styles.characterImage} // Новый класс для изображения персонажа
-              src={characterImage}
-              alt="Персонаж"
-            />
+  ref={characterImageRef}
+  className={styles.characterImage}
+  src={`./img/${characterImage}`} // Исправленный путь к изображению
+  alt="Персонаж"
+/>
 
             {clickAnimations.map((animation, index) => (
               <div
