@@ -65,16 +65,29 @@ function App() {
           setToken(loginResult.token);
           localStorage.setItem('token', loginResult.token);
           setIsLoggedIn(true);
+
+          const balanceResponse = await fetch(`${API_URL}/user/get_user_data`, {
+            headers: { Authorization: `Bearer ${loginResult.token}` },
+          });
+
+          if (balanceResponse.ok) {
+            const userDataWithBalance = await balanceResponse.json();
+            setUserData(userDataWithBalance); 
+            console.log("Баланс успешно загружен");
+          } else {
+            console.error('Ошибка при загрузке баланса:', balanceResponse.statusText);
+          }
+
         } else {
-          console.error('Login or registration failed:', response.statusText);
+          console.error('Ошибка входа или регистрации:', response.statusText);
         }
       } catch (error) {
-        console.error('Error sending data:', error);
+        console.error('Ошибка отправки данных:', error);
       }
     };
 
     sendData();
-  }, []);
+  }, []); 
 
   return (
     <div className="App">
