@@ -36,7 +36,7 @@ interface Miner {
 interface MineProps {
   userData: User | null;
   token: string | null;
-  setUserData: (userData: User | null) => void;
+  setUserData: React.Dispatch<React.SetStateAction<User | null>>;
 }
 
 const Mine: FunctionComponent<MineProps> = ({ userData, token, setUserData }) => {

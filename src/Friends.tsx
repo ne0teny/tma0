@@ -34,6 +34,7 @@ interface Friend {
 interface FriendsMainProps {
   userData: User | null;
   token: string | null;
+  setUserData: React.Dispatch<React.SetStateAction<User | null>>;
 }
 
 const FriendsMain: FunctionComponent<FriendsMainProps> = ({ userData, token }) => {

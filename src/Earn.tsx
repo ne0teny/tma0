@@ -20,6 +20,7 @@ interface User {
   followers: number;
 }
 
+
 interface Reward {
   day: number;
   amount: number;
@@ -29,7 +30,7 @@ interface Reward {
 interface EarnProps {
   userData: User | null;
   token: string | null;
-  setUserData: (userData: User | null) => void;
+  setUserData: React.Dispatch<React.SetStateAction<User | null>>;
 }
 
 const Earn: FunctionComponent<EarnProps> = ({ userData, token, setUserData }) => {

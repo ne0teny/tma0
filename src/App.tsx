@@ -66,34 +66,40 @@ function App() {
           localStorage.setItem('token', loginResult.token);
           setIsLoggedIn(true);
 
-          // Fetch user points and energy after successful login
-          const pointsResponse = await fetch(`${API_URL}/user/get_points`, {
-            headers: { Authorization: `Bearer ${loginResult.token}` },
-          });
+          // Запрос баланса после успешного логина
+          try {
+            const balanceResponse = await fetch(`${API_URL}/user/get_user_data`, {
+              headers: { Authorization: `Bearer ${loginResult.token}` },
+            });
 
-          if (pointsResponse.ok) {
-            const pointsData = await pointsResponse.json();
-            setUserData(prevUserData => prevUserData ? { ...prevUserData, balance: pointsData.balance, energy: pointsData.energy } : null);
-          } else {
-            console.error('Failed to fetch user points:', pointsResponse.statusText);
+            if (balanceResponse.ok) {
+              const userDataWithBalance = await balanceResponse.json();
+              setUserData(userDataWithBalance); 
+              console.log("Баланс успешно загружен");
+            } else {
+              console.error('Ошибка при загрузке баланса:', balanceResponse.statusText);
+            }
+          } catch (error) {
+            console.error('Ошибка при загрузке баланса:', error);
           }
+
         } else {
-          console.error('Login or registration failed:', response.statusText);
+          console.error('Ошибка входа или регистрации:', response.statusText);
         }
       } catch (error) {
-        console.error('Error sending data:', error);
+        console.error('Ошибка отправки данных:', error);
       }
     };
 
     sendData();
-  }, []);
+  }, []); 
 
   return (
     <div className="App">
       <Routes>
         <Route path="/" element={isLoggedIn ? <Homescreen userData={userData} token={token} /> : <Loading />} />
         <Route path="/earn" element={isLoggedIn ? <Earn userData={userData} token={token} setUserData={setUserData} /> : <Loading />} /> 
-        <Route path="/friends" element={isLoggedIn ? <Friends userData={userData} token={token} /> : <Loading />} />
+        <Route path="/friends" element={isLoggedIn ? <Friends userData={userData} token={token} setUserData={setUserData} /> : <Loading />} />
         <Route path="/mine" element={isLoggedIn ? <Mine userData={userData} token={token} setUserData={setUserData} /> : <Loading />} /> 
         <Route path="*" element={<Navigate to="/" />} />
         <Route path="airdrop" element={isLoggedIn ? <Airdrop userData={userData} token={token} /> : <Loading />} />

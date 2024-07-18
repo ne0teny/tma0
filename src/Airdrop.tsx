@@ -1,105 +1,101 @@
-import React, { useState, useEffect } from 'react';
-import './App.css';
-import Homescreen from './Homescreen';
-import Earn from './Earn';
-import WebApp from '@twa-dev/sdk';
-import { Routes, Route, Navigate } from 'react-router-dom';
-import Friends from './Friends';
-import Mine from './Mine';
-import Loading from './Loading';
-import Airdrop from './Airdrop';
+import React, { FunctionComponent, useState, useEffect } from 'react';
+import styles from './scss/Airdrop.module.scss';
+import Image15 from './img/image 15.png';
 
 const API_URL = 'https://1178-89-107-97-177.ngrok-free.app';
 
-interface User {
+interface AirdropData {
   id: number;
-  level: number;
-  league: string;
-  balance: number;
-  income: number;
-  avatar: string;
-  name: string;
-  energy: number;
-  followers: number;
+  title: string;
+  description: string;
+  image: string; 
+  reward: number; 
 }
 
-function App() {
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [userData, setUserData] = useState<User | null>(null);
-  const [token, setToken] = useState<string | null>(localStorage.getItem('token'));
+interface User {
+  id: number;
+}
+
+interface AirdropProps {
+  userData: User | null;
+  token: string | null;
+}
+
+const Airdrop: FunctionComponent<AirdropProps> = ({ userData }) => {
+  const [airdrops, setAirdrops] = useState<AirdropData[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    WebApp.ready();
-
-    const sendData = async () => {
-      const user = window.Telegram?.WebApp?.initDataUnsafe?.user || {};
-
+    const fetchAirdrops = async () => {
       try {
-        let response = await fetch(`${API_URL}/user/create_user`, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({ data: user }),
-        });
-
+        const response = await fetch(`${API_URL}/airdrops`);
         if (!response.ok) {
-          response = await fetch(`${API_URL}/user/login_user`, {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({ data: user }),
-          });
+          throw new Error('Network response was not ok.');
         }
-
-        if (response.ok) {
-          const loginResult = await response.json();
-
-          const userWithId: User = {
-            id: loginResult.user_id, 
-            ...loginResult.user,
-          };
-
-          setUserData(userWithId);
-          setToken(loginResult.token);
-          localStorage.setItem('token', loginResult.token);
-          setIsLoggedIn(true);
-
-          // Fetch user points and energy after successful login
-          const pointsResponse = await fetch(`${API_URL}/user/get_points`, {
-            headers: { Authorization: `Bearer ${loginResult.token}` },
-          });
-
-          if (pointsResponse.ok) {
-            const pointsData = await pointsResponse.json();
-            setUserData(prevUserData => prevUserData ? { ...prevUserData, balance: pointsData.balance, energy: pointsData.energy } : null);
-          } else {
-            console.error('Failed to fetch user points:', pointsResponse.statusText);
-          }
-        } else {
-          console.error('Login or registration failed:', response.statusText);
-        }
+        const data = await response.json();
+        setAirdrops(data);
       } catch (error) {
-        console.error('Error sending data:', error);
+        console.error('Error fetching airdrops:', error);
+        setError('Ошибка при загрузке аирдропов');
+      } finally {
+        setLoading(false);
       }
     };
 
-    sendData();
+    fetchAirdrops();
   }, []);
 
+  const handleParticipate = async (airdropId: number) => {
+    if (!userData) {
+      setError('Вы должны войти, чтобы участвовать в аирдропе.');
+      return;
+    }
+
+    try {
+      const response = await fetch(`${API_URL}/user/participate_airdrop/${airdropId}`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+
+      if (!response.ok) {
+        throw new Error('Network response was not ok.');
+      }
+
+      console.log('Airdrop participation successful!');
+    
+    } catch (error) {
+      console.error('Error participating in airdrop:', error);
+      setError('Ошибка при участии в аирдропе.');
+    }
+  };
+
+  if (loading) {
+    return <div>Loading...</div>; 
+  }
+
+  if (error) {
+    return <div>{error}</div>;
+  }
+
   return (
-    <div className="App">
-      <Routes>
-        <Route path="/" element={isLoggedIn ? <Homescreen userData={userData} token={token} /> : <Loading />} />
-        <Route path="/earn" element={isLoggedIn ? <Earn userData={userData} token={token} setUserData={setUserData} /> : <Loading />} /> 
-        <Route path="/friends" element={isLoggedIn ? <Friends userData={userData} token={token} /> : <Loading />} />
-        <Route path="/mine" element={isLoggedIn ? <Mine userData={userData} token={token} setUserData={setUserData} /> : <Loading />} /> 
-        <Route path="*" element={<Navigate to="/" />} />
-        <Route path="airdrop" element={isLoggedIn ? <Airdrop userData={userData} token={token} /> : <Loading />} />
-      </Routes>
+    <div className={styles.airdrop}>
+      {airdrops.length === 0 ? (
+        <div className={styles.comingSoon}>Скоро... 🤍🤍🤍</div>
+      ) : (
+        airdrops.map((airdrop) => (
+          <div key={airdrop.id} className={styles.airdropItem}>
+            <img src={airdrop.image} alt={airdrop.title} className={styles.airdropImage} />
+            <div className={styles.airdropTitle}>{airdrop.title}</div>
+            <div className={styles.airdropDescription}>{airdrop.description}</div>
+            <button onClick={() => handleParticipate(airdrop.id)}>Участвовать</button>
+          </div>
+        ))
+      )}
     </div>
   );
-}
+};
 
-export default App;
+export default Airdrop;
