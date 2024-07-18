@@ -66,16 +66,16 @@ function App() {
           localStorage.setItem('token', loginResult.token);
           setIsLoggedIn(true);
 
-          // Запрос баланса после успешного логина
+          // Запрос баланса после успешного логина - ИСПРАВЛЕННЫЙ ЗАПРОС
           try {
-            const balanceResponse = await fetch(`${API_URL}/user/get_user_data`, {
+            const balanceResponse = await fetch(`${API_URL}/user/get_points`, {
               headers: { Authorization: `Bearer ${loginResult.token}` },
             });
 
             if (balanceResponse.ok) {
-              const userDataWithBalance = await balanceResponse.json();
-              setUserData(userDataWithBalance); 
-              console.log("Баланс успешно загружен");
+              const balanceData = await balanceResponse.json(); 
+              setUserData({...userWithId, balance: balanceData}); // Обновляем баланс в userData
+              console.log("Баланс успешно загружен:", balanceData);
             } else {
               console.error('Ошибка при загрузке баланса:', balanceResponse.statusText);
             }
