@@ -75,7 +75,10 @@ function App() {
 
             if (balanceResponse.ok) {
               const balanceData = await balanceResponse.json(); 
-              setUserData({...userWithId, balance: balanceData}); // Обновляем баланс в userData
+              setUserData((prevUserData) => ({
+                ...prevUserData!,
+                balance: balanceData,
+              }));
               console.log("Баланс успешно загружен:", balanceData);
             } else {
               console.error('Ошибка при загрузке баланса:', balanceResponse.statusText);
