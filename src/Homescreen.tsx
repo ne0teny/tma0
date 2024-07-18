@@ -33,13 +33,13 @@ interface ClickAnimation {
 interface HomeScreenProps {
   userData: User | null;
   token: string | null;
-  onBalanceUpdate: (newBalance: number) => void; // Функция для обновления баланса в App.tsx
 }
 
-const HomeScreen: React.FC<HomeScreenProps> = ({ userData, token, onBalanceUpdate }) => {
-  const [isClicking, setIsClicking] = useState(false); 
+const HomeScreen: React.FC<HomeScreenProps> = ({ userData, token }) => {
+  const [user, setUser] = useState<User | null>(userData);
+  const [isClicking, setIsClicking] = useState(false);
   const [clickAnimations, setClickAnimations] = useState<ClickAnimation[]>([]);
-  const [energy, setEnergy] = useState(userData?.energy || 7000); // Начальная энергия из userData или 7000
+  const [energy, setEnergy] = useState(userData?.energy || 7000);
   const maxEnergy = 7000;
   const energyRecoveryRate = 10;
   const energyRecoveryInterval = 60000;
@@ -49,77 +49,51 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ userData, token, onBalanceUpdat
   const additionalInfoRef = useRef<SVGSVGElement>(null);
   const contentBlockRef = useRef<HTMLDivElement>(null);
 
-  // Используем userData напрямую для отображения баланса
-  const pointsGained = userData?.balance || 0; 
+  const [pointsGained, setPointsGained] = useState(userData?.balance || 0);
 
   useEffect(() => {
-    // Восстановление энергии каждую минуту
+    setUser(userData);
+    setEnergy(userData?.energy || 7000);
+    setPointsGained(userData?.balance || 0);
+  }, [userData]);
+
+  useEffect(() => {
     const intervalId = setInterval(() => {
       setEnergy((prevEnergy) => Math.min(prevEnergy + energyRecoveryRate, maxEnergy));
     }, energyRecoveryInterval);
-    return () => clearInterval(intervalId); // Очистка интервала при размонтировании компонента
+
+    return () => clearInterval(intervalId);
   }, []);
 
   const handleClick = (event: React.TouchEvent<HTMLDivElement>) => {
-    event.preventDefault(); // Предотвращаем стандартное поведение касания
-    const touches = event.touches; // Получаем список касаний
-    const rect = contentBlockRef.current?.getBoundingClientRect(); // Получаем координаты блока контента
+    event.preventDefault();
+    const touches = event.touches;
+    const rect = contentBlockRef.current?.getBoundingClientRect();
 
-    // Создаем анимацию для каждого касания
     for (let i = 0; i < touches.length; i++) {
       const touch = touches[i];
       const newAnimation: ClickAnimation = {
         style: {
-          left: `${touch.clientX - (rect?.left ?? 0)}px`, // Позиция анимации по X
-          top: `${touch.clientY - (rect?.top ?? 0)}px`,    // Позиция анимации по Y
+          left: `${touch.clientX - (rect?.left ?? 0)}px`,
+          top: `${touch.clientY - (rect?.top ?? 0)}px`,
         },
-        startTime: Date.now(), // Время начала анимации
+        startTime: Date.now(),
       };
-      setClickAnimations((prevAnimations) => [...prevAnimations, newAnimation]); 
+      setClickAnimations((prevAnimations) => [...prevAnimations, newAnimation]);
     }
 
-    if (energy > 0 && userData) { // Проверяем, есть ли энергия и данные пользователя
-      setEnergy(energy - 1); // Уменьшаем энергию
-      setIsClicking(true);   // Запускаем анимацию клика
+    if (energy > 0 && user) {
+      setPointsGained(pointsGained + clickValue);
+      setEnergy(energy - 1);
+      setIsClicking(true);
 
       setTimeout(() => {
-        setIsClicking(false); // Останавливаем анимацию клика через 100 мс
+        setIsClicking(false);
       }, 100);
-
-      // Обновление баланса на сервере и локально
-      const updateBalance = async () => {
-        try {
-          const response = await fetch(`${API_URL}/user/update_points`, {
-            method: 'PATCH',
-            headers: {
-              'Content-Type': 'application/json',
-              'Authorization': `Bearer ${token}`,
-            },
-            body: JSON.stringify({
-              gain_points: (pointsGained + clickValue).toString(), // Новый баланс
-            }),
-          });
-  
-          if (response.ok) {
-            onBalanceUpdate(pointsGained + clickValue); // Обновляем баланс в App.tsx
-            console.log("Баланс успешно обновлён");
-            setError(null); 
-          } else {
-            const errorData = await response.json();
-            console.error('Ошибка сервера:', errorData);
-            setError(errorData.detail || 'Произошла ошибка при обновлении баланса');
-          }
-        } catch (error) {
-          console.error('Ошибка обновления баланса на сервере:', error);
-          setError('Ошибка сети. Проверьте подключение к интернету.');
-        }
-      };
-      updateBalance();
     }
   };
 
   useEffect(() => {
-    // Анимация кликов: удаляем старые анимации через 1 секунду
     const intervalId = setInterval(() => {
       setClickAnimations((prevAnimations) =>
         prevAnimations.filter(
@@ -128,14 +102,48 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ userData, token, onBalanceUpdat
       );
     }, 100);
 
-    return () => clearInterval(intervalId); // Очистка интервала при размонтировании компонента
+    return () => clearInterval(intervalId);
   }, []);
+
+  useEffect(() => {
+    const updateBalanceOnServer = async () => {
+      try {
+        if (!user) return;
+
+        const response = await fetch(`${API_URL}/user/update_points`, {
+          method: 'PATCH',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`,
+          },
+          body: JSON.stringify({
+            gain_points: pointsGained.toString(),
+          }),
+        });
+
+        if (!response.ok) {
+          const errorData = await response.json();
+          console.error('Ошибка сервера:', errorData);
+          setError(errorData.detail || 'Произошла ошибка при обновлении баланса');
+        } else {
+          console.log("Баланс успешно обновлён");
+          setError(null);
+        }
+      } catch (error) {
+        console.error('Ошибка обновления баланса на сервере:', error);
+        setError('Ошибка сети. Проверьте подключение к интернету.');
+      }
+    };
+
+    document.addEventListener('visibilitychange', updateBalanceOnServer);
+    return () => document.removeEventListener('visibilitychange', updateBalanceOnServer);
+  }, [user, token, pointsGained]);
 
   const defaultUser: User = {
     id: 0,
     level: 1,
     league: 'No league',
-    balance: 0, 
+    balance: 0,
     income: 0,
     avatar: avatar,
     name: 'New User',
@@ -143,7 +151,7 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ userData, token, onBalanceUpdat
     followers: 0,
   };
 
-  const currentUser = userData || defaultUser; // Используем userData, если есть, иначе - данные по умолчанию
+  const currentUser = user || defaultUser;
 
   return (
     <div>
