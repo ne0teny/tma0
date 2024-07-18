@@ -75,32 +75,36 @@ function App() {
 
             if (balanceResponse.ok) {
               const balanceData = await balanceResponse.json(); 
-              setUserData((prevUserData) => ({
-                ...prevUserData!,
-                balance: balanceData,
-              }));
+              setUserData((prevUserData) => {
+                const updatedUserData = {
+                  ...prevUserData!,
+                  balance: balanceData,
+                };
+                console.log('Updated user data:', updatedUserData);
+                return updatedUserData;
+              });
               console.log("Баланс успешно загружен:", balanceData);
             } else {
               console.error('Ошибка при загрузке баланса:', balanceResponse.statusText);
-              setError('Не удалось загрузить баланс'); // Устанавливаем сообщение об ошибке
+              setError('Не удалось загрузить баланс'); 
             }
           } catch (error) {
             console.error('Ошибка при загрузке баланса:', error);
-            setError('Ошибка сети'); // Устанавливаем сообщение об ошибке
+            setError('Ошибка сети'); 
           } finally {
-            setIsLoggedIn(true); // Устанавливаем isLoggedIn в true только после загрузки баланса
-            setLoading(false); // Загрузка завершена
+            setIsLoggedIn(true); 
+            setLoading(false); 
           }
 
         } else {
           console.error('Ошибка входа или регистрации:', response.statusText);
-          setError('Ошибка входа или регистрации'); // Устанавливаем сообщение об ошибке
-          setLoading(false); // Загрузка завершена
+          setError('Ошибка входа или регистрации'); 
+          setLoading(false); 
         }
       } catch (error) {
         console.error('Ошибка отправки данных:', error);
-        setError('Ошибка сети'); // Устанавливаем сообщение об ошибке
-        setLoading(false); // Загрузка завершена
+        setError('Ошибка сети'); 
+        setLoading(false); 
       }
     };
 
