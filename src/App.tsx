@@ -65,6 +65,18 @@ function App() {
           setToken(loginResult.token);
           localStorage.setItem('token', loginResult.token);
           setIsLoggedIn(true);
+
+          // Fetch user points and energy after successful login
+          const pointsResponse = await fetch(`${API_URL}/user/get_points`, {
+            headers: { Authorization: `Bearer ${loginResult.token}` },
+          });
+
+          if (pointsResponse.ok) {
+            const pointsData = await pointsResponse.json();
+            setUserData(prevUserData => prevUserData ? { ...prevUserData, balance: pointsData.balance, energy: pointsData.energy } : null);
+          } else {
+            console.error('Failed to fetch user points:', pointsResponse.statusText);
+          }
         } else {
           console.error('Login or registration failed:', response.statusText);
         }

@@ -52,34 +52,10 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ userData, token }) => {
   const [pointsGained, setPointsGained] = useState(userData?.balance || 0);
 
   useEffect(() => {
-    const fetchUserData = async () => {
-      try {
-        if (!token) {
-          console.error("Токен отсутствует");
-          setError('Токен отсутствует');
-          return;
-        }
-
-        const response = await fetch(`${API_URL}/user/get_points`, {
-          headers: { Authorization: `Bearer ${token}` },
-        });
-
-        if (!response.ok) {
-          throw new Error('Ошибка при получении данных пользователя');
-        }
-
-        const data = await response.json();
-        setPointsGained(data.balance);
-        setEnergy(data.energy);
-        setUser(prevUser => prevUser ? { ...prevUser, balance: data.balance, energy: data.energy } : null);
-      } catch (error) {
-        console.error('Ошибка:', error);
-        setError('Ошибка при загрузке данных пользователя');
-      }
-    };
-
-    fetchUserData();
-  }, [token]);
+    setUser(userData);
+    setEnergy(userData?.energy || 7000);
+    setPointsGained(userData?.balance || 0);
+  }, [userData]);
 
   useEffect(() => {
     const intervalId = setInterval(() => {
