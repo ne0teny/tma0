@@ -9,7 +9,7 @@ import Mine from './Mine';
 import Loading from './Loading';
 import Airdrop from './Airdrop';
 
-const API_URL = 'https://1178-89-107-97-177.ngrok-free.app'; // Замените на ваш актуальный URL
+const API_URL = 'https://1178-89-107-97-177.ngrok-free.app'; 
 
 interface User {
   id: number;
@@ -26,7 +26,7 @@ interface User {
 function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [userData, setUserData] = useState<User | null>(null);
-  const [isLoading, setIsLoading] = useState(true); // Индикатор загрузки
+  const [isLoading, setIsLoading] = useState(true); 
 
   useEffect(() => {
     WebApp.ready();
@@ -35,24 +35,18 @@ function App() {
       const token = localStorage.getItem('token');
       if (token) {
         try {
-          // Получаем актуальный баланс пользователя
           const response = await fetch(`${API_URL}/user/get_points`, {
             headers: { Authorization: `Bearer ${token}` },
           });
 
           if (response.ok) {
             const balanceData = await response.json();
-            setUserData((prevUserData) => ({
-              ...prevUserData!,
-              balance: balanceData,
-            }));
+            setUserData((prevUserData) => prevUserData ? { ...prevUserData, balance: balanceData.balance } : null);
           } else {
             console.error('Ошибка получения баланса:', response.statusText);
-            // Добавьте обработку ошибки получения баланса (например, отображение сообщения об ошибке)
           }
         } catch (error) {
           console.error('Ошибка сети:', error);
-          // Добавьте обработку ошибки сети (например, отображение сообщения об ошибке)
         }
       } else {
         const user = window.Telegram?.WebApp?.initDataUnsafe?.user || {};
@@ -75,16 +69,14 @@ function App() {
             localStorage.setItem('token', loginResult.token);
           } else {
             console.error('Ошибка входа/регистрации:', response.statusText);
-            // Добавьте обработку ошибки входа/регистрации
           }
         } catch (error) {
           console.error('Ошибка сети:', error);
-          // Добавьте обработку ошибки сети
         }
       }
 
       setIsLoggedIn(true);
-      setIsLoading(false); // Скрываем индикатор загрузки
+      setIsLoading(false); 
     };
 
     initializeApp();
@@ -92,7 +84,7 @@ function App() {
 
   return (
     <div className="App">
-      {isLoading ? ( // Отображаем индикатор загрузки, пока данные не получены
+      {isLoading ? ( 
         <Loading />
       ) : isLoggedIn ? (
         <Routes>
@@ -104,7 +96,6 @@ function App() {
           <Route path="airdrop" element={<Airdrop userData={userData} token={localStorage.getItem('token')} />} />
         </Routes>
       ) : (
-        // Добавьте сюда компонент или логику для случая, когда пользователь не авторизован
         <div>Пользователь не авторизован</div> 
       )}
     </div>
