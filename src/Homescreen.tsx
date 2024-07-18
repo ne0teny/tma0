@@ -6,7 +6,6 @@ import { ReactComponent as IconFollowers } from './img/Icon3.svg';
 import { ReactComponent as IconSkuff } from './img/Icon2.svg';
 import { ReactComponent as IconProfile } from './img/Icon4.svg';
 import { ReactComponent as Component13 } from './img/Component 13.svg';
-import { ReactComponent as AdditionalInfo } from './img/Additional Info.svg';
 import frame109 from './img/Frame 109.svg';
 import avatar from './img/Avatar.png';
 import imageКубок from './img/image кубок.png';
@@ -46,10 +45,13 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ userData, token }) => {
   const clickValue = 1;
   const [error, setError] = useState<string | null>(null);
 
-  const additionalInfoRef = useRef<SVGSVGElement>(null);
+  const characterImageRef = useRef<HTMLImageElement>(null);
   const contentBlockRef = useRef<HTMLDivElement>(null);
 
   const [pointsGained, setPointsGained] = useState(userData?.balance || 0);
+
+  const [level, setLevel] = useState(userData?.level || 1);
+  const [characterImage, setCharacterImage] = useState('lvl1.png');
 
   useEffect(() => {
     setUser(userData);
@@ -64,6 +66,69 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ userData, token }) => {
 
     return () => clearInterval(intervalId);
   }, []);
+
+  useEffect(() => {
+    const fetchLevelAndImage = async () => {
+      if (!token) {
+        setError('Не удалось получить уровень: отсутствует токен.');
+        return;
+      }
+
+      try {
+        const response = await fetch(`${API_URL}/user/get_level`, {
+          headers: {
+            'Authorization': `Bearer ${token}`,
+          },
+        });
+
+        if (response.ok) {
+          const data = await response.json();
+          setLevel(data.level);
+          setCharacterImage(`lvl${data.level}.png`);
+        } else {
+          setError('Ошибка при получении уровня с сервера.');
+        }
+      } catch (error) {
+        setError('Ошибка сети. Проверьте подключение к интернету.');
+      }
+    };
+
+    fetchLevelAndImage();
+
+    const updateLevelOnServer = async () => {
+      if (!token) {
+        setError('Не удалось обновить баланс: отсутствует токен.');
+        return;
+      }
+
+      try {
+        const response = await fetch(`${API_URL}/user/update_points`, {
+          method: 'PATCH',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`,
+          },
+          body: JSON.stringify({
+            gain_points: pointsGained.toString(),
+          }),
+        });
+
+        if (!response.ok) {
+          const errorData = await response.json();
+          setError(errorData.detail || 'Произошла ошибка при обновлении баланса');
+        } else {
+          setError(null);
+        }
+      } catch (error) {
+        setError('Ошибка сети. Проверьте подключение к интернету.');
+      }
+
+      fetchLevelAndImage(); // Запрос уровня после обновления баланса
+    };
+
+    document.addEventListener('visibilitychange', updateLevelOnServer);
+    return () => document.removeEventListener('visibilitychange', updateLevelOnServer);
+  }, [token, pointsGained]);
 
   const handleClick = (event: React.TouchEvent<HTMLDivElement>) => {
     event.preventDefault();
@@ -93,43 +158,6 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ userData, token }) => {
     }, 1000);
   };
 
-  useEffect(() => {
-    const updateBalanceOnServer = async () => {
-      if (!token) {
-        setError('Не удалось обновить баланс: отсутствует токен.');
-        return;
-      }
-
-      try {
-        const response = await fetch(`${API_URL}/user/update_points`, {
-          method: 'PATCH',
-          headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${token}`,
-          },
-          body: JSON.stringify({
-            gain_points: pointsGained.toString(),
-          }),
-        });
-
-        if (!response.ok) {
-          const errorData = await response.json();
-          console.error('Ошибка сервера:', errorData);
-          setError(errorData.detail || 'Произошла ошибка при обновлении баланса');
-        } else {
-          console.log("Баланс успешно обновлён");
-          setError(null);
-        }
-      } catch (error) {
-        console.error('Ошибка обновления баланса на сервере:', error);
-        setError('Ошибка сети. Проверьте подключение к интернету.');
-      }
-    };
-
-    document.addEventListener('visibilitychange', updateBalanceOnServer);
-    return () => document.removeEventListener('visibilitychange', updateBalanceOnServer);
-  }, [token, pointsGained]);
-
   const defaultUser: User = {
     id: 0,
     level: 1,
@@ -146,30 +174,29 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ userData, token }) => {
 
   return (
     <div>
-      <div className={styles.homeScreen}>
-        <div className={styles.topSection}>
-          <div className={styles.blockOfInfo}>
-            <div className={styles.blockOfInfoInner}>
-              <div className={styles.pointBlockParent}>
-                <div className={styles.pointBlock}>
-                  <div className={styles.parent}>
-                    <div className={styles.div}>Поинты за час</div>
-                    <div className={styles.instanceParent}>
-                      <Frame122 className={styles.frameChild} aria-label="Иконка поинтов за час" />
-                      <div className={styles.highlightedFigure}>+{currentUser.income}</div>
-                    </div>
+    <div className={styles.homeScreen}>
+      <div className={styles.topSection}>
+        <div className={styles.blockOfInfo}>
+          <div className={styles.blockOfInfoInner}>
+            <div className={styles.pointBlockParent}>
+              <div className={styles.pointBlock}>
+                <div className={styles.parent}>
+                  <div className={styles.div}>Поинты за час</div>
+                  <div className={styles.instanceParent}>
+                    <Frame122 className={styles.frameChild} aria-label="Иконка поинтов за час" />
+                    <div className={styles.highlightedFigure}>+{currentUser.income}</div>
                   </div>
                 </div>
-                <div className={styles.pointBlock}>
-                  <div className={styles.parent}>
-                    <div className={styles.group}>
-                      <div className={styles.div2}>Подписчики</div>
-                      <IconFollowers className={styles.iconFollowers} aria-label="Иконка подписчиков" />
-                    </div>
-                    <div className={styles.instanceParent}>
-                      <IconFollowers className={styles.iconFollowers} aria-label="Иконка подписчиков" />
-                      <div className={styles.highlightedFigure}>{currentUser.followers}</div>
-                    </div>
+              </div>
+              <div className={styles.pointBlock}>
+                <div className={styles.parent}>
+                  <div className={styles.group}>
+                    <div className={styles.div2}>Подписчики</div>
+                    <IconFollowers className={styles.iconFollowers} aria-label="Иконка подписчиков" />
+                  </div>
+                  <div className={styles.instanceParent}>
+                    <IconFollowers className={styles.iconFollowers} aria-label="Иконка подписчиков" />
+                    <div className={styles.highlightedFigure}>{currentUser.followers}</div>
                   </div>
                 </div>
               </div>
@@ -180,7 +207,7 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ userData, token }) => {
                 <IconSkuff className={styles.iconSkuff} aria-label="Иконка Skuffolog" />
               </div>
               <div className={styles.level89Parent}>
-                <div className={styles.level89}>level {currentUser.level}</div>
+                <div className={styles.level89}>level {level}</div>
                 <div className={styles.frameWrapper}>
                   <div className={styles.progressBarBackgroundWrapper}>
                     <div className={styles.progressBarBackground} />
@@ -189,7 +216,8 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ userData, token }) => {
               </div>
             </div>
           </div>
-          <div className={styles.profileBlock}>
+        </div>
+        <div className={styles.profileBlock}>
             <div className={styles.avatarParent}>
               <img className={styles.avatarIcon} alt="Аватар пользователя" src={currentUser.avatar} />
               <div className={styles.nameAndRunk}>
@@ -224,11 +252,13 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ userData, token }) => {
               <div className={styles.highlightedFigure}>{isNaN(pointsGained) ? 0 : pointsGained}</div>
             </div>
 
-            <AdditionalInfo
+            <img
+              ref={characterImageRef}
               className={`${styles.additionalInfoIcon} ${isClicking ? styles.clicking : ''}`}
-              aria-label="Дополнительная информация"
-              ref={additionalInfoRef}
+              src={characterImage}
+              alt="Персонаж"
             />
+
             {clickAnimations.map((animation, index) => (
               <div
                 key={index}
@@ -247,9 +277,7 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ userData, token }) => {
         </div>
       </div>
 
-      <div className={styles.navigationContainer}>
-        <NavigationBar />
-      </div>
+      <NavigationBar />
     </div>
   );
 };
