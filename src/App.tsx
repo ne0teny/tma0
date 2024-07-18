@@ -9,7 +9,7 @@ import Mine from './Mine';
 import Loading from './Loading';
 import Airdrop from './Airdrop';
 
-const API_URL = 'https://1178-89-107-97-177.ngrok-free.app'; 
+const API_URL = 'https://1178-89-107-97-177.ngrok-free.app'; // Замените на ваш актуальный URL
 
 interface User {
   id: number;
@@ -26,7 +26,7 @@ interface User {
 function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [userData, setUserData] = useState<User | null>(null);
-  const [isLoading, setIsLoading] = useState(true); 
+  const [isLoading, setIsLoading] = useState(true); // Индикатор загрузки
 
   useEffect(() => {
     WebApp.ready();
@@ -35,6 +35,7 @@ function App() {
       const token = localStorage.getItem('token');
       if (token) {
         try {
+          // Получаем актуальный баланс пользователя
           const response = await fetch(`${API_URL}/user/get_points`, {
             headers: { Authorization: `Bearer ${token}` },
           });

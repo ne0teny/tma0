@@ -55,7 +55,6 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ userData, token }) => {
     setUser(userData);
     setEnergy(userData?.energy || 7000);
     setPointsGained(userData?.balance || 0);
-    console.log('Received updated userData in Homescreen:', userData);
   }, [userData]);
 
   useEffect(() => {
@@ -102,8 +101,8 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ userData, token }) => {
       }
 
       try {
-        const response = await fetch(`${API_URL}/user/add_points`, {
-          method: 'POST',
+        const response = await fetch(`${API_URL}/user/update_points`, {
+          method: 'PATCH',
           headers: {
             'Content-Type': 'application/json',
             'Authorization': `Bearer ${token}`,
