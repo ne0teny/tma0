@@ -55,7 +55,6 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ userData, token }) => {
     setUser(userData);
     setEnergy(userData?.energy || 7000);
     setPointsGained(userData?.balance || 0);
-    console.log('Received updated userData in Homescreen:', userData);
   }, [userData]);
 
   useEffect(() => {
