@@ -27,8 +27,8 @@ function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [userData, setUserData] = useState<User | null>(null);
   const [token, setToken] = useState<string | null>(localStorage.getItem('token'));
-  const [loading, setLoading] = useState(true); // Добавляем состояние загрузки
-  const [error, setError] = useState<string | null>(null); // Добавляем состояние ошибки
+  const [loading, setLoading] = useState(true); 
+  const [error, setError] = useState<string | null>(null); 
 
   useEffect(() => {
     WebApp.ready();
