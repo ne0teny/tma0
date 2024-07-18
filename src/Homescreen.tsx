@@ -60,7 +60,7 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ userData, token }) => {
           return;
         }
 
-        const response = await fetch(`${API_URL}/user/get_user_data`, {
+        const response = await fetch(`${API_URL}/user/get_points`, {
           headers: { Authorization: `Bearer ${token}` },
         });
 
@@ -68,10 +68,10 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ userData, token }) => {
           throw new Error('Ошибка при получении данных пользователя');
         }
 
-        const userData = await response.json();
-        setUser(userData);
-        setEnergy(userData.energy);
-        setPointsGained(userData.balance);
+        const data = await response.json();
+        setPointsGained(data.balance);
+        setEnergy(data.energy);
+        setUser(prevUser => prevUser ? { ...prevUser, balance: data.balance, energy: data.energy } : null);
       } catch (error) {
         console.error('Ошибка:', error);
         setError('Ошибка при загрузке данных пользователя');
