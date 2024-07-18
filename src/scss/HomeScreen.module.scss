@@ -439,6 +439,12 @@
   align-items: center;
   justify-content: flex-start;
   gap: 16px;
+  min-height: auto;
+  background-image: url('.backgroundpoint.png'); 
+  background-size: cover;
+  background-position: center;
+
+
 }
 .batartyChild {
   width: 44px;
