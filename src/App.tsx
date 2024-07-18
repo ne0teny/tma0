@@ -9,7 +9,7 @@ import Mine from './Mine';
 import Loading from './Loading';
 import Airdrop from './Airdrop';
 
-const API_URL = 'https://47bc-89-107-97-177.ngrok-free.app';
+const API_URL = 'https://1178-89-107-97-177.ngrok-free.app';
 
 interface User {
   id: number;

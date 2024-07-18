@@ -9,9 +9,9 @@ import { ReactComponent as Component13 } from './img/Component 13.svg';
 import { ReactComponent as AdditionalInfo } from './img/Additional Info.svg';
 import frame109 from './img/Frame 109.svg';
 import avatar from './img/Avatar.png';
-import imageКубок from './img/image кубок.png';
+import imageКубок from './img/image кубок.png'; // Импортируем изображение кубка
 
-const API_URL = 'https://47bc-89-107-97-177.ngrok-free.app';
+const API_URL = 'https://1178-89-107-97-177.ngrok-free.app';
 
 interface User {
   id: number;
@@ -49,7 +49,6 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ userData, token }) => {
   const additionalInfoRef = useRef<SVGSVGElement>(null);
   const contentBlockRef = useRef<HTMLDivElement>(null);
 
-  // Состояние для отслеживания заработанных поинтов в текущей сессии
   const [pointsGained, setPointsGained] = useState(0);
 
   useEffect(() => {
@@ -73,7 +72,6 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ userData, token }) => {
         setUser(userData);
         setEnergy(userData.energy);
 
-        // Инициализируем pointsGained при получении данных пользователя
         setPointsGained(userData.balance); 
       } catch (error) {
         console.error('Ошибка:', error);
@@ -81,7 +79,6 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ userData, token }) => {
       }
     };
 
-    // Запрашиваем данные пользователя при каждом монтировании компонента
     fetchUserData();
   }, [token]);
 
@@ -111,7 +108,6 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ userData, token }) => {
     }
 
     if (energy > 0 && user) {
-      // Обновляем pointsGained сразу при клике
       setPointsGained(pointsGained + clickValue);
       setEnergy(energy - 1);
       setIsClicking(true);
@@ -153,7 +149,6 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ userData, token }) => {
       try {
         if (!user) return; 
 
-        // Отправляем pointsGained на сервер
         const response = await fetch(`${API_URL}/user/update_points`, {
           method: 'PATCH',
           headers: {
@@ -181,7 +176,7 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ userData, token }) => {
 
     document.addEventListener('visibilitychange', updateBalanceOnServer);
     return () => document.removeEventListener('visibilitychange', updateBalanceOnServer);
-  }, [user, token, pointsGained]); // Добавляем pointsGained в зависимости
+  }, [user, token, pointsGained]); 
 
   return (
     <div>
@@ -220,77 +215,46 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ userData, token }) => {
               </div>
               <div className={styles.level89Parent}>
                 <div className={styles.level89}>level {currentUser.level}</div>
-                <div className={styles.frameWrapper}>
-                  <div className={styles.progressBarBackgroundWrapper}>
-                    <div className={styles.progressBarBackground} />
+                <div className={styles.ellipseParent}>
+                  <div className={styles.frameChild1} />
+                  <IconProfile className={styles.iconProfile} aria-label="Иконка профиля" />
+                  <div className={styles.bxjHasntParent}>
+                    <div className={styles.bxjHasnt}>{currentUser.league}</div>
+                    <div className={styles.dinoParent}>
+                      <img className={styles.avatarIcon} alt="Аватар" src={currentUser.avatar} />
+                      <div className={styles.dino}>{currentUser.name}</div>
+                    </div>
                   </div>
                 </div>
               </div>
-            </div>
-          </div>
-          <div className={styles.profileBlock}>
-            <div className={styles.avatarParent}>
-            <img className={styles.avatarIcon} alt="Аватар пользователя" src={currentUser.avatar} />
-              <div className={styles.nameAndRunk}>
-                <div className={styles.namee}>{currentUser.name}</div>
-                <div className={styles.meme}>{currentUser.league}</div>
-              </div>
-              <IconProfile className={styles.iconProfile} aria-label="Иконка профиля" />
-            </div>
-            <div className={styles.everyDayBonus}>
-              <div className={styles.container}>
-                <div className={styles.div4}>
-                  <p className={styles.p}>Ежедневный</p>
-                  <p className={styles.p}>бонус</p>
+              <div className={styles.everyDayBonus}>
+                <img className={styles.cupIcon} alt="Кубок" src={imageКубок} />
+                <div className={styles.textBlock}>
+                  <div className={styles.everyDayBonusText}>Ежедневный бонус</div>
+                  <div className={styles.nsText}>HC</div>
                 </div>
-                <img className={styles.imageIcon} alt="Иконка кубка" src={imageКубок} />
-                <div className={styles.notificationError}>
-                  <div className={styles.div5}>1</div>
+                <div className={styles.additionalInfo}>
+                  <AdditionalInfo ref={additionalInfoRef} className={styles.additionalInfoIcon} aria-label="Иконка дополнительной информации" />
                 </div>
               </div>
             </div>
           </div>
         </div>
-
-        <div className={styles.mainSection}>
-          <div
-            ref={contentBlockRef}
-            className={`${styles.contentBlock} ${styles.touchable}`}
-            onTouchStart={handleClick}
-          >
-            <div className={styles.highlightedInfo}>
-              <Component13 className={styles.component13Icon} aria-label="Компонент 13" />
-              <div className={styles.highlightedFigure}>{isNaN(pointsGained) ? 0 : pointsGained}</div>
-              </div>
-
-            <AdditionalInfo
-              className={`${styles.additionalInfoIcon} ${isClicking ? styles.clicking : ''}`}
-              aria-label="Дополнительная информация"
-              ref={additionalInfoRef}
-            />
-            {clickAnimations.map((animation, index) => (
-              <div
-                key={index}
-                className={styles.clickAnimation}
-                style={animation.style}
-              >
-                +{clickValue}
-              </div>
-            ))}
+        <div className={styles.contentBlock} onTouchStart={handleClick} ref={contentBlockRef}>
+          {clickAnimations.map((animation, index) => (
+            <Component13 key={index} className={styles.clickAnimation} style={animation.style} />
+          ))}
+          <div className={styles.energyBar}>
+            <div className={styles.energyBarFill} style={{ width: `${(energy / maxEnergy) * 100}%` }}>
+              <div className={styles.energyText}>{energy}</div>
+            </div>
+            </div>
           </div>
-
-          <div className={styles.batarty}>
-            <img className={styles.batartyChild} alt="Батарея" src={frame109} />
-            <div className={styles.div6}>{energy}/{maxEnergy}</div>
-          </div>
-        </div>
-      </div>
-
-      <div className={styles.navigationContainer}>
-        <NavigationBar />
+          <div className={styles.navigationContainer}>
+        <NavigationBar /> 
       </div>
     </div>
-  );
+</div>  );
 };
 
 export default HomeScreen;
