@@ -128,7 +128,7 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ userData, token, setUserData })
       document.removeEventListener('visibilitychange', handleVisibilityChange);
       updateBalanceOnServer();
     };
-  }, [token, user]);
+  }, [token, user]); // Зависимость от токена и данных пользователя (user)
 
   const handleClick = (event: React.TouchEvent<HTMLDivElement>) => {
     event.preventDefault();
@@ -219,9 +219,10 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ userData, token, setUserData })
                   <div className={styles.frameWrapper}>
                     <div className={styles.progressBarBackgroundWrapper}>
                       <div className={styles.progressBarBackground} />
-                      </div>
+                    </div>
                   </div>
-                </div>
+                
+                  </div>
               </div>
             </div>
           </div>
@@ -260,12 +261,15 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ userData, token, setUserData })
               <div className={styles.highlightedFigure}>{currentUser.balance}</div>
             </div>
 
-            <img
-              ref={characterImageRef}
-              className={styles.characterImage}
-              src={`/img/${characterImage}`} 
-              alt="Персонаж"
-            />
+            {/* Отображение персонажа в зависимости от уровня */}
+            {level >= 1 && (
+              <img
+                ref={characterImageRef}
+                className={styles.characterImage}
+                src={`/img/lvl${level}.png`}
+                alt={`Персонаж уровня ${level}`}
+              />
+            )}
 
             {clickAnimations.map((animation, index) => (
               <div

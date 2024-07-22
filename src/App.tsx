@@ -9,7 +9,7 @@ import Mine from './Mine';
 import Loading from './Loading';
 import Airdrop from './Airdrop';
 
-const API_URL = 'https://1178-89-107-97-177.ngrok-free.app';
+const API_URL = 'https://1178-89-107-97-177.ngrok-free.app'; // Замените на ваш актуальный URL
 
 interface User {
   id: number;
@@ -29,30 +29,33 @@ function App() {
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    WebApp.ready();
+    WebApp.ready(); // Инициализируем Telegram Web App
 
     const initializeApp = async () => {
-      const token = localStorage.getItem('token');
+      const token = localStorage.getItem('token'); // Получаем токен из localStorage
+
       if (token) {
+        // Если токен есть, пытаемся получить данные пользователя
         try {
           const response = await fetch(`${API_URL}/user/get_points`, {
             headers: { Authorization: `Bearer ${token}` },
           });
 
           if (response.ok) {
+            // Если данные получены успешно, обновляем состояние userData
             const userData = await response.json();
             setUserData(userData);
-            // Ensure 2 seconds minimum loading time
-            await new Promise(resolve => setTimeout(resolve, 2000)); 
           } else {
-            console.error('Error fetching user data:', response.statusText);
+            // Если данные не получены, выводим ошибку и удаляем токен
+            console.error('Ошибка получения данных пользователя:', response.statusText);
             localStorage.removeItem('token');
             setIsLoggedIn(false);
           }
         } catch (error) {
-          console.error('Network error:', error);
+          console.error('Ошибка сети:', error);
         }
       } else {
+        // Если токена нет, пытаемся создать или войти в аккаунт пользователя
         const user = window.Telegram?.WebApp?.initDataUnsafe?.user || {};
         try {
           let response = await fetch(`${API_URL}/user/create_user`, {
@@ -60,40 +63,44 @@ function App() {
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ data: user }),
           });
+
           if (!response.ok) {
+            // Если пользователь уже существует, пытаемся войти
             response = await fetch(`${API_URL}/user/login_user`, {
               method: 'POST',
               headers: { 'Content-Type': 'application/json' },
               body: JSON.stringify({ data: user }),
             });
           }
+
           if (response.ok) {
+            // Если вход или регистрация успешны, обновляем состояние и сохраняем токен
             const loginResult = await response.json();
             setUserData(loginResult.user);
             localStorage.setItem('token', loginResult.token);
-
-            // Ensure 2 seconds minimum loading time
-            await new Promise(resolve => setTimeout(resolve, 10000));
           } else {
-            console.error('Login/registration error:', response.statusText);
+            console.error('Ошибка входа/регистрации:', response.statusText);
           }
         } catch (error) {
-          console.error('Network error:', error);
+          console.error('Ошибка сети:', error);
         }
       }
 
-      setIsLoggedIn(true);
-      setIsLoading(false);
+      // Обеспечиваем минимальное время загрузки 2 секунды
+      await new Promise(resolve => setTimeout(resolve, 2000));
+
+      setIsLoggedIn(true); // Пользователь авторизован
+      setIsLoading(false); // Скрываем экран загрузки
     };
 
-    initializeApp();
+    initializeApp(); // Запускаем инициализацию приложения
   }, []);
 
   return (
     <div className="App">
-      {isLoading ? (
+      {isLoading ? ( // Если загрузка не завершена, показываем экран загрузки
         <Loading />
-      ) : isLoggedIn ? (
+      ) : isLoggedIn ? ( // Если пользователь авторизован, показываем маршруты
         <Routes>
           <Route path="/" element={<Homescreen userData={userData} token={localStorage.getItem('token')} setUserData={setUserData} />} />
           <Route path="/earn" element={<Earn userData={userData} token={localStorage.getItem('token')} setUserData={setUserData} />} />
@@ -103,7 +110,7 @@ function App() {
           <Route path="airdrop" element={<Airdrop userData={userData} token={localStorage.getItem('token')} />} />
         </Routes>
       ) : (
-        <div>Пользователь не авторизован</div>
+        <div>Пользователь не авторизован</div> // Если пользователь не авторизован, показываем сообщение
       )}
     </div>
   );
