@@ -73,7 +73,7 @@ function App() {
             localStorage.setItem('token', loginResult.token);
 
             // Ensure 2 seconds minimum loading time
-            await new Promise(resolve => setTimeout(resolve, 2000));
+            await new Promise(resolve => setTimeout(resolve, 10000));
           } else {
             console.error('Login/registration error:', response.statusText);
           }
