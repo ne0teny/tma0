@@ -32,9 +32,10 @@ interface ClickAnimation {
 interface HomeScreenProps {
   userData: User | null;
   token: string | null;
+  setUserData: React.Dispatch<React.SetStateAction<User | null>>; // Добавляем setUserData
 }
 
-const HomeScreen: React.FC<HomeScreenProps> = ({ userData, token }) => {
+const HomeScreen: React.FC<HomeScreenProps> = ({ userData, token, setUserData }) => {
   const [user, setUser] = useState<User | null>(userData);
   const [isClicking, setIsClicking] = useState(false);
   const [clickAnimations, setClickAnimations] = useState<ClickAnimation[]>([]);
@@ -104,7 +105,7 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ userData, token }) => {
             'Authorization': `Bearer ${token}`,
           },
           body: JSON.stringify({
-            gain_points: user.balance.toString(),
+            gain_points: user.balance.toString(), // Отправляем текущий баланс
           }),
         });
 
@@ -127,7 +128,7 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ userData, token }) => {
       document.removeEventListener('visibilitychange', handleVisibilityChange);
       updateBalanceOnServer();
     };
-  }, [token, user]);
+  }, [token, user]); // Зависимость от токена и данных пользователя (user)
 
   const handleClick = (event: React.TouchEvent<HTMLDivElement>) => {
     event.preventDefault();
@@ -146,7 +147,7 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ userData, token }) => {
       setClickAnimations((prevAnimations) => [...prevAnimations, newAnimation]);
     }
 
-    setUser((prevUser) => {
+    setUserData((prevUser) => { // Используем переданный проп setUserData
       if (prevUser) {
         const newBalance = prevUser.balance + clickValue * touches.length;
         const newEnergy = prevUser.energy - clickValue * touches.length;
@@ -218,7 +219,7 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ userData, token }) => {
                   <div className={styles.frameWrapper}>
                     <div className={styles.progressBarBackgroundWrapper}>
                       <div className={styles.progressBarBackground} />
-                    </div>
+                      </div>
                   </div>
                 </div>
               </div>

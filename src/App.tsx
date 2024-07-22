@@ -42,10 +42,16 @@ function App() {
           if (response.ok) {
             const userData = await response.json();
             setUserData(userData);
+
+            // Обеспечиваем минимальное время загрузки 2 секунды
+            await new Promise((resolve) => setTimeout(resolve, 2000));
+
+            setIsLoading(false); 
           } else {
             console.error('Ошибка получения данных пользователя:', response.statusText);
             localStorage.removeItem('token');
             setIsLoggedIn(false);
+            setIsLoading(false); 
           }
         } catch (error) {
           console.error('Ошибка сети:', error);
@@ -70,18 +76,18 @@ function App() {
             const loginResult = await response.json();
             setUserData(loginResult.user);
             localStorage.setItem('token', loginResult.token);
+
+            // Обеспечиваем минимальное время загрузки 2 секунды
+            await new Promise((resolve) => setTimeout(resolve, 2000));
           } else {
             console.error('Ошибка входа/регистрации:', response.statusText);
-            setIsLoading(false);
+            setIsLoading(false); 
           }
         } catch (error) {
           console.error('Ошибка сети:', error);
-          setIsLoading(false);
+          setIsLoading(false); 
         }
       }
-
-      // Обеспечиваем минимальное время загрузки 2 секунды
-      await new Promise((resolve) => setTimeout(resolve, 2000));
 
       setIsLoggedIn(true);
       setIsLoading(false);
