@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react';
 import { FunctionComponent } from 'react';
 import styles from './Loading.module.scss';
+import './Loading.css';
 
 import tiktokIcon from './img/tiktokicon1.svg';
 import twitchIcon from './img/twitchicon.svg';
@@ -36,8 +37,8 @@ const Loading: FunctionComponent = () => {
       </div>
 
       {/* Круговой загрузчик */}
-      <div className={styles.loader}>
-        <div className={styles.loaderInner}></div>
+      <div className="loader">
+        <div className="loader-inner"></div>
       </div>
     </div>
   );

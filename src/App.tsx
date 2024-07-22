@@ -85,6 +85,9 @@ function App() {
         }
       }
 
+      // Обеспечиваем минимальное время загрузки 2 секунды
+      await new Promise(resolve => setTimeout(resolve, 2000)); 
+
       setIsLoggedIn(true);
       setIsLoading(false);
     };
