@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import './App.css';
-import Homescreen from './Homescreen';
+import HomeScreen from './Homescreen';
 import Earn from './Earn';
 import WebApp from '@twa-dev/sdk';
 import { Routes, Route, Navigate } from 'react-router-dom';
@@ -43,19 +43,15 @@ function App() {
             const userData = await response.json();
             setUserData(userData);
 
-            // Обеспечиваем минимальное время загрузки 2 секунды
-            await new Promise((resolve) => setTimeout(resolve, 2000));
-
-            setIsLoading(false); 
+            // Ensure 2 seconds minimum loading time
+            await new Promise(resolve => setTimeout(resolve, 2000)); 
           } else {
-            console.error('Ошибка получения данных пользователя:', response.statusText);
+            console.error('Error fetching user data:', response.statusText);
             localStorage.removeItem('token');
             setIsLoggedIn(false);
-            setIsLoading(false); 
           }
         } catch (error) {
-          console.error('Ошибка сети:', error);
-          setIsLoading(false);
+          console.error('Network error:', error);
         }
       } else {
         const user = window.Telegram?.WebApp?.initDataUnsafe?.user || {};
@@ -77,15 +73,13 @@ function App() {
             setUserData(loginResult.user);
             localStorage.setItem('token', loginResult.token);
 
-            // Обеспечиваем минимальное время загрузки 2 секунды
-            await new Promise((resolve) => setTimeout(resolve, 2000));
+            // Ensure 2 seconds minimum loading time
+            await new Promise(resolve => setTimeout(resolve, 2000));
           } else {
-            console.error('Ошибка входа/регистрации:', response.statusText);
-            setIsLoading(false); 
+            console.error('Login/registration error:', response.statusText);
           }
         } catch (error) {
-          console.error('Ошибка сети:', error);
-          setIsLoading(false); 
+          console.error('Network error:', error);
         }
       }
 
@@ -102,8 +96,8 @@ function App() {
         <Loading />
       ) : isLoggedIn ? (
         <Routes>
-          <Route path="/" element={<Homescreen userData={userData} token={localStorage.getItem('token')} />} />
-          <Route path="/earn" element={<Earn userData={userData} token={localStorage.getItem('token')} setUserData={setUserData} />} />
+<Route path="/" element={<HomeScreen userData={userData} token={localStorage.getItem('token')} setUserData={setUserData} />} />
+<Route path="/earn" element={<Earn userData={userData} token={localStorage.getItem('token')} setUserData={setUserData} />} />
           <Route path="/friends" element={<Friends userData={userData} token={localStorage.getItem('token')} setUserData={setUserData} />} />
           <Route path="/mine" element={<Mine userData={userData} token={localStorage.getItem('token')} setUserData={setUserData} />} />
           <Route path="*" element={<Navigate to="/" />} />
