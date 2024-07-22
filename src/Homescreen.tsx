@@ -9,15 +9,6 @@ import { ReactComponent as Component13 } from './img/Component 13.svg';
 import frame109 from './img/Frame 109.svg';
 import avatar from './img/Avatar.png';
 import imageКубок from './img/image кубок.png';
-import lvl1 from './img/lvl1.png';
-import lvl2 from './img/lvl2.png';
-import lvl3 from './img/lvl3.png';
-import lvl4 from './img/lvl4.png';
-import lvl5 from './img/lvl5.png';
-import lvl6 from './img/lvl6.png';
-import lvl7 from './img/lvl7.png';
-import lvl8 from './img/lvl8.png';
-import lvl9 from './img/lvl9.png';
 
 const API_URL = 'https://1178-89-107-97-177.ngrok-free.app';
 
@@ -69,7 +60,6 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ userData, token }) => {
     const intervalId = setInterval(() => {
       setEnergy((prevEnergy) => Math.min(prevEnergy + energyRecoveryRate, maxEnergy));
     }, energyRecoveryInterval);
-
     return () => clearInterval(intervalId);
   }, []);
 
@@ -103,7 +93,6 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ userData, token }) => {
   }, [token]);
 
   useEffect(() => {
-    // Функция для обновления баланса на сервере
     const updateBalanceOnServer = async () => {
       if (!token || !user) return;
 
@@ -115,7 +104,7 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ userData, token }) => {
             'Authorization': `Bearer ${token}`,
           },
           body: JSON.stringify({
-            gain_points: user.balance.toString(), // Отправляем текущий баланс
+            gain_points: user.balance.toString(),
           }),
         });
 
@@ -127,7 +116,6 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ userData, token }) => {
       }
     };
 
-    // Обновляем баланс при закрытии/сворачивании приложения
     const handleVisibilityChange = () => {
       if (document.visibilityState === 'hidden') {
         updateBalanceOnServer();
@@ -137,10 +125,9 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ userData, token }) => {
     document.addEventListener('visibilitychange', handleVisibilityChange);
     return () => {
       document.removeEventListener('visibilitychange', handleVisibilityChange);
-      // Обновляем баланс при размонтировании компонента (например, при переходе на другую страницу)
-      updateBalanceOnServer(); 
+      updateBalanceOnServer();
     };
-  }, [token, user]); // Зависимость от токена и данных пользователя
+  }, [token, user]);
 
   const handleClick = (event: React.TouchEvent<HTMLDivElement>) => {
     event.preventDefault();
@@ -162,7 +149,7 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ userData, token }) => {
     setUser((prevUser) => {
       if (prevUser) {
         const newBalance = prevUser.balance + clickValue * touches.length;
-        const newEnergy = prevUser.energy - clickValue * touches.length; // Расходуем энергию
+        const newEnergy = prevUser.energy - clickValue * touches.length;
         return { ...prevUser, balance: newBalance, energy: newEnergy };
       }
       return prevUser;
@@ -218,7 +205,7 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ userData, token }) => {
                       <IconFollowers className={styles.iconFollowers} aria-label="Иконка подписчиков" />
                       <div className={styles.highlightedFigure}>{currentUser.followers}</div>
                     </div>
-                    </div>
+                  </div>
                 </div>
               </div>
               <div className={styles.pointBlockGroup}>
@@ -275,7 +262,7 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ userData, token }) => {
             <img
               ref={characterImageRef}
               className={styles.characterImage}
-              src={`./img/${characterImage}`}
+              src={`/img/${characterImage}`} // Исправленный путь к картинкам
               alt="Персонаж"
             />
 

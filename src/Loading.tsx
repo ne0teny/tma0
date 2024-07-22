@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import { useEffect } from 'react';
 import { FunctionComponent } from 'react';
 import styles from './Loading.module.scss';
 
@@ -36,9 +36,7 @@ const Loading: FunctionComponent = () => {
       </div>
 
       {/* Круговой загрузчик */}
-      <div className="loader">
-        <div className="loader-inner"></div>
-      </div>
+      <div className={styles.loader}></div> 
     </div>
   );
 };

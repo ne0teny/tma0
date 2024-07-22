@@ -9,7 +9,7 @@ import Mine from './Mine';
 import Loading from './Loading';
 import Airdrop from './Airdrop';
 
-const API_URL = 'https://1178-89-107-97-177.ngrok-free.app'; // Замените на ваш актуальный URL
+const API_URL = 'https://1178-89-107-97-177.ngrok-free.app';
 
 interface User {
   id: number;
@@ -26,7 +26,7 @@ interface User {
 function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [userData, setUserData] = useState<User | null>(null);
-  const [isLoading, setIsLoading] = useState(true); // Индикатор загрузки
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     WebApp.ready();
@@ -35,7 +35,6 @@ function App() {
       const token = localStorage.getItem('token');
       if (token) {
         try {
-          // Получаем данные пользователя, включая баланс и очки
           const response = await fetch(`${API_URL}/user/get_points`, {
             headers: { Authorization: `Bearer ${token}` },
           });
@@ -45,13 +44,11 @@ function App() {
             setUserData(userData);
           } else {
             console.error('Ошибка получения данных пользователя:', response.statusText);
-            // Дополнительная обработка ошибки (например, выход из системы)
             localStorage.removeItem('token');
             setIsLoggedIn(false);
           }
         } catch (error) {
           console.error('Ошибка сети:', error);
-          // Дополнительная обработка ошибки
           setIsLoading(false);
         }
       } else {
@@ -75,18 +72,16 @@ function App() {
             localStorage.setItem('token', loginResult.token);
           } else {
             console.error('Ошибка входа/регистрации:', response.statusText);
-            // Дополнительная обработка ошибки
             setIsLoading(false);
           }
         } catch (error) {
           console.error('Ошибка сети:', error);
-          // Дополнительная обработка ошибки
           setIsLoading(false);
         }
       }
 
       // Обеспечиваем минимальное время загрузки 2 секунды
-      await new Promise(resolve => setTimeout(resolve, 2000)); 
+      await new Promise((resolve) => setTimeout(resolve, 2000));
 
       setIsLoggedIn(true);
       setIsLoading(false);
