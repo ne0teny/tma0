@@ -82,6 +82,7 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ userData, token, setUserData })
           const data = await response.json();
           setLevel(data.level);
           setCharacterImage(`lvl${data.level}.png`);
+          console.log("Fetched level:", data.level);
         } else {
           setError('Ошибка при получении уровня с сервера.');
         }
@@ -109,8 +110,11 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ userData, token, setUserData })
           }),
         });
 
-        if (!response.ok) {
-          setError('Ошибка при обновлении баланса на сервере.');
+        if (response.ok) {
+          console.log("Balance updated successfully on server");
+        } else {
+          const errorData = await response.json();
+          setError(errorData.detail || 'Ошибка при обновлении баланса на сервере.');
         }
       } catch (error) {
         setError('Ошибка сети. Проверьте подключение к интернету.');
@@ -128,7 +132,7 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ userData, token, setUserData })
       document.removeEventListener('visibilitychange', handleVisibilityChange);
       updateBalanceOnServer();
     };
-  }, [token, user]); // Зависимость от токена и данных пользователя (user)
+  }, [token, user]);
 
   const handleClick = (event: React.TouchEvent<HTMLDivElement>) => {
     event.preventDefault();
@@ -217,12 +221,11 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ userData, token, setUserData })
                 <div className={styles.level89Parent}>
                   <div className={styles.level89}>level {level}</div>
                   <div className={styles.frameWrapper}>
-                    <div className={styles.progressBarBackgroundWrapper}>
+                  <div className={styles.progressBarBackgroundWrapper}>
                       <div className={styles.progressBarBackground} />
                     </div>
                   </div>
-                
-                  </div>
+                </div>
               </div>
             </div>
           </div>
