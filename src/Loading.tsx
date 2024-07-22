@@ -1,7 +1,6 @@
 import React, { useEffect } from 'react';
 import { FunctionComponent } from 'react';
 import styles from './Loading.module.scss';
-import './Loading.css';
 
 import tiktokIcon from './img/tiktokicon1.svg';
 import twitchIcon from './img/twitchicon.svg';
