@@ -32,7 +32,7 @@ interface ClickAnimation {
 interface HomeScreenProps {
   userData: User | null;
   token: string | null;
-  setUserData: React.Dispatch<React.SetStateAction<User | null>>; // Добавляем setUserData
+  setUserData: React.Dispatch<React.SetStateAction<User | null>>;
 }
 
 const HomeScreen: React.FC<HomeScreenProps> = ({ userData, token, setUserData }) => {
@@ -105,7 +105,7 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ userData, token, setUserData })
             'Authorization': `Bearer ${token}`,
           },
           body: JSON.stringify({
-            gain_points: user.balance.toString(), // Отправляем текущий баланс
+            gain_points: user.balance.toString(),
           }),
         });
 
@@ -128,7 +128,7 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ userData, token, setUserData })
       document.removeEventListener('visibilitychange', handleVisibilityChange);
       updateBalanceOnServer();
     };
-  }, [token, user]); // Зависимость от токена и данных пользователя (user)
+  }, [token, user]);
 
   const handleClick = (event: React.TouchEvent<HTMLDivElement>) => {
     event.preventDefault();
@@ -147,7 +147,7 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ userData, token, setUserData })
       setClickAnimations((prevAnimations) => [...prevAnimations, newAnimation]);
     }
 
-    setUserData((prevUser) => { // Используем переданный проп setUserData
+    setUserData((prevUser) => {
       if (prevUser) {
         const newBalance = prevUser.balance + clickValue * touches.length;
         const newEnergy = prevUser.energy - clickValue * touches.length;
@@ -263,7 +263,7 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ userData, token, setUserData })
             <img
               ref={characterImageRef}
               className={styles.characterImage}
-              src={`/img/${characterImage}`} // Исправленный путь к картинкам
+              src={`/img/${characterImage}`} 
               alt="Персонаж"
             />
 

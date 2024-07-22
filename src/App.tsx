@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import './App.css';
-import HomeScreen from './Homescreen';
+import Homescreen from './Homescreen';
 import Earn from './Earn';
 import WebApp from '@twa-dev/sdk';
 import { Routes, Route, Navigate } from 'react-router-dom';
@@ -42,7 +42,6 @@ function App() {
           if (response.ok) {
             const userData = await response.json();
             setUserData(userData);
-
             // Ensure 2 seconds minimum loading time
             await new Promise(resolve => setTimeout(resolve, 2000)); 
           } else {
@@ -96,8 +95,8 @@ function App() {
         <Loading />
       ) : isLoggedIn ? (
         <Routes>
-<Route path="/" element={<HomeScreen userData={userData} token={localStorage.getItem('token')} setUserData={setUserData} />} />
-<Route path="/earn" element={<Earn userData={userData} token={localStorage.getItem('token')} setUserData={setUserData} />} />
+          <Route path="/" element={<Homescreen userData={userData} token={localStorage.getItem('token')} setUserData={setUserData} />} />
+          <Route path="/earn" element={<Earn userData={userData} token={localStorage.getItem('token')} setUserData={setUserData} />} />
           <Route path="/friends" element={<Friends userData={userData} token={localStorage.getItem('token')} setUserData={setUserData} />} />
           <Route path="/mine" element={<Mine userData={userData} token={localStorage.getItem('token')} setUserData={setUserData} />} />
           <Route path="*" element={<Navigate to="/" />} />
