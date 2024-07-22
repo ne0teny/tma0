@@ -57,15 +57,12 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ userData, token }) => {
   const characterImageRef = useRef<HTMLImageElement>(null);
   const contentBlockRef = useRef<HTMLDivElement>(null);
 
-  const [pointsGained, setPointsGained] = useState(userData?.balance || 0);
-
   const [level, setLevel] = useState(userData?.level || 1);
   const [characterImage, setCharacterImage] = useState('lvl1.png');
 
   useEffect(() => {
     setUser(userData);
     setEnergy(userData?.energy || 7000);
-    setPointsGained(userData?.balance || 0);
   }, [userData]);
 
   useEffect(() => {
@@ -103,41 +100,47 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ userData, token }) => {
     };
 
     fetchLevelAndImage();
+  }, [token]);
 
-    const updateLevelOnServer = async () => {
-      if (!token) {
-        setError('Не удалось обновить баланс: отсутствует токен.');
-        return;
-      }
+  useEffect(() => {
+    // Функция для обновления баланса на сервере
+    const updateBalanceOnServer = async () => {
+      if (!token || !user) return;
 
       try {
-        const response = await fetch(`${API_URL}/user/update_points`, {
+        const response = await fetch(`${API_URL}/points/update_points`, {
           method: 'PATCH',
           headers: {
             'Content-Type': 'application/json',
             'Authorization': `Bearer ${token}`,
           },
           body: JSON.stringify({
-            gain_points: pointsGained.toString(),
+            gain_points: user.balance.toString(), // Отправляем текущий баланс
           }),
         });
 
         if (!response.ok) {
-          const errorData = await response.json();
-          setError(errorData.detail || 'Произошла ошибка при обновлении баланса');
-        } else {
-          setError(null);
+          setError('Ошибка при обновлении баланса на сервере.');
         }
       } catch (error) {
         setError('Ошибка сети. Проверьте подключение к интернету.');
       }
-
-      fetchLevelAndImage(); // Запрос уровня после обновления баланса
     };
 
-    document.addEventListener('visibilitychange', updateLevelOnServer);
-    return () => document.removeEventListener('visibilitychange', updateLevelOnServer);
-  }, [token, pointsGained]);
+    // Обновляем баланс при закрытии/сворачивании приложения
+    const handleVisibilityChange = () => {
+      if (document.visibilityState === 'hidden') {
+        updateBalanceOnServer();
+      }
+    };
+
+    document.addEventListener('visibilitychange', handleVisibilityChange);
+    return () => {
+      document.removeEventListener('visibilitychange', handleVisibilityChange);
+      // Обновляем баланс при размонтировании компонента (например, при переходе на другую страницу)
+      updateBalanceOnServer(); 
+    };
+  }, [token, user]); // Зависимость от токена и данных пользователя
 
   const handleClick = (event: React.TouchEvent<HTMLDivElement>) => {
     event.preventDefault();
@@ -156,7 +159,15 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ userData, token }) => {
       setClickAnimations((prevAnimations) => [...prevAnimations, newAnimation]);
     }
 
-    setPointsGained((prevPoints) => prevPoints + clickValue * touches.length);
+    setUser((prevUser) => {
+      if (prevUser) {
+        const newBalance = prevUser.balance + clickValue * touches.length;
+        const newEnergy = prevUser.energy - clickValue * touches.length; // Расходуем энергию
+        return { ...prevUser, balance: newBalance, energy: newEnergy };
+      }
+      return prevUser;
+    });
+
     setIsClicking(true);
     setTimeout(() => setIsClicking(false), 200);
 
@@ -183,50 +194,50 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ userData, token }) => {
 
   return (
     <div>
-    <div className={styles.homeScreen}>
-      <div className={styles.topSection}>
-        <div className={styles.blockOfInfo}>
-          <div className={styles.blockOfInfoInner}>
-            <div className={styles.pointBlockParent}>
-              <div className={styles.pointBlock}>
-                <div className={styles.parent}>
-                  <div className={styles.div}>Поинты за час</div>
-                  <div className={styles.instanceParent}>
-                    <Frame122 className={styles.frameChild} aria-label="Иконка поинтов за час" />
-                    <div className={styles.highlightedFigure}>+{currentUser.income}</div>
+      <div className={styles.homeScreen}>
+        <div className={styles.topSection}>
+          <div className={styles.blockOfInfo}>
+            <div className={styles.blockOfInfoInner}>
+              <div className={styles.pointBlockParent}>
+                <div className={styles.pointBlock}>
+                  <div className={styles.parent}>
+                    <div className={styles.div}>Поинты за час</div>
+                    <div className={styles.instanceParent}>
+                      <Frame122 className={styles.frameChild} aria-label="Иконка поинтов за час" />
+                      <div className={styles.highlightedFigure}>+{currentUser.income}</div>
+                    </div>
                   </div>
                 </div>
-              </div>
-              <div className={styles.pointBlock}>
-                <div className={styles.parent}>
-                  <div className={styles.group}>
-                    <div className={styles.div2}>Подписчики</div>
-                    <IconFollowers className={styles.iconFollowers} aria-label="Иконка подписчиков" />
-                  </div>
-                  <div className={styles.instanceParent}>
-                    <IconFollowers className={styles.iconFollowers} aria-label="Иконка подписчиков" />
-                    <div className={styles.highlightedFigure}>{currentUser.followers}</div>
-                  </div>
+                <div className={styles.pointBlock}>
+                  <div className={styles.parent}>
+                    <div className={styles.group}>
+                      <div className={styles.div2}>Подписчики</div>
+                      <IconFollowers className={styles.iconFollowers} aria-label="Иконка подписчиков" />
+                    </div>
+                    <div className={styles.instanceParent}>
+                      <IconFollowers className={styles.iconFollowers} aria-label="Иконка подписчиков" />
+                      <div className={styles.highlightedFigure}>{currentUser.followers}</div>
+                    </div>
+                    </div>
                 </div>
               </div>
-            </div>
-            <div className={styles.pointBlockGroup}>
-              <div className={styles.pointBlock2}>
-                <div className={styles.skufsdff}>Skuffolog...</div>
-                <IconSkuff className={styles.iconSkuff} aria-label="Иконка Skuffolog" />
-              </div>
-              <div className={styles.level89Parent}>
-                <div className={styles.level89}>level {level}</div>
-                <div className={styles.frameWrapper}>
-                  <div className={styles.progressBarBackgroundWrapper}>
-                    <div className={styles.progressBarBackground} />
+              <div className={styles.pointBlockGroup}>
+                <div className={styles.pointBlock2}>
+                  <div className={styles.skufsdff}>Skuffolog...</div>
+                  <IconSkuff className={styles.iconSkuff} aria-label="Иконка Skuffolog" />
+                </div>
+                <div className={styles.level89Parent}>
+                  <div className={styles.level89}>level {level}</div>
+                  <div className={styles.frameWrapper}>
+                    <div className={styles.progressBarBackgroundWrapper}>
+                      <div className={styles.progressBarBackground} />
+                    </div>
                   </div>
                 </div>
               </div>
             </div>
           </div>
-        </div>
-        <div className={styles.profileBlock}>
+          <div className={styles.profileBlock}>
             <div className={styles.avatarParent}>
               <img className={styles.avatarIcon} alt="Аватар пользователя" src={currentUser.avatar} />
               <div className={styles.nameAndRunk}>
@@ -253,20 +264,20 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ userData, token }) => {
         <div className={styles.mainSection}>
           <div
             ref={contentBlockRef}
-            className={`${styles.contentBlock} ${styles.touchable}`}
+            className={`${styles.contentBlock} ${styles.touchable} ${isClicking ? styles.clicking : ''}`}
             onTouchStart={handleClick}
           >
             <div className={styles.highlightedInfo}>
               <Component13 className={styles.component13Icon} aria-label="Компонент 13" />
-              <div className={styles.highlightedFigure}>{isNaN(pointsGained) ? 0 : pointsGained}</div>
+              <div className={styles.highlightedFigure}>{currentUser.balance}</div>
             </div>
 
             <img
-  ref={characterImageRef}
-  className={styles.characterImage}
-  src={`./img/${characterImage}`} 
-  alt="Персонаж"
-/>
+              ref={characterImageRef}
+              className={styles.characterImage}
+              src={`./img/${characterImage}`}
+              alt="Персонаж"
+            />
 
             {clickAnimations.map((animation, index) => (
               <div

@@ -1,17 +1,17 @@
 .layout {
     display: flex;
     flex-direction: column;
-    min-height: 100vh; /* Занимает всю высоту экрана */
+    min-height: 100vh; 
   }
   
   .content {
-    flex: 1; /* Контент занимает все оставшееся пространство */
+    flex: 1; 
   }
   
   .navigationbar {
-    bottom: 24px; /* Отступ от низа */
-    position: fixed; /* Фиксируем навигацию */
-    width: 100%; /* На всю ширину */
-    z-index: 10; /* Чтобы быть поверх контента */
+    bottom: 24px; 
+    position: fixed; 
+    width: 100%; 
+    z-index: 10; 
   }
   

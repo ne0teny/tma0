@@ -35,19 +35,24 @@ function App() {
       const token = localStorage.getItem('token');
       if (token) {
         try {
-          // Получаем актуальный баланс пользователя
+          // Получаем данные пользователя, включая баланс и очки
           const response = await fetch(`${API_URL}/user/get_points`, {
             headers: { Authorization: `Bearer ${token}` },
           });
 
           if (response.ok) {
-            const balanceData = await response.json();
-            setUserData((prevUserData) => prevUserData ? { ...prevUserData, balance: balanceData.balance } : null);
+            const userData = await response.json();
+            setUserData(userData);
           } else {
-            console.error('Ошибка получения баланса:', response.statusText);
+            console.error('Ошибка получения данных пользователя:', response.statusText);
+            // Дополнительная обработка ошибки (например, выход из системы)
+            localStorage.removeItem('token');
+            setIsLoggedIn(false);
           }
         } catch (error) {
           console.error('Ошибка сети:', error);
+          // Дополнительная обработка ошибки
+          setIsLoading(false);
         }
       } else {
         const user = window.Telegram?.WebApp?.initDataUnsafe?.user || {};
@@ -70,14 +75,18 @@ function App() {
             localStorage.setItem('token', loginResult.token);
           } else {
             console.error('Ошибка входа/регистрации:', response.statusText);
+            // Дополнительная обработка ошибки
+            setIsLoading(false);
           }
         } catch (error) {
           console.error('Ошибка сети:', error);
+          // Дополнительная обработка ошибки
+          setIsLoading(false);
         }
       }
 
       setIsLoggedIn(true);
-      setIsLoading(false); 
+      setIsLoading(false);
     };
 
     initializeApp();
@@ -85,7 +94,7 @@ function App() {
 
   return (
     <div className="App">
-      {isLoading ? ( 
+      {isLoading ? (
         <Loading />
       ) : isLoggedIn ? (
         <Routes>
@@ -97,7 +106,7 @@ function App() {
           <Route path="airdrop" element={<Airdrop userData={userData} token={localStorage.getItem('token')} />} />
         </Routes>
       ) : (
-        <div>Пользователь не авторизован</div> 
+        <div>Пользователь не авторизован</div>
       )}
     </div>
   );

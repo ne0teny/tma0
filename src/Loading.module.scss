@@ -1,10 +1,10 @@
-
 .memeEmpire {
   position: absolute;
   top: 532px;
   left: calc(50% - 113px);
   font-weight: 600;
 }
+
 .div {
   position: absolute;
   top: 587px;
@@ -16,11 +16,12 @@
   justify-content: center;
   width: 202px;
 }
+
 .icon {
   width: 32px;
-  position: relative;
   height: 32px;
 }
+
 .iconParent {
   position: absolute;
   top: 665px;
@@ -34,7 +35,6 @@
 
 .memeEmpireParent {
   width: 100%;
-  position: relative;
   height: 753px;
   overflow: hidden;
   background-image: url('./Loading1.png'); 
@@ -48,7 +48,34 @@
   min-height: 100vh;
 }
 
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap');
-body {
-  	margin: 0; line-height: normal;
+/* Стили для кругового загрузчика */
+.loader {
+  border: 8px solid #f3f3f3; /* Светло-серый */
+  border-top: 8px solid #c6d101; /* Цвет вашей темы */
+  border-radius: 50%;
+  width: 60px;
+  height: 60px;
+  animation: spin 1s linear infinite;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.loaderInner {
+  border: 8px solid #f3f3f3;
+  border-top: 8px solid #c6d101;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  animation: spin 1.5s linear infinite;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
 }

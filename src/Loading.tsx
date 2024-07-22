@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import React, { useEffect } from 'react';
 import { FunctionComponent } from 'react';
 import styles from './Loading.module.scss';
 
@@ -33,6 +33,11 @@ const Loading: FunctionComponent = () => {
         <img className={styles.icon} alt="Twitch" src={twitchIcon} />
         <img className={styles.icon} alt="YouTube" src={youtubeIcon} />
         <img className={styles.icon} alt="Telegram" src={telegramIcon} />
+      </div>
+
+      {/* Круговой загрузчик */}
+      <div className={styles.loader}>
+        <div className={styles.loaderInner}></div>
       </div>
     </div>
   );
