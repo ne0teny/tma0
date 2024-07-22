@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import './App.css';
-import HomeScreen from './Homescreen'; // Обратите внимание на заглавную 'H'
+import HomeScreen from './Homescreen';
 import Earn from './Earn';
 import WebApp from '@twa-dev/sdk';
 import { Routes, Route, Navigate } from 'react-router-dom';
@@ -54,7 +54,34 @@ function App() {
           setIsLoading(false);
         }
       } else {
-        // ... (logic for creating/logging in user, with 2-second delay)
+        const user = window.Telegram?.WebApp?.initDataUnsafe?.user || {};
+        try {
+          let response = await fetch(`${API_URL}/user/create_user`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ data: user }),
+          });
+          if (!response.ok) {
+            response = await fetch(`${API_URL}/user/login_user`, {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ data: user }),
+            });
+          }
+          if (response.ok) {
+            const loginResult = await response.json();
+            setUserData(loginResult.user);
+            localStorage.setItem('token', loginResult.token);
+
+            await new Promise(resolve => setTimeout(resolve, 2000));
+          } else {
+            console.error('Login/registration error:', response.statusText);
+            setIsLoading(false); 
+          }
+        } catch (error) {
+          console.error('Network error:', error);
+          setIsLoading(false); 
+        }
       }
 
       setIsLoggedIn(true);

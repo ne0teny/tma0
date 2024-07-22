@@ -74,15 +74,19 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ userData, token, setUserData })
       try {
         const response = await fetch(`${API_URL}/user/get_level`, {
           headers: {
-            'Authorization': `Bearer ${token}`,
+            Authorization: `Bearer ${token}`,
           },
         });
 
         if (response.ok) {
           const data = await response.json();
-          setLevel(data.level);
-          setCharacterImage(`lvl${data.level}.png`);
-          console.log("Fetched level:", data.level);
+          if (typeof data === 'object' && data.hasOwnProperty('level')) {
+            setLevel(data.level);
+            setCharacterImage(`lvl${data.level}.png`);
+            console.log("Fetched level:", data.level);
+          } else {
+            setError('Ошибка при получении уровня: неверный формат ответа сервера.');
+          }
         } else {
           setError('Ошибка при получении уровня с сервера.');
         }
@@ -106,12 +110,14 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ userData, token, setUserData })
             'Authorization': `Bearer ${token}`,
           },
           body: JSON.stringify({
-            gain_points: user.balance.toString(),
+            gain_points: user.balance, 
           }),
         });
 
         if (response.ok) {
           console.log("Balance updated successfully on server");
+          const updatedUserData = await response.json();
+          setUserData(updatedUserData);
         } else {
           const errorData = await response.json();
           setError(errorData.detail || 'Ошибка при обновлении баланса на сервере.');
@@ -132,7 +138,7 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ userData, token, setUserData })
       document.removeEventListener('visibilitychange', handleVisibilityChange);
       updateBalanceOnServer();
     };
-  }, [token, user]);
+  }, [token, user?.balance]);
 
   const handleClick = (event: React.TouchEvent<HTMLDivElement>) => {
     event.preventDefault();
@@ -264,7 +270,6 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ userData, token, setUserData })
               <div className={styles.highlightedFigure}>{currentUser.balance}</div>
             </div>
 
-            {/* Отображение персонажа в зависимости от уровня */}
             {level >= 1 && (
               <img
                 ref={characterImageRef}
