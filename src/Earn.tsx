@@ -6,7 +6,7 @@ import frame122 from './img/Frame 122.png';
 import actionSheedImage from './img/ActionSheed image.png';
 import iconSvg from './img/Icon.svg'; 
 
-const API_URL = 'https://f46c-89-107-97-177.ngrok-free.app';
+const API_URL = 'https://89a5-89-107-97-177.ngrok-free.app';
 
 interface User {
   id: number;

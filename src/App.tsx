@@ -9,7 +9,7 @@ import Mine from './Mine';
 import Loading from './Loading';
 import Airdrop from './Airdrop';
 
-const API_URL = 'https://1178-89-107-97-177.ngrok-free.app';
+const API_URL = 'https://89a5-89-107-97-177.ngrok-free.app'; // Замените на ваш ngrok URL
 
 interface User {
   id: number;
@@ -33,54 +33,50 @@ function App() {
 
     const initializeApp = async () => {
       const token = localStorage.getItem('token');
+
       if (token) {
         try {
           const response = await fetch(`${API_URL}/user/get_points`, {
-            headers: { Authorization: `Bearer ${token}` },
+            headers: { Authorization: `Bearer ${token}` }
           });
 
           if (response.ok) {
-            const userData = await response.json();
+            const userData: User = await response.json();
             setUserData(userData);
-            await new Promise(resolve => setTimeout(resolve, 2000)); 
           } else {
-            console.error('Error fetching user data:', response.statusText);
+            console.error('Ошибка получения данных пользователя:', response.statusText);
             localStorage.removeItem('token');
-            setIsLoggedIn(false);
-            setIsLoading(false);
           }
         } catch (error) {
-          console.error('Network error:', error);
-          setIsLoading(false);
+          console.error('Ошибка сети:', error);
         }
       } else {
-        const user = window.Telegram?.WebApp?.initDataUnsafe?.user || {};
+        const telegramUser = window.Telegram?.WebApp?.initDataUnsafe?.user || {};
+
         try {
           let response = await fetch(`${API_URL}/user/create_user`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ data: user }),
+            body: JSON.stringify({ data: telegramUser })
           });
+
           if (!response.ok) {
             response = await fetch(`${API_URL}/user/login_user`, {
               method: 'POST',
               headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify({ data: user }),
+              body: JSON.stringify({ data: telegramUser })
             });
           }
+
           if (response.ok) {
             const loginResult = await response.json();
             setUserData(loginResult.user);
             localStorage.setItem('token', loginResult.token);
-
-            await new Promise(resolve => setTimeout(resolve, 2000));
           } else {
-            console.error('Login/registration error:', response.statusText);
-            setIsLoading(false); 
+            console.error('Ошибка входа/регистрации:', response.statusText);
           }
         } catch (error) {
-          console.error('Network error:', error);
-          setIsLoading(false); 
+          console.error('Ошибка сети:', error);
         }
       }
 
