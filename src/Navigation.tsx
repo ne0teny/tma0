@@ -1,43 +1,36 @@
-import React, { FC } from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import React, { FunctionComponent } from 'react';
 import styles from './scss/NavigationBar.module.scss';
 
-import HomeIcon from './img/Home.svg';
-import MineIcon from './img/Mine.svg';
-import FriendsIcon from './img/Friends.svg';
-import EarnIcon from './img/Earn.svg';
-import AirdropIcon from './img/Airdrop.svg';
+// Импортируем все SVG-изображения
+import homeSvg from './img/Home.svg';
+import mineSvg from './img/Mine.svg';
+import friendsSvg from './img/Friends.svg';
+import earnSvg from './img/Earn.svg';
+import airdropSvg from './img/Airdrop.svg';
 
-const NavigationBar: FC = () => {
-  const location = useLocation();
-
+const NavigationBar: FunctionComponent = () => {
   return (
-    <div className={styles.navigationbar}>
-      <Link to="/" className={styles.component11}>
-        <img className={styles.component11Child} alt="Home" src={HomeIcon} />
+    <div className={styles.component11Parent}>
+      <div className={styles.component11}>
+        <img className={styles.component11Child} alt="" src={homeSvg} />
         <div className={styles.home}>Home</div>
-      </Link>
-      <div> {/* Обертка для Link */}
-        <Link to="/mine" className={styles.frameParent}>
-          <img className={styles.component11Child} alt="Mine" src={MineIcon} />
-          <div className={styles.home}>Mine</div>
-        </Link>
       </div>
-      <Link
-        to="/friends"
-        className={`${styles.frameParent} ${location.pathname === '/friends' ? styles.active : ''}`}
-      >
-        <img className={styles.component11Child} alt="Friends" src={FriendsIcon} />
+      <div className={styles.frameParent}>
+        <img className={styles.component11Child} alt="" src={mineSvg} />
+        <div className={styles.home}>Mine</div>
+      </div>
+      <div className={styles.frameParent}>
+        <img className={styles.component11Child} alt="" src={friendsSvg} />
         <div className={styles.home}>Friends</div>
-      </Link>
-      <Link to="/earn" className={styles.frameParent}>
-        <img className={styles.component11Child} alt="Earn" src={EarnIcon} />
+      </div>
+      <div className={styles.frameParent}>
+        <img className={styles.component11Child} alt="" src={earnSvg} />
         <div className={styles.home}>Earn</div>
-      </Link>
-      <Link to="/airdrop" className={styles.frameParent}>
-        <img className={styles.component11Child} alt="Airdrop" src={AirdropIcon} />
+      </div>
+      <div className={styles.frameParent}>
+        <img className={styles.component11Child} alt="" src={airdropSvg} />
         <div className={styles.home}>Airdrop</div>
-      </Link>
+      </div>
     </div>
   );
 };

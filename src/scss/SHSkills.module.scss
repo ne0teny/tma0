@@ -1,0 +1,130 @@
+/* Стили для SHSkills.tsx */
+.div6 {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 12px;
+    text-align: left;
+    font-size: 10px;
+  }
+  .blockOfInfoParent {
+    align-self: stretch;
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+    justify-content: flex-start;
+    gap: 8px;
+    z-index: 0;
+  }
+  .subtractParent {
+    width: 175px;
+    height: 99px;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: flex-start;
+    position: relative;
+  }
+  .subtractIcon {
+    align-self: stretch;
+    position: relative;
+    border-radius: 8px;
+    max-width: 100%;
+    overflow: hidden;
+    height: 99px;
+    flex-shrink: 0;
+    z-index: 0;
+  }
+  .div7 {
+    align-self: stretch;
+    position: relative;
+    font-size: 12px;
+    font-weight: 600;
+    color: #fff;
+  }
+  .frameDiv {
+    width: 103px;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: flex-start;
+    gap: 6px;
+  }
+  .frameItem {
+    width: 87.5px;
+    position: relative;
+    border-top: 0.5px solid #b2b2b2;
+    box-sizing: border-box;
+    height: 0.5px;
+  }
+  .component9Parent {
+    display: flex;
+    flex-direction: row;
+    align-items: flex-end;
+    justify-content: flex-start;
+    gap: 2px;
+    text-align: center;
+    font-size: 12px;
+    color: #fff;
+  }
+  .frameGroup {
+    margin: 0 !important;
+    position: absolute;
+    top: calc(50% - 41.5px);
+    left: 8px;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: flex-start;
+    gap: 8px;
+    z-index: 1;
+  }
+  .lvl100 {
+    width: 50px;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 16px;
+    flex-shrink: 0;
+  }
+  .image7Icon {
+    position: absolute;
+    top: 0.27px;
+    left: calc(50% - 19.21px);
+    width: 37.4px;
+    height: 64.5px;
+    object-fit: cover;
+  }
+  .image7Wrapper {
+    position: absolute;
+    top: calc(50% - 37px);
+    left: calc(50% - 26px);
+    width: 53px;
+    height: 74px;
+  }
+  .instanceWrapper {
+    width: 54px;
+    position: relative;
+    height: 74px;
+  }
+
+
+  .lvl100Parent {
+    width: 54px;
+    margin: 0 !important;
+    position: absolute;
+    top: 4px;
+    left: 121px;
+    display: flex;
+    flex-direction: column;
+    align-items: center; // Исправленная строка
+    justify-content: flex-start;
+    gap: 5px;
+    z-index: 2;
+    text-align: center;
+    font-size: 12px;
+    color: #fff;
+  }
+  

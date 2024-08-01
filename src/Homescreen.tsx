@@ -1,213 +1,104 @@
-import React, { useState, useEffect, useRef } from 'react';
-import NavigationBar from './Navigation';
+import React, { useState, useEffect } from 'react';
 import styles from './scss/HomeScreen.module.scss';
-import { ReactComponent as Frame122 } from './img/Frame 122.svg';
-import { ReactComponent as IconFollowers } from './img/Icon3.svg';
-import { ReactComponent as IconSkuff } from './img/Icon2.svg';
-import { ReactComponent as IconProfile } from './img/Icon4.svg';
-import { ReactComponent as Component13 } from './img/Component 13.svg';
-import frame109 from './img/Frame 109.svg';
+import NavigationBar from './Navigation';
+
+// Импорт изображений для разных элементов
+import characterLvl1 from './img/lvl1.png';
+import characterLvl2 from './img/lvl2.png';
+import characterLvl3 from './img/lvl3.png';
+import characterLvl4 from './img/lvl4.png';
+import characterLvl5 from './img/lvl5.png';
+import characterLvl6 from './img/lvl6.png';
+import characterLvl7 from './img/lvl7.png';
+import characterLvl8 from './img/lvl8.png';
+import characterLvl9 from './img/lvl9.png';
+
+import frame122 from './img/Frame 122.png';
+import iconSvg from './img/Icon.svg';
+import icon3Svg from './img/Icon2.svg';
+import icon2Svg from './img/Icon3.svg';
+import icon4Svg from './img/Icon4.svg';
 import avatar from './img/Avatar.png';
-import imageКубок from './img/image кубок.png';
+import imageCup from './img/image кубок.png';
+import component13 from './img/Component 13.png';
+import frame109 from './img/Frame 109.svg';
+import boostSvg from './img/boost.svg';
+import backgr from './img/backgr.png';
 
-const API_URL = 'https://89a5-89-107-97-177.ngrok-free.app'; // Замените на ваш ngrok URL
+const levelImages = {
+  1: characterLvl1,
+  2: characterLvl2,
+  3: characterLvl3,
+  4: characterLvl4,
+  5: characterLvl5,
+  6: characterLvl6,
+  7: characterLvl7,
+  8: characterLvl8,
+  9: characterLvl9,
+};
 
-interface User {
-  id: number;
-  level: number;
-  league: string;
-  balance: number;
-  income: number;
-  avatar: string;
-  name: string;
-  energy: number;
-  followers: number;
-}
-
-interface ClickAnimation {
-  style: React.CSSProperties;
-  startTime: number;
-}
-
-interface HomeScreenProps {
-  userData: User | null;
-  token: string | null;
-  setUserData: React.Dispatch<React.SetStateAction<User | null>>;
-}
-
-const HomeScreen: React.FC<HomeScreenProps> = ({ userData, token, setUserData }) => {
-  const [user, setUser] = useState<User | null>(userData);
-  const [isClicking, setIsClicking] = useState(false);
-  const [clickAnimations, setClickAnimations] = useState<ClickAnimation[]>([]);
-  const [energy, setEnergy] = useState(userData?.energy || 7000);
-  const maxEnergy = 7000;
-  const energyRecoveryRate = 10; // Восстановление энергии за тик
-  const energyRecoveryInterval = 60000; // Интервал восстановления энергии (1 минута)
-  const clickValue = 1; // Количество очков за клик
-  const [error, setError] = useState<string | null>(null);
-
-  const characterImageRef = useRef<HTMLImageElement>(null);
-  const contentBlockRef = useRef<HTMLDivElement>(null);
-
-  const [level, setLevel] = useState(userData?.level || 1);
-  const [characterImage, setCharacterImage] = useState('lvl1.png');
+const HomeScreen: React.FC = () => {
+  const [level, setLevel] = useState<number>(() => Number(localStorage.getItem('level')) || 1);
+  const [balance, setBalance] = useState<number>(() => Number(localStorage.getItem('balance')) || 0);
+  const [income, setIncome] = useState<number>(() => Number(localStorage.getItem('income')) || 0);
+  const [stamina, setStamina] = useState<number>(1000);
+  const [clickPosition, setClickPosition] = useState<{ x: number, y: number } | null>(null);
+  const [showClickAnimation, setShowClickAnimation] = useState(false);
 
   useEffect(() => {
-    setUser(userData);
-    setEnergy(userData?.energy || 7000);
-  }, [userData]);
+    localStorage.setItem('level', level.toString());
+    localStorage.setItem('balance', balance.toString());
+    localStorage.setItem('income', income.toString());
+  }, [level, balance, income]);
 
   useEffect(() => {
-    const fetchLevelAndImage = async () => {
-      if (!token) return;
+    const staminaInterval = setInterval(() => {
+      setStamina(prevStamina => Math.min(prevStamina + 10, 1000));
+    }, 60000); // Восстановление стамины каждые 60 секунд
+    return () => clearInterval(staminaInterval);
+  }, []);
 
-      try {
-        const response = await fetch(`${API_URL}/user/get_level`, {
-          headers: { Authorization: `Bearer ${token}` }
-        });
+  const handleCharacterClick = (e: React.MouseEvent<HTMLImageElement>) => {
+    if (stamina > 0) {
+      const rect = e.currentTarget.getBoundingClientRect();
+      setClickPosition({ x: e.clientX - rect.left, y: e.clientY - rect.top });
+      setShowClickAnimation(true);
 
-        if (response.ok) {
-          const data = await response.json();
-          setLevel(data);
-          setCharacterImage(`lvl${data}.png`);
-        } else {
-          setError('Ошибка получения уровня: ' + response.statusText);
-        }
-      } catch (error) {
-        setError('Ошибка сети: ' + error);
-      }
-    };
+      const newBalance = balance + 1;
+      setBalance(newBalance);
+      setStamina(stamina - 1);
+      checkLevelUp(newBalance);
 
-    fetchLevelAndImage();
-  }, [token]);
-
-  useEffect(() => {
-    let energyInterval: NodeJS.Timeout;
-
-    const startEnergyRecovery = () => {
-      energyInterval = setInterval(() => {
-        setEnergy((prevEnergy) => Math.min(prevEnergy + energyRecoveryRate, maxEnergy));
-      }, energyRecoveryInterval);
-    };
-
-    const stopEnergyRecovery = () => {
-      clearInterval(energyInterval);
-    };
-
-    if (energy < maxEnergy) {
-      startEnergyRecovery();
+      setTimeout(() => {
+        setShowClickAnimation(false);
+      }, 1000); // Анимация длится 1 секунду
+    } else {
+      alert("У вас закончилась стамина!");
     }
-
-    const handleVisibilityChange = () => {
-      if (document.visibilityState === 'hidden') {
-        stopEnergyRecovery();
-      } else if (document.visibilityState === 'visible' && energy < maxEnergy) {
-        startEnergyRecovery();
-      }
-    };
-
-    document.addEventListener('visibilitychange', handleVisibilityChange);
-
-    return () => {
-      document.removeEventListener('visibilitychange', handleVisibilityChange);
-      stopEnergyRecovery();
-    };
-  }, [energy, maxEnergy]);
-
-  useEffect(() => {
-    const updateBalanceOnServer = async () => {
-      if (!token || !user) return;
-
-      try {
-        const response = await fetch(`${API_URL}/points/update_points`, {
-          method: 'PATCH',
-          headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${token}`,
-          },
-          body: JSON.stringify({
-            gain_points: user.balance, 
-          }),
-        });
-
-        if (response.ok) {
-          console.log("Balance updated successfully on server");
-          const updatedUserData = await response.json();
-          setUserData(updatedUserData);
-        } else {
-          const errorData = await response.json();
-          setError(errorData.detail || 'Ошибка при обновлении баланса на сервере.');
-        }
-      } catch (error) {
-        setError('Ошибка сети. Проверьте подключение к интернету.');
-      }
-    };
-
-    const handleVisibilityChange = () => {
-      if (document.visibilityState === 'hidden') {
-        updateBalanceOnServer();
-      }
-    };
-
-    document.addEventListener('visibilitychange', handleVisibilityChange);
-    return () => {
-      document.removeEventListener('visibilitychange', handleVisibilityChange);
-      updateBalanceOnServer(); 
-    };
-  }, [token, user?.balance]);
-
-  const handleClick = (event: React.TouchEvent<HTMLDivElement>) => {
-    event.preventDefault();
-    const touches = event.touches;
-    const rect = contentBlockRef.current?.getBoundingClientRect();
-
-    for (let i = 0; i < touches.length; i++) {
-      const touch = touches[i];
-      const newAnimation: ClickAnimation = {
-        style: {
-          left: `${touch.clientX - (rect?.left ?? 0)}px`,
-          top: `${touch.clientY - (rect?.top ?? 0)}px`,
-        },
-        startTime: Date.now(),
-      };
-      setClickAnimations((prevAnimations) => [...prevAnimations, newAnimation]);
-    }
-
-    setUserData((prevUser) => {
-      if (prevUser && prevUser.energy > 0) { // Проверка наличия энергии
-        const newBalance = prevUser.balance + clickValue * touches.length;
-        const newEnergy = prevUser.energy - clickValue * touches.length;
-        return { ...prevUser, balance: newBalance, energy: newEnergy };
-      }
-      return prevUser; 
-    });
-
-    setIsClicking(true);
-    setTimeout(() => setIsClicking(false), 200);
-
-    setTimeout(() => {
-      setClickAnimations((prevAnimations) =>
-        prevAnimations.filter((animation) => Date.now() - animation.startTime < 1000)
-      );
-    }, 1000);
   };
 
-  const defaultUser: User = {
-    id: 0,
-    level: 1,
-    league: 'No league',
-    balance: 0,
-    income: 0,
-    avatar: avatar,
-    name: 'New User',
-    energy: 7000,
-    followers: 0,
+  const checkLevelUp = (currentBalance: number) => {
+    const levelRequirements = [0, 5000, 10000, 100000, 500000, 1000000, 5000000, 10000000, 50000000];
+    for (let i = 0; i < levelRequirements.length; i++) {
+      if (currentBalance >= levelRequirements[i] && level < i + 1) {
+        setLevel(i + 1);
+      }
+    }
   };
 
-  const currentUser = user || defaultUser;
+  // Функция для увеличения дохода
+  const increaseIncome = () => {
+    const additionalIncome = 10; // Например, доход за период времени
+    setIncome(prevIncome => prevIncome + additionalIncome);
+  };
+
+  // Используйте хук эффекта, чтобы симулировать получение дохода каждый раз в определенный период
+  useEffect(() => {
+    const incomeInterval = setInterval(increaseIncome, 10000); // Увеличение дохода каждые 10 секунд
+    return () => clearInterval(incomeInterval); // Очистка интервала при размонтировании компонента
+  }, []); // Пустой массив зависимостей для запуска эффекта только при монтировании
 
   return (
-    <div>
     <div className={styles.homeScreen}>
       <div className={styles.topSection}>
         <div className={styles.blockOfInfo}>
@@ -217,8 +108,8 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ userData, token, setUserData })
                 <div className={styles.parent}>
                   <div className={styles.div}>Поинты за час</div>
                   <div className={styles.instanceParent}>
-                    <Frame122 className={styles.frameChild} aria-label="Иконка поинтов за час" />
-                    <div className={styles.highlightedFigure}>+{currentUser.income}</div>
+                    <img className={styles.frameChild} alt="" src={frame122} />
+                    <div className={styles.highlightedFigure}>{income}</div>
                   </div>
                 </div>
               </div>
@@ -226,11 +117,11 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ userData, token, setUserData })
                 <div className={styles.parent}>
                   <div className={styles.group}>
                     <div className={styles.div2}>Подписчики</div>
-                    <IconFollowers className={styles.iconFollowers} aria-label="Иконка подписчиков" />
+                    <img className={styles.icon} alt="" src={icon2Svg} />
                   </div>
                   <div className={styles.instanceParent}>
-                    <IconFollowers className={styles.iconFollowers} aria-label="Иконка подписчиков" />
-                    <div className={styles.highlightedFigure}>{currentUser.followers}</div>
+                    <img className={styles.icon1} alt="" src={iconSvg} />
+                    <div className={styles.highlightedFigure}>0</div>
                   </div>
                 </div>
               </div>
@@ -238,10 +129,10 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ userData, token, setUserData })
             <div className={styles.pointBlockGroup}>
               <div className={styles.pointBlock2}>
                 <div className={styles.skufsdff}>Skuffolog...</div>
-                <IconSkuff className={styles.iconSkuff} aria-label="Иконка Skuffolog" />
+                <img className={styles.icon2} alt="" src={icon3Svg} />
               </div>
               <div className={styles.level89Parent}>
-                <div className={styles.level89}>level {level}</div>
+                <div className={styles.level89}>Уровень {level}</div>
                 <div className={styles.frameWrapper}>
                   <div className={styles.progressBarBackgroundWrapper}>
                     <div className={styles.progressBarBackground} />
@@ -253,12 +144,12 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ userData, token, setUserData })
         </div>
         <div className={styles.profileBlock}>
           <div className={styles.avatarParent}>
-            <img className={styles.avatarIcon} alt="Аватар пользователя" src={currentUser.avatar} />
+            <img className={styles.avatarIcon} alt="avatar" src={avatar} />
             <div className={styles.nameAndRunk}>
-              <div className={styles.namee}>{currentUser.name}</div>
-              <div className={styles.meme}>{currentUser.league}</div>
+              <div className={styles.namee}>newuser</div>
+              <div className={styles.meme}>(meme)</div>
             </div>
-            <IconProfile className={styles.iconProfile} aria-label="Иконка профиля" />
+            <img className={styles.icon1} alt="icon" src={icon4Svg} />
           </div>
           <div className={styles.everyDayBonus}>
             <div className={styles.container}>
@@ -266,7 +157,7 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ userData, token, setUserData })
                 <p className={styles.p}>Ежедневный</p>
                 <p className={styles.p}>бонус</p>
               </div>
-              <img className={styles.imageIcon} alt="Иконка кубка" src={imageКубок} />
+              <img className={styles.imageIcon} alt="cup" src={imageCup} />
               <div className={styles.notificationError}>
                 <div className={styles.div5}>1</div>
               </div>
@@ -276,46 +167,49 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ userData, token, setUserData })
       </div>
 
       <div className={styles.mainSection}>
-        <div
-          ref={contentBlockRef}
-          className={`${styles.contentBlock} ${styles.touchable} ${isClicking ? styles.clicking : ''}`}
-          onTouchStart={handleClick}
-        >
+        <div className={styles.contentBlock}>
+          <img className={styles.backgr} alt="background" src={backgr} />
+
           <div className={styles.highlightedInfo}>
-            <Component13 className={styles.component13Icon} aria-label="Компонент 13" />
-            <div className={styles.highlightedFigure}>{currentUser.balance}</div>
+            <img className={styles.component13Icon} alt="component" src={component13} />
+            <div className={styles.highlightedFigure}>{balance.toLocaleString()}</div>
           </div>
-
-          {level >= 1 && ( 
-            <img
-              ref={characterImageRef}
-              className={styles.characterImage}
-              src={`/img/${characterImage}`} // Динамическая загрузка изображения
-              alt={`Персонаж уровня ${level}`}
-            />
-          )}
-
-          {clickAnimations.map((animation, index) => (
-            <div
-              key={index}
-              className={styles.clickAnimation}
-              style={animation.style}
+          <img
+            className={styles.characterIcon}
+            alt="character"
+            src={levelImages[level as keyof typeof levelImages]}
+            onClick={handleCharacterClick}
+          />
+          {showClickAnimation && clickPosition && (
+            <div 
+              className={styles.clickAnimation} 
+              style={{ top: clickPosition.y, left: clickPosition.x }}
             >
-              +{clickValue}
+              +1
             </div>
-          ))}
+          )}
         </div>
-
         <div className={styles.batarty}>
-          <img className={styles.batartyChild} alt="Батарея" src={frame109} />
-          <div className={styles.div6}>{energy}/{maxEnergy}</div>
+          <div className={styles.instanceGroup}>
+            <img className={styles.frameItem} alt="frame" src={frame109} />
+            <div className={styles.div6}>{stamina}/1000</div>
+          </div>
+          <div className={styles.progressBarWrapper}>
+            <div className={styles.progressBar} style={{ width: `${(stamina / 1000) * 100}%` }} />
+          </div>
+          <div className={styles.iconGroup}>
+            <img className={styles.icon4} alt="boost" src={boostSvg} />
+            <div className={styles.boost}>Boost</div>
+          </div>
         </div>
+        <div className={styles.footerSection} />
       </div>
 
-      <NavigationBar />
+      <div className={styles.navigationContainer}>
+        <NavigationBar />
+      </div>
     </div>
-  </div>
-);
+  );
 };
 
 export default HomeScreen;

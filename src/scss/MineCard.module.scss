@@ -1,0 +1,73 @@
+// MineCard.module.scss
+
+.mineCard {
+    width: 100%;
+    position: relative;
+    background-color: #191919;
+    height: 844px;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    padding: 0 16px;
+    box-sizing: border-box;
+    gap: 16px;
+    text-align: center;
+    font-size: 12px;
+    color: #aeaeae;
+    font-family: Inter;
+  
+    // ... (стили для блока информации о пользователе)
+  
+    .tapbarButtonParent {
+      align-self: stretch;
+      border-radius: 12px;
+      background-color: #2e2e2e;
+      overflow: hidden;
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      justify-content: center;
+      padding: 4px;
+  
+      .tapbarButton,
+      .tapbarButton1 {
+        flex: 1;
+        border-radius: 8px;
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: center;
+        padding: 8px;
+      }
+  
+      .tapbarButton {
+        background-color: #191919;
+        color: #fff;
+  
+        &.active {
+          background-color: #c6d101; // Цвет активной вкладки
+        }
+      }
+  
+      .tapbarButton1 {
+        &.active {
+          background-color: #191919;
+          color: #fff;
+        }
+      }
+    }
+  
+    .div6 {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-start;
+      gap: 12px;
+      text-align: left;
+      font-size: 10px;
+    }
+  
+  }
+  
